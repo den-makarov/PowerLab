@@ -1,0 +1,10 @@
+#ifndef VERSION_H
+#define VERSION_H
+
+#define ELECTRONSHIK_PROGRAM_NAME   "Electronshik"
+
+#define ELECTRONSHIK_VERSION_MAJOR  "0"
+#define ELECTRONSHIK_VERSION_MINOR  "0"
+#define ELECTRONSHIK_VERSION_BUILD  "0"
+
+#endif // VERSION_H
