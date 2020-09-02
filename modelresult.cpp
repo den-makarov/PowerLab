@@ -1,12 +1,12 @@
-#include <QDebug>
+#include <logger.h>
 #include "modelresult.h"
 
 ModelResult::ModelResult(size_t variables, size_t points, QObject *parent) : QObject(parent)
 {
   if(variables <= 1) {
-    qWarning() << "[" << this->metaObject()->className() << "]"
-               << "invalid size of variables"
-               << variables;
+    Logger::instance()->debug(this->metaObject()->className()) << "invalid size of variables"
+                                                               << variables;
+
     variables = 1;
   }
 
