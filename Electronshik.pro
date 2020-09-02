@@ -17,11 +17,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    modelresult.cpp
 
 HEADERS += \
     include/version.h \
-    mainwindow.h
+    mainwindow.h \
+    include/modelresult.h
 
 TRANSLATIONS += \
     Electronshik_en_US.ts
