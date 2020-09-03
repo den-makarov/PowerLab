@@ -2,6 +2,7 @@
 
 #include "mainwindow.h"
 #include "version.h"
+#include "logger.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,6 +13,8 @@ int main(int argc, char *argv[])
                        ELECTRONSHIK_VERSION_MINOR"."
                        ELECTRONSHIK_VERSION_BUILD;
   QString appTitle = appName + " - " + appVersion;
+
+  E_DEBUG(&app) << appTitle << "started";
 
   QCoreApplication::setApplicationVersion(appVersion);
   QCoreApplication::setApplicationName(appTitle);

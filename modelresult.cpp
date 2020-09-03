@@ -3,17 +3,17 @@
 
 ModelResult::ModelResult(size_t variables, size_t points, QObject *parent) : QObject(parent)
 {
-  if(variables <= 1) {
-    Logger::instance()->debug(this->metaObject()->className()) << "invalid size of variables"
-                                                               << variables;
+  if(variables < 1) {
+    E_WARNING(this) << "invalid size of variables"
+                     << variables;
 
     variables = 1;
   }
 
   if(points <= 1) {
-    qWarning() << "[" << this->metaObject()->className() << "]"
-               << "number of points too small"
-               << points;
+    E_WARNING(this) << "number of points too small"
+                    << points;
+    points = 2;
   }
 
   m_data = std::vector<std::vector<double>>(variables);
