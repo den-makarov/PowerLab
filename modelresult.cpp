@@ -71,6 +71,8 @@ void ModelResult::setDataNames(size_t var, DataNames& names) {
 
 const ModelResult::DataPoints& ModelResult::getDataPoints(size_t var) const {
   if(var >= m_signals.size()) {
+    // @TODO: Consider to throw an exception
+
     E_CRITICAL(this) << "Invalid variable identifier";
     return dummyPoints;
   }
@@ -80,6 +82,8 @@ const ModelResult::DataPoints& ModelResult::getDataPoints(size_t var) const {
 
 const ModelResult::DataNames& ModelResult::getDataNames(size_t var) const {
   if(var >= m_signals.size()) {
+    // @TODO: Consider to throw an exception
+
     E_CRITICAL(this) << "Invalid variable identifier";
     return dummyNames;
   }
