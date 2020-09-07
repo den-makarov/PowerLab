@@ -80,7 +80,12 @@ private:
       m_module = DEFAULT_MODULE_NAME;
     }
   }
+
+  template<class T> friend QDebug operator<<(Logger& log, T t);
+  static QString ERROR;
 };
+
+
 
 template <class T>
 QDebug operator<<(Logger& log, T t) {
@@ -101,6 +106,7 @@ QDebug operator<<(Logger& log, T t) {
     return qCritical() << "[" << log.module() << "]" << "FATAL" << t;
     break;
   }
+  return QDebug(&Logger::ERROR);
 }
 
 #define E_DEBUG(x) Logger::instance()->debug(x)
