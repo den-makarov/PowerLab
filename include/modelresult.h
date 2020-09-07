@@ -22,9 +22,14 @@ public:
   void addDataPoint(size_t var, const DataPoints& data);
   void setDataNames(size_t var, DataNames& names);
 
+  const DataPoints& getDataPoints(size_t var) const;
+  const DataNames& getDataNames(size_t var) const;
+
 private:
   std::vector<DataPoints> m_data;
   std::vector<DataNames> m_signals;
+  static DataPoints dummyPoints;
+  static DataNames dummyNames;
 };
 
 #endif // MODELRESULT_H

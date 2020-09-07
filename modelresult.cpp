@@ -1,6 +1,9 @@
 #include <logger.h>
 #include "modelresult.h"
 
+static ModelResult::DataPoints dummyPoints = {};
+static ModelResult::DataNames dummyNames = std::make_pair<std::string, std::string>("EMPTY", "UNIT");
+
 ModelResult::ModelResult(size_t variables, size_t points, QObject *parent) : QObject(parent)
 {
   E_DEBUG(this) << "New storage for #"
@@ -14,7 +17,7 @@ ModelResult::ModelResult(size_t variables, size_t points, QObject *parent) : QOb
 
   m_signals = std::vector<DataNames>(variables);
   for(auto& item : m_signals) {
-    item = std::make_pair<std::string, std::string>("NO_NAME", "NO_UNIT");
+    item = dummyNames;
   }
 }
 
@@ -64,4 +67,22 @@ void ModelResult::setDataNames(size_t var, DataNames& names) {
                 << ", units: " << names.second.c_str();
 
   m_signals[var] = names;
+}
+
+const ModelResult::DataPoints& ModelResult::getDataPoints(size_t var) const {
+  if(var >= m_signals.size()) {
+    E_CRITICAL(this) << "Invalid variable identifier";
+    return dummyPoints;
+  }
+
+  return m_data[var];
+}
+
+const ModelResult::DataNames& ModelResult::getDataNames(size_t var) const {
+  if(var >= m_signals.size()) {
+    E_CRITICAL(this) << "Invalid variable identifier";
+    return dummyNames;
+  }
+
+  return m_signals[var];
 }
