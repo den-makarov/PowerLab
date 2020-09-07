@@ -3,18 +3,9 @@
 
 ModelResult::ModelResult(size_t variables, size_t points, QObject *parent) : QObject(parent)
 {
-  if(variables == 0) {
-    E_WARNING(this) << "invalid size of variables"
-                    << variables;
-
-    variables = 1;
-  }
-
-  if(points <= 1) {
-    E_WARNING(this) << "number of points too small"
-                    << points;
-    points = 0;
-  }
+  E_DEBUG(this) << "New storage for #"
+                << variables << "variables, #"
+                << points << "points";
 
   m_data = std::vector<DataPoints>(variables);
   for(auto& item : m_data) {
@@ -33,7 +24,6 @@ size_t ModelResult::getVariablesNumber() const {
 
 size_t ModelResult::getPointsNumber() const {
   if(m_data.empty()) {
-    E_CRITICAL(this) << "Invalid container state";
     return 0;
   }
 
@@ -41,26 +31,37 @@ size_t ModelResult::getPointsNumber() const {
 }
 
 void ModelResult::addDataPoint(size_t var, double point) {
-#ifdef E_MODEL_RESULT_STRICT_CHECK
-  if(m_data.empty()) {
-    E_CRITICAL(this) << "Invalid container";
-    return;
-  }
-#endif
-
-  if(var >= m_data[0].size()) {
-    E_CRITICAL(this) << "Invalid identifier";
+  if(var >= m_data.size()) {
+    E_CRITICAL(this) << "Invalid variable identifier";
     return;
   }
 
+  E_DEBUG(this) << "New data point for variable id " << var
+                << ", point " << point;
   m_data[var].push_back(point);
+}
+
+void ModelResult::addDataPoint(size_t var, const DataPoints& data) {
+  if(var >= m_data.size()) {
+    E_CRITICAL(this) << "Invalid variable identifier";
+    return;
+  }
+
+  E_DEBUG(this) << "New data point for variable id " << var
+                << ", points number " << data.size();
+
+  m_data[var].insert(m_data[var].end(), data.begin(), data.end());
 }
 
 void ModelResult::setDataNames(size_t var, DataNames& names) {
   if(var >= m_signals.size()) {
-    E_CRITICAL(this) << "Invalid identifier";
+    E_CRITICAL(this) << "Invalid variable identifier";
     return;
   }
+
+  E_DEBUG(this) << "Update variable id " << var
+                << ", title: " << names.first.c_str()
+                << ", units: " << names.second.c_str();
 
   m_signals[var] = names;
 }

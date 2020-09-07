@@ -19,6 +19,7 @@ public:
   size_t getVariablesNumber() const;
   size_t getPointsNumber() const;
   void addDataPoint(size_t var, double point);
+  void addDataPoint(size_t var, const DataPoints& data);
   void setDataNames(size_t var, DataNames& names);
 
 private:
