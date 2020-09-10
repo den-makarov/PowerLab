@@ -22,7 +22,14 @@ bool ModelResultMeta::addToken(const QString& str) {
   auto type = STR_TO_TOKEN_TYPE.find(list.first());
   if(type != STR_TO_TOKEN_TYPE.end()) {
     // @TODO parse variables in a different way
-    m_tokens.push_back({list.back(), type->second});
+    // @TODO parse date in a different way
+    if(type->second == TokenType::DATE) {
+      auto pos = str.size() - type->first.size() - 1;
+      m_tokens.push_back({str.right(pos), type->second});
+    } else {
+      m_tokens.push_back({list.back(), type->second});
+    }
+
     result = true;
   } else {
     m_tokens.push_back({str, TokenType::UNKNOWN});
@@ -34,14 +41,29 @@ bool ModelResultMeta::addToken(const QString& str) {
 void ModelResultMeta::parseData() {
   for(const auto& item : m_tokens) {
     switch(item.type) {
-    case TokenType::TITLE: m_data.title = item.data; break;
-    case TokenType::DATE: m_data.date = QDate::fromString(item.data, Qt::RFC2822Date); break;
-    case TokenType::PLOTNAME: m_data.plotname = item.data; break;
-    case TokenType::FLAGS: m_data.flags = Flags::REAL; break;
-    case TokenType::VAR_COUNT: m_data.varCount = item.data.toUInt(); break;
-    case TokenType::POINT_COUNT: m_data.points = item.data.toUInt(); break;
-    case TokenType::SIGNALS: m_data.signalSet.push_back(item.splitToken(' ')); break;
-    case TokenType::UNKNOWN: E_WARNING(this) << "Unknown meta data type" << item.data;
+    case TokenType::TITLE:
+      m_data.title = item.data.trimmed();
+      break;
+    case TokenType::DATE:
+      m_data.date = QDateTime::fromString(item.data.trimmed(), Qt::RFC2822Date);
+      break;
+    case TokenType::PLOTNAME:
+      m_data.plotname = item.data.trimmed();
+      break;
+    case TokenType::FLAGS:
+      m_data.flags = Flags::REAL;
+      break;
+    case TokenType::VAR_COUNT:
+      m_data.varCount = item.data.toUInt();
+      break;
+    case TokenType::POINT_COUNT:
+      m_data.points = item.data.toUInt();
+      break;
+    case TokenType::SIGNALS:
+      m_data.signalSet.push_back(item.splitToken(' '));
+      break;
+    case TokenType::UNKNOWN:
+      E_WARNING(this) << "Unknown meta data type" << item.data;
       break;
     }
   }
@@ -57,10 +79,10 @@ QDebug operator<<(QDebug& log, const ModelResultMeta::Flags& data) {
 
 QDebug operator<<(QDebug& log, const ModelResultMeta::Data& data) {
   log << "Model result meta data:\n";
-  log << data.title << "\n";
-  log << data.plotname << "\n";
-  log << data.date << "\n";
-  log << data.flags << "\n";
+  log << "Title:" << data.title << "\n";
+  log << "Plotname:" << data.plotname << "\n";
+  log << "Date:" << data.date.toString("yyyy/MM/dd hh:mm:ss") << "\n";
+  log << "Flags:" << data.flags << "\n";
   log << "Number of signals" << data.varCount << data.signalSet << "\n";
   log << "Number of points" << data.points;
   return log;

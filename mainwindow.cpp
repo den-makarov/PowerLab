@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     openFile->setText("&Open");
     openFile->show();
     connect(openFile, &QPushButton::pressed, this, [filename, &result, this](){
-      *filename = QFileDialog::getOpenFileName(nullptr,
+      *filename = QFileDialog::getOpenFileName(this,
                                               tr("Open file with modeling results"),
                                               "",
                                               tr("Modeling result files (*.esk *.o)"));

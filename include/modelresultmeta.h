@@ -2,8 +2,7 @@
 #define MODELRESULTMETA_H
 
 #include <QObject>
-#include <QDate>
-#include <QTime>
+#include <QDateTime>
 
 #include "logger.h"
 
@@ -23,8 +22,7 @@ public:
     QString title = "";
     QString plotname = "";
     std::vector<Signals> signalSet;
-    QDate date;
-//    QTime time;
+    QDateTime date;
     size_t varCount = 0;
     size_t points = 0;
     Flags flags = Flags::UNKNOWN;
@@ -57,9 +55,12 @@ private:
 
     Signals splitToken(char delim) const {
       if(type == TokenType::SIGNALS) {
-        auto list = data.split(delim);
+        auto list = data.trimmed().split(delim);
+        E_DEBUG(nullptr) << data;
+        E_DEBUG(nullptr) << list;
         return {list.first(), list.back()};
       } else {
+        E_WARNING(nullptr) << "Token type doesn't support splitting data";
         return {"EMPTY", "UNIT"};
       }
     }
