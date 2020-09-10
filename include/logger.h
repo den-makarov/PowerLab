@@ -85,8 +85,6 @@ private:
   static QString ERROR;
 };
 
-
-
 template <class T>
 QDebug operator<<(Logger& log, T t) {
   switch (log.level()) {

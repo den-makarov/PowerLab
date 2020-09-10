@@ -30,6 +30,9 @@ private:
   std::vector<DataNames> m_signals;
   static DataPoints dummyPoints;
   static DataNames dummyNames;
+
+  static constexpr size_t MAX_VARIABLES_NUMBER = 25;
+  static constexpr size_t MAX_POINTS_NUMBER = 1'000'000;
 };
 
 #endif // MODELRESULT_H

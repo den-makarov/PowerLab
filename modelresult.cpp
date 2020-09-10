@@ -10,6 +10,11 @@ ModelResult::ModelResult(size_t variables, size_t points, QObject *parent) : QOb
                 << variables << "variables,"
                 << points << "points";
 
+  if(variables > MAX_VARIABLES_NUMBER || points > MAX_POINTS_NUMBER) {
+    variables = 0;
+    points = 0;
+  }
+
   m_data = std::vector<DataPoints>(variables);
   for(auto& item : m_data) {
     item.reserve(points);

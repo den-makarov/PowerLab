@@ -9,7 +9,8 @@ class ModelResultValidator : public QObject {
   Q_OBJECT
 public:
   explicit ModelResultValidator(const QString& filename, QObject *parent = nullptr);
-  bool validate();
+  const ModelResultMeta* validate();
+
 
 private:
   QString m_filename;

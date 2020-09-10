@@ -5,6 +5,8 @@
 #include <QDate>
 #include <QTime>
 
+#include "logger.h"
+
 class ModelResultMeta : public QObject
 {
   Q_OBJECT
@@ -13,22 +15,23 @@ public:
 
   enum class Flags
   {
-    REAL
+    REAL,
+    UNKNOWN
   };
 
   struct Data {
-    QString title;
-    QString plotname;
+    QString title = "";
+    QString plotname = "";
     std::vector<Signals> signalSet;
     QDate date;
 //    QTime time;
-    int varCount;
-    int points;
-    Flags flags;
+    size_t varCount = 0;
+    size_t points = 0;
+    Flags flags = Flags::UNKNOWN;
   };
 
   explicit ModelResultMeta(QObject *parent = nullptr);
-  void addToken(const QString& str);
+  bool addToken(const QString& str);
   void parseData();
   const Data& getData() const {
     return m_data;
@@ -65,5 +68,8 @@ private:
   Data m_data;
   std::vector<Token> m_tokens;
 };
+
+QDebug operator<<(QDebug& log, const ModelResultMeta::Flags& data);
+QDebug operator<<(QDebug& log, const ModelResultMeta::Data& data);
 
 #endif // MODELRESULTMETA_H
