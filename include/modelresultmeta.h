@@ -12,6 +12,17 @@ class ModelResultMeta : public QObject
 public:
   using Signals = std::pair<QString, QString>;
 
+  enum class TokenType {
+    TITLE,
+    DATE,
+    PLOTNAME,
+    FLAGS,
+    VAR_COUNT,
+    POINT_COUNT,
+    SIGNALS,
+    UNKNOWN
+  };
+
   enum class Flags
   {
     REAL,
@@ -29,24 +40,14 @@ public:
   };
 
   explicit ModelResultMeta(QObject *parent = nullptr);
-  bool addToken(const QString& str);
+  TokenType determineToken(const QString& str) const;
+  bool addToken(TokenType type, const QString& str);
   void parseData();
   const Data& getData() const {
     return m_data;
   }
 
 private:
-  enum class TokenType {
-    TITLE,
-    DATE,
-    PLOTNAME,
-    FLAGS,
-    VAR_COUNT,
-    POINT_COUNT,
-    SIGNALS,
-    UNKNOWN
-  };
-
   static const std::unordered_map<QString, TokenType> STR_TO_TOKEN_TYPE;
 
   struct Token {

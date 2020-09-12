@@ -16,25 +16,66 @@ ModelResultMeta::ModelResultMeta(QObject *parent) : QObject(parent)
   // EMPTY
 }
 
-bool ModelResultMeta::addToken(const QString& str) {
-  bool result = false;
-  auto list = str.split(':');
-  auto type = STR_TO_TOKEN_TYPE.find(list.first());
-  if(type != STR_TO_TOKEN_TYPE.end()) {
-    // @TODO parse variables in a different way
-    // @TODO parse date in a different way
-    if(type->second == TokenType::DATE) {
-      auto pos = str.size() - type->first.size() - 1;
-      m_tokens.push_back({str.right(pos), type->second});
-    } else {
-      m_tokens.push_back({list.back(), type->second});
-    }
+ModelResultMeta::TokenType ModelResultMeta::determineToken(const QString& str) const {
+  TokenType token = TokenType::UNKNOWN;
 
-    result = true;
-  } else {
-    m_tokens.push_back({str, TokenType::UNKNOWN});
-    result = false;
+  auto list = str.splitRef(':');
+  if(!list.isEmpty()) {
+    auto type = STR_TO_TOKEN_TYPE.find(list[0].toString());
+    if(type != STR_TO_TOKEN_TYPE.end()) {
+     token = type->second;
+   }
   }
+
+  return token;
+}
+
+bool ModelResultMeta::addToken(ModelResultMeta::TokenType type, const QString& str) {
+  bool result = false;
+
+  if(type == TokenType::UNKNOWN) {
+    E_CRITICAL(this) << "Attempt to add UNKNOWN token" << str;
+  } else if(type == TokenType::SIGNALS) {
+    auto list = str.splitRef('\t');
+    // @NOTE: If there are any signals, size of container should be definitely more than 2
+    if(list.size() >= 2) {
+      auto str_ref = list[0].trimmed().toString();
+      str_ref.resize(str_ref.size() - 1);
+      auto type = STR_TO_TOKEN_TYPE.find(str_ref);
+      if(type == STR_TO_TOKEN_TYPE.end() || type->second != TokenType::SIGNALS) {
+        E_CRITICAL(this) << "Can't parse signals. Wrong token type";
+      } else {
+        // @NOTE: each signal consists of number, signal name and signal units
+        // for example: 0 Idd Amps
+        // that is why each cycle a check should be performed to validate enough fields
+        for(auto i = 1; i < list.size();) {
+          Signals signal;
+          if(i++ >= list.size() - 2) {
+            E_CRITICAL(this) << "Corrupted signals string" << list[i];
+            break;
+          }
+          signal.first = list[i].trimmed().toString();
+          if(i++ >= list.size() - 1) {
+            E_CRITICAL(this) << "Corrupted signals string" << list[i - 1];
+            break;
+          }
+          signal.second = list[i].trimmed().toString();
+          i++;
+
+          m_data.signalSet.push_back(signal);
+        }
+      }
+    } else {
+      E_CRITICAL(this) << "Can't parse signals. No items to parse";
+    }
+  } else {
+    auto pos = str.indexOf(':');
+    if(pos != -1) {
+      m_tokens.push_back({str.right(str.size() - pos - 1), type});
+      result = true;
+    }
+  }
+
   return result;
 }
 
@@ -60,7 +101,7 @@ void ModelResultMeta::parseData() {
       m_data.points = item.data.toUInt();
       break;
     case TokenType::SIGNALS:
-      m_data.signalSet.push_back(item.splitToken(' '));
+      E_WARNING(this) << "Signals token type is parsed manualy";
       break;
     case TokenType::UNKNOWN:
       E_WARNING(this) << "Unknown meta data type" << item.data;

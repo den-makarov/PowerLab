@@ -13,6 +13,8 @@ public:
 
 
 private:
+  static constexpr size_t MAX_COUNT_OF_SIGNALS = 25;
+
   QString m_filename;
   ModelResultMeta* m_meta = nullptr;
 };

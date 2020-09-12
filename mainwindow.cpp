@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
       *filename = QFileDialog::getOpenFileName(this,
                                               tr("Open file with modeling results"),
                                               "",
-                                              tr("Modeling result files (*.esk *.o)"));
+                                              tr("Modeling result files (*.esk *.dat)"));
       if(filename->isEmpty()) {
         return;
       }
