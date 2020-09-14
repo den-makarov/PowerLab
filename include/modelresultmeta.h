@@ -40,6 +40,8 @@ public:
   };
 
   explicit ModelResultMeta(QObject *parent = nullptr);
+  virtual ~ModelResultMeta();
+
   TokenType determineToken(const QString& str) const;
   bool addToken(TokenType type, const QString& str);
   void parseData();
@@ -69,6 +71,9 @@ private:
 
   Data m_data;
   std::vector<Token> m_tokens;
+
+  void parseToken(TokenType token, const QString& data);
+  bool addSignalToken(QVector<QStringRef>& list);
 };
 
 QDebug operator<<(QDebug& log, const ModelResultMeta::Flags& data);

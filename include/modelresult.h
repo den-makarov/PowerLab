@@ -8,13 +8,15 @@
 
 #define E_MODEL_RESULT_STRICT_CHECK
 
+class ModelResultValidator;
+
 class ModelResult : public QObject
 {
   Q_OBJECT
 public:
   using DataPoints = std::vector<double>;
   using DataNames = std::pair<std::string, std::string>;
-  explicit ModelResult(size_t variables, size_t points, QObject *parent = nullptr);
+  explicit ModelResult(QObject *parent = nullptr);
 
   size_t getVariablesNumber() const;
   size_t getPointsNumber() const;
@@ -25,7 +27,11 @@ public:
   const DataPoints& getDataPoints(size_t var) const;
   const DataNames& getDataNames(size_t var) const;
 
+public slots:
+  void openFile();
+
 private:
+  ModelResultValidator* m_validator;
   std::vector<DataPoints> m_data;
   std::vector<DataNames> m_signals;
   static DataPoints dummyPoints;
@@ -33,6 +39,8 @@ private:
 
   static constexpr size_t MAX_VARIABLES_NUMBER = 25;
   static constexpr size_t MAX_POINTS_NUMBER = 1'000'000;
+
+  void init(size_t variables, size_t points);
 };
 
 #endif // MODELRESULT_H

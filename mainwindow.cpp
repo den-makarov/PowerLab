@@ -6,42 +6,30 @@
 #include "logger.h"
 #include "mainwindow.h"
 #include "modelresult.h"
-#include "modelresultvalidator.h"
-#include "modelresultmeta.h"
 
+/**
+ * @brief MainWindow::MainWindow
+ * @param parent
+ */
 MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
 {
   this->setMinimumWidth(MIN_WINDOW_WIDTH);
   this->setMinimumHeight(MIN_WINDOW_HEIGHT);
 
-  ModelResult* result;
+  ModelResult* result = new ModelResult(this);
   QPushButton* openFile = new QPushButton(this);
-  QString* filename = new QString();
 
   if(openFile) {
     openFile->setText("&Open");
     openFile->show();
-    connect(openFile, &QPushButton::pressed, this, [filename, &result, this](){
-      *filename = QFileDialog::getOpenFileName(this,
-                                              tr("Open file with modeling results"),
-                                              "",
-                                              tr("Modeling result files (*.esk *.dat)"));
-      if(filename->isEmpty()) {
-        return;
-      }
-
-      ModelResultValidator* validator = new ModelResultValidator(*filename, this);
-      auto meta = validator->validate();
-      if(meta) {
-        E_DEBUG(this) << "Meta data ready";
-        result = new ModelResult(meta->getData().varCount, meta->getData().points, this);
-      }
-    });
+    connect(openFile, &QPushButton::pressed, result, &ModelResult::openFile);
   }
 }
 
+/**
+ * @brief MainWindow::~MainWindow
+ */
 MainWindow::~MainWindow()
 {
 }
-
