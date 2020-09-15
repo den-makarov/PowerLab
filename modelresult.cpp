@@ -51,7 +51,7 @@ void ModelResult::init(size_t variables, size_t points) {
  * @return
  */
 size_t ModelResult::getVariablesNumber() const {
-  return m_data.size();
+  return m_meta ? m_meta->getData().varCount : 0;
 }
 
 /**
@@ -59,11 +59,7 @@ size_t ModelResult::getVariablesNumber() const {
  * @return
  */
 size_t ModelResult::getPointsNumber() const {
-  if(m_data.empty()) {
-    return 0;
-  }
-
-  return m_data[0].size();
+  return m_meta ? m_meta->getData().points : 0;
 }
 
 /**
@@ -104,17 +100,8 @@ void ModelResult::addDataPoint(size_t var, const DataPoints& data) {
  * @param var
  * @param names
  */
-void ModelResult::setDataNames(size_t var, DataNames& names) {
-  if(var >= m_signals.size()) {
-    E_CRITICAL(this) << "Invalid variable identifier";
-    return;
-  }
-
-  E_DEBUG(this) << "Update variable id" << var
-                << ", title:" << names.first.c_str()
-                << ", units:" << names.second.c_str();
-
-  m_signals[var] = names;
+const std::vector<ModelResultMeta::Signals>* ModelResult::getSignalNames() const {
+  return m_meta ? &m_meta->getData().signalSet : nullptr;
 }
 
 /**
@@ -134,22 +121,6 @@ const ModelResult::DataPoints& ModelResult::getDataPoints(size_t var) const {
 }
 
 /**
- * @brief ModelResult::getDataNames
- * @param var
- * @return
- */
-const ModelResult::DataNames& ModelResult::getDataNames(size_t var) const {
-  if(var >= m_signals.size()) {
-    // @TODO: Consider to throw an exception
-
-    E_CRITICAL(this) << "Invalid variable identifier";
-    return ModelResult::dummyNames;
-  }
-
-  return m_signals[var];
-}
-
-/**
  * @brief ModelResult::openFile
  */
 void ModelResult::openFile() {
@@ -159,16 +130,21 @@ void ModelResult::openFile() {
                                                   tr("Modeling result files (*.esk *.dat)"));
   if(filename.isEmpty()) {
     E_DEBUG(this) << "No file selected";
+    emit metaDataLoaded(nullptr, "No file selected");
     return;
   }
 
   if(m_validator->validate(filename)) {
     E_DEBUG(this) << "Meta data ready";
-    auto meta = m_validator->getMetaData();
-    if(meta) {
-      init(meta->getData().varCount, meta->getData().points);
+    m_meta = m_validator->getMetaData();
+    if(m_meta) {
+      init(m_meta->getData().varCount, m_meta->getData().points);
+      emit metaDataLoaded(&m_meta->getData(), "Chose signals to plot");
     } else {
       E_CRITICAL(this) << "Unable to retrive meta data";
+      emit metaDataLoaded(nullptr, "Meta data is expected");
     }
+  } else {
+    emit metaDataLoaded(nullptr, "Meta data validation failed");
   }
 }

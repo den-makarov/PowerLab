@@ -8,6 +8,8 @@
 
 #define E_MODEL_RESULT_STRICT_CHECK
 
+#include "modelresultmeta.h"
+
 class ModelResultValidator;
 
 class ModelResult : public QObject
@@ -22,18 +24,21 @@ public:
   size_t getPointsNumber() const;
   void addDataPoint(size_t var, double point);
   void addDataPoint(size_t var, const DataPoints& data);
-  void setDataNames(size_t var, DataNames& names);
 
   const DataPoints& getDataPoints(size_t var) const;
-  const DataNames& getDataNames(size_t var) const;
+  const std::vector<ModelResultMeta::Signals>* getSignalNames() const;
 
 public slots:
   void openFile();
+
+signals:
+  void metaDataLoaded(const ModelResultMeta::Data* data, QString msg = "") const;
 
 private:
   ModelResultValidator* m_validator;
   std::vector<DataPoints> m_data;
   std::vector<DataNames> m_signals;
+  const ModelResultMeta* m_meta = nullptr;
   static DataPoints dummyPoints;
   static DataNames dummyNames;
 
