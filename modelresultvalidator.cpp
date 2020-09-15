@@ -45,9 +45,7 @@ bool ModelResultValidator::validate(const QString& filename) {
       E_DEBUG(this) << "End of meta";
       break;
     } else if(token == ModelResultMeta::TokenType::SIGNALS) {
-      m_meta->parseData();
-
-      if(validateSignals(file, line)) {
+      if(readSignalLines(file, line)) {
         result = m_meta->addToken(ModelResultMeta::TokenType::SIGNALS, line);
       }
       // Expected end of meta data
@@ -59,6 +57,10 @@ bool ModelResultValidator::validate(const QString& filename) {
         break;
       }
     }
+  }
+
+  if(result) {
+    m_meta->parseData();
   }
 
   E_DEBUG(this) << m_meta->getData();
@@ -74,21 +76,30 @@ bool ModelResultValidator::validate(const QString& filename) {
  * @param line
  * @return
  */
-bool ModelResultValidator::validateSignals(QFile& file, QByteArray& line) {
-  for(size_t i = 0; i < m_meta->getData().varCount; i++) {
-    if(i >= MAX_COUNT_OF_SIGNALS) {
-      E_WARNING(this) << "Limit of signals reached" << MAX_COUNT_OF_SIGNALS;
-      break;
-    }
+bool ModelResultValidator::readSignalLines(QFile& file, QByteArray& line) {
+  bool result = false;
 
-    if(!file.atEnd()) {
-      QByteArray signal = file.readLine();
-      line.append(signal);
-    } else {
-      E_CRITICAL(this) << "Unexpected file end";
-      return false;
+  auto varNumberRef = m_meta->peekTokenData(ModelResultMeta::TokenType::VAR_COUNT);
+
+  if(!varNumberRef.isEmpty()) {
+    auto num = varNumberRef.toUInt();
+
+    for(size_t i = 0; i < num; i++) {
+      if(i >= MAX_COUNT_OF_SIGNALS) {
+        E_WARNING(this) << "Limit of signals reached" << MAX_COUNT_OF_SIGNALS;
+        break;
+      }
+
+      if(!file.atEnd()) {
+        QByteArray signal = file.readLine();
+        line.append(signal);
+      } else {
+        E_CRITICAL(this) << "Unexpected file end";
+        return result;
+      }
     }
+    result = true;
   }
 
-  return true;
+  return result;
 }

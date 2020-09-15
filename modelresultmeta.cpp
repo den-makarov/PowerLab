@@ -58,13 +58,10 @@ bool ModelResultMeta::addToken(ModelResultMeta::TokenType type, const QString& s
 
   if(type == TokenType::UNKNOWN) {
     E_CRITICAL(this) << "Attempt to add UNKNOWN token" << str;
-  } else if(type == TokenType::SIGNALS) {
-    auto list = str.splitRef('\t');
-    result = addSignalToken(list);
   } else {
     auto pos = str.indexOf(':');
     if(pos != -1) {
-      m_tokens.push_back({str.right(str.size() - pos - 1), type});
+      m_tokens.push_back({str.right(str.size() - pos - 1).trimmed(), type});
       result = true;
     }
   }
@@ -77,54 +74,43 @@ bool ModelResultMeta::addToken(ModelResultMeta::TokenType type, const QString& s
  * @param list
  * @return
  */
-bool ModelResultMeta::addSignalToken(QVector<QStringRef>& list) {
-  bool result = false;
-
+void ModelResultMeta::parseSignalToken(const QString& str) {
+  auto list = str.splitRef('\t');
   // @NOTE: If there are any signals, size of container should be definitely more than 2
-  if(list.size() >= 2) {
+  // and number of items should be ratio of 3
+  if(list.size() > 2 && !(list.size() % 3)) {
     auto str_ref = list[0].trimmed().toString();
     str_ref.resize(str_ref.size() - 1);
 
-    auto type = STR_TO_TOKEN_TYPE.find(str_ref);
-
-    if(type == STR_TO_TOKEN_TYPE.end() || type->second != TokenType::SIGNALS) {
-      E_CRITICAL(this) << "Can't parse signals. Wrong token type";
-    } else {
-      // @NOTE: each signal consists of number, signal name and signal units
-      // for example: 0 Idd Amps
-      // that is why each cycle a check should be performed to validate enough fields
-      for(auto i = 1; i < list.size();) {
-        Signals signal;
-
-        if(i++ >= list.size() - 2) {
-          E_CRITICAL(this) << "Corrupted signals string" << list[i];
-          break;
-        }
-
-        signal.first = list[i].trimmed().toString();
-
-        if(i++ >= list.size() - 1) {
-          E_CRITICAL(this) << "Corrupted signals string" << list[i - 1];
-          break;
-        }
-
-        signal.second = list[i].trimmed().toString();
-        i++;
-
-        m_data.signalSet.push_back(signal);
-
-        if(i == list.size()) {
-          // It is expected that last list item should be the second signal string (Unit)
-          result = true;
-        }
-      }
+    // @NOTE: each signal consists of number, signal name and signal units
+    // for example: 0 Idd Amps
+    for(auto i = 0; i < list.size();) {
+      Signals signal;
+      signal.first = list[++i].trimmed().toString();
+      signal.second = list[++i].trimmed().toString();
+      m_data.signalSet.push_back(signal);
+      i++;
     }
   } else {
     E_CRITICAL(this) << "Can't parse signals. No items to parse";
   }
-
-  return result;
 }
+
+/**
+ * @brief ModelResultMeta::peekTokenData
+ * @param token
+ * @return
+ */
+QStringRef ModelResultMeta::peekTokenData(TokenType token) const {
+  for(const auto & item : m_tokens) {
+    if(item.type == token) {
+      return &item.data;
+    }
+  }
+
+  return QStringRef();
+}
+
 
 /**
  * @brief ModelResultMeta::parseToken
@@ -134,13 +120,13 @@ bool ModelResultMeta::addSignalToken(QVector<QStringRef>& list) {
 void ModelResultMeta::parseToken(TokenType token, const QString& data) {
   switch(token) {
   case TokenType::TITLE:
-    m_data.title = data.trimmed();
+    m_data.title = data;
     break;
   case TokenType::DATE:
-    m_data.date = QDateTime::fromString(data.trimmed(), Qt::RFC2822Date);
+    m_data.date = QDateTime::fromString(data, Qt::RFC2822Date);
     break;
   case TokenType::PLOTNAME:
-    m_data.plotname = data.trimmed();
+    m_data.plotname = data;
     break;
   case TokenType::FLAGS:
     m_data.flags = Flags::REAL;
@@ -152,7 +138,7 @@ void ModelResultMeta::parseToken(TokenType token, const QString& data) {
     m_data.points = data.toUInt();
     break;
   case TokenType::SIGNALS:
-    E_WARNING(this) << "Signals token type is parsed manualy";
+    parseSignalToken(data);
     break;
   case TokenType::UNKNOWN:
     E_WARNING(this) << "Unknown meta data type" << data;

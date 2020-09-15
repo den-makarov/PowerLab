@@ -44,6 +44,7 @@ public:
 
   TokenType determineToken(const QString& str) const;
   bool addToken(TokenType type, const QString& str);
+  QStringRef peekTokenData(TokenType token) const;
   void parseData();
   const Data& getData() const {
     return m_data;
@@ -73,7 +74,7 @@ private:
   std::vector<Token> m_tokens;
 
   void parseToken(TokenType token, const QString& data);
-  bool addSignalToken(QVector<QStringRef>& list);
+  void parseSignalToken(const QString& str);
 };
 
 QDebug operator<<(QDebug& log, const ModelResultMeta::Flags& data);

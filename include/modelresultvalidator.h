@@ -21,7 +21,7 @@ private:
   static constexpr size_t MAX_COUNT_OF_SIGNALS = 25;
   ModelResultMeta* m_meta;
 
-  bool validateSignals(QFile& file, QByteArray& line);
+  bool readSignalLines(QFile& file, QByteArray& line);
 };
 
 #endif // MODELRESULTVALIDATOR_H
