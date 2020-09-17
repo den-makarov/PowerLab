@@ -1,9 +1,9 @@
 #ifndef METADATAWINDOW_H
 #define METADATAWINDOW_H
 
-#include <QWidget>
+#include <QDialog>
 
-class MetaDataWindow : public QWidget
+class MetaDataWindow : public QDialog
 {
   Q_OBJECT
 public:
