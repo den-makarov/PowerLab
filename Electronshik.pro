@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    metadatawindow.cpp \
     modelresultmeta.cpp \
     logger.cpp \
     main.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
 
 HEADERS += \
     include/logger.h \
+    include/metadatawindow.h \
     include/modelresultmeta.h \
     include/modelresultvalidator.h \
     include/version.h \
