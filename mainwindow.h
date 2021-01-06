@@ -7,6 +7,7 @@
 #include "modelresultmeta.h"
 
 class QMessageBox;
+class QStatusBar;
 
 class MainWindow : public QWidget
 {
@@ -21,7 +22,10 @@ public slots:
 
 private:
   QMessageBox* m_metaDataWindow = nullptr;
+  int m_graphColumns = 1;
+  QStatusBar* m_statusBar;
 
+  void showReadyStatus(QStatusBar* status);
   constexpr static size_t MIN_WINDOW_WIDTH = 400;
   constexpr static size_t MIN_WINDOW_HEIGHT = 200;
 };
