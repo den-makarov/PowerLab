@@ -20,7 +20,8 @@ signals:
 private:
   constexpr static size_t MIN_WINDOW_WIDTH = 500;
   constexpr static size_t MIN_WINDOW_HEIGHT = 400;
-  QAbstractItemModel *model = nullptr;
+  QAbstractItemModel *signals_model = nullptr;
+  QAbstractItemModel *graph_model = nullptr;
 };
 
 #endif // METADATAWINDOW_H
