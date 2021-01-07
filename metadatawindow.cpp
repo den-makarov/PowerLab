@@ -12,6 +12,10 @@
 #include "metadatawindow.h"
 #include "modelresultmeta.h"
 
+/**
+ * @brief MetaDataWindow::MetaDataWindow
+ * @param parent
+ */
 MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
 {
   setWindowModality(Qt::ApplicationModal);
@@ -23,14 +27,11 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
   QSplitter *signals_splitter = new QSplitter(this);
 
   signals_model = new QStringListModel(this);
-  QListView *signals_view = new QListView(this);
+  signals_view = new QListView(this);
   signals_view->setModel(signals_model);
 
-  QStringList dummy;
-  dummy << "one" << "two" << "three";
-
-  graph_model = new QStringListModel(dummy, this);
-  QListView *graph_view = new QListView(this);
+  graph_model = new QStringListModel(this);
+  graph_view = new QListView(this);
   graph_view->setModel(graph_model);
 
   signals_splitter->addWidget(signals_view);
@@ -46,18 +47,34 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
   cancel->setMaximumWidth(80);
   connect(cancel, &QPushButton::pressed, this, &MetaDataWindow::close);
 
-  QGridLayout *layout = new QGridLayout(this);
+  QPushButton* add_signal = new QPushButton(this);
+  add_signal->setText("&Add");
+  add_signal->setMaximumWidth(80);
+  connect(add_signal, &QPushButton::pressed, this, &MetaDataWindow::addSignalToGraph);
+
+  QPushButton* del_signal = new QPushButton(this);
+  del_signal->setText("&Remove");
+  del_signal->setMaximumWidth(80);
+  connect(del_signal, &QPushButton::pressed, this, &MetaDataWindow::removeSignalFromGraph);
+
+  QGridLayout *layout = new QGridLayout();
   setLayout(layout);
 
-  QGridLayout *button_layout = new QGridLayout(this);
-  layout->addLayout(button_layout, 2, 0, Qt::AlignRight);
+  QGridLayout *button_layout = new QGridLayout();
+  layout->addLayout(button_layout, 2, 0);
   layout->addWidget(label, 0, 0);
   layout->addWidget(signals_splitter, 1, 0);
 
-  button_layout->addWidget(ok, 0, 0);
-  button_layout->addWidget(cancel, 0, 1);
+  button_layout->addWidget(add_signal, 0, 0, Qt::AlignLeft);
+  button_layout->addWidget(del_signal, 0, 1, Qt::AlignLeft);
+  button_layout->addWidget(ok, 1, 2, Qt::AlignRight);
+  button_layout->addWidget(cancel, 1, 3, Qt::AlignRight);
 }
 
+/**
+ * @brief MetaDataWindow::loadModelResults
+ * @param data
+ */
 void MetaDataWindow::loadModelResults(const ModelResultMeta::Data* data) {
   if(!data) {
     E_CRITICAL(this) << "meta data is expected";
@@ -69,14 +86,73 @@ void MetaDataWindow::loadModelResults(const ModelResultMeta::Data* data) {
     return;
   }
 
-  signals_model->removeRows(0, signals_model->rowCount(QModelIndex()), QModelIndex());
+  signals_model->removeRows(0, signals_model->rowCount());
   int row = 0;
 
   auto signalsNames = data->signalSet;
   for(auto & item : signalsNames) {
-    signals_model->insertRows(row, 1, QModelIndex());
-    auto idx = signals_model->index(row, 0, QModelIndex());
+    signals_model->insertRows(row, 1);
+    auto idx = signals_model->index(row, 0);
     signals_model->setData(idx, item.first);
     row++;
   }
+}
+
+/**
+ * @brief MetaDataWindow::addSignalToGraph
+ */
+void MetaDataWindow::addSignalToGraph() {
+  if(!graph_model || !signals_view) {
+    E_CRITICAL(this) << "data and graph model/view are expected";
+    return;
+  }
+
+  const QItemSelectionModel *selectionModel = signals_view->selectionModel();
+  if(!selectionModel) {
+    E_CRITICAL(this) << "Valid selection is expected";
+    return;
+  }
+
+  const QModelIndexList indexes = selectionModel->selectedIndexes();
+
+  for(const QModelIndex &idx : indexes) {
+    auto data = idx.data();
+    if(data.isValid()) {
+      auto startIdx = graph_model->index(0, 0);
+      auto matches = graph_model->match(startIdx, Qt::DisplayRole, data, 1, Qt::MatchExactly);
+      if(matches.isEmpty()) {
+        graph_model->insertRow(graph_model->rowCount());
+        auto row_idx = graph_model->index(graph_model->rowCount() - 1, 0);
+        graph_model->setData(row_idx, data);
+      } else {
+        E_DEBUG(this) << "Item already exists:" << data.toString();
+      }
+    }
+  }
+
+  // @TODO: Clear selection
+}
+
+/**
+ * @brief MetaDataWindow::removeSignalFromGraph
+ */
+void MetaDataWindow::removeSignalFromGraph() {
+  if(!graph_model || !graph_view) {
+    E_CRITICAL(this) << "graph model/view are expected";
+    return;
+  }
+
+  const QItemSelectionModel *selectionModel = graph_view->selectionModel();
+  if(!selectionModel) {
+    E_CRITICAL(this) << "Valid selection is expected";
+    return;
+  }
+
+  const QModelIndexList indexes = selectionModel->selectedIndexes();
+
+  for(const QModelIndex &idx : indexes) {
+    graph_model->removeRow(idx.row());
+  }
+
+  // @TODO: Clear selection
 }

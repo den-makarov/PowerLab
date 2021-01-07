@@ -44,29 +44,17 @@ MainWindow::MainWindow(QWidget *parent)
   menuBar->addMenu(menuHelp);
 
   QToolBar* toolBar = new QToolBar("Data", this);
-  auto openAction = toolBar->addAction("Open", result, &ModelResult::openFile);
+  toolBar->addAction("Open", result, &ModelResult::openFile);
 
-  QIcon viewIcon("images/icon.png");
-  toolBar->addAction(viewIcon, "View", result, &ModelResult::openFile);
+//  QIcon viewIcon("images/icon.png");
+//  toolBar->addAction(viewIcon, "View", result, &ModelResult::openFile);
 
   m_metaDataWindow = new QMessageBox(this);
-  QStatusBar* m_statusBar = new QStatusBar(this);
   menuFile->addAction("&Open", result, &ModelResult::openFile, scKeyOpen);
-
-  auto openFileActionHovered = [m_statusBar, this](){
-    auto mes = m_statusBar->currentMessage();
-    m_statusBar->showMessage("Open a file with model results");
-    QTimer::singleShot(2000, [m_statusBar, this](){
-      this->showReadyStatus(m_statusBar);
-    });
-  };
-
-  connect(openAction, &QAction::hovered, this, openFileActionHovered);
 
   QGridLayout *layout = new QGridLayout(this);
   layout->setMenuBar(menuBar);
   layout->addWidget(toolBar, 0, 0, Qt::AlignTop);
-  layout->addWidget(m_statusBar, 1, 0, Qt::AlignBottom);
   layout->setSpacing(0);
   auto margins = layout->contentsMargins();
   margins.setTop(0);
@@ -74,20 +62,8 @@ MainWindow::MainWindow(QWidget *parent)
   margins.setBottom(0);
   layout->setContentsMargins(margins);
 
-  m_statusBar->showMessage("Ready");
-
   if(m_metaDataWindow) {
     connect(result, &ModelResult::metaDataLoaded, this, &MainWindow::showMetaData);
-  }
-}
-
-/**
- * @brief MainWindow::showReadyStatus
- * @param status
- */
-void MainWindow::showReadyStatus(QStatusBar* status) {
-  if(status) {
-    status->showMessage("Ready");
   }
 }
 
