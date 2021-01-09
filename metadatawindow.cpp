@@ -107,7 +107,7 @@ void MetaDataWindow::addSignalToGraph() {
     return;
   }
 
-  const QItemSelectionModel *selectionModel = signals_view->selectionModel();
+  QItemSelectionModel *selectionModel = signals_view->selectionModel();
   if(!selectionModel) {
     E_CRITICAL(this) << "Valid selection is expected";
     return;
@@ -130,7 +130,7 @@ void MetaDataWindow::addSignalToGraph() {
     }
   }
 
-  // @TODO: Clear selection
+  selectionModel->clearSelection();
 }
 
 /**
@@ -142,7 +142,7 @@ void MetaDataWindow::removeSignalFromGraph() {
     return;
   }
 
-  const QItemSelectionModel *selectionModel = graph_view->selectionModel();
+  QItemSelectionModel *selectionModel = graph_view->selectionModel();
   if(!selectionModel) {
     E_CRITICAL(this) << "Valid selection is expected";
     return;
@@ -154,5 +154,5 @@ void MetaDataWindow::removeSignalFromGraph() {
     graph_model->removeRow(idx.row());
   }
 
-  // @TODO: Clear selection
+  selectionModel->clearSelection();
 }
