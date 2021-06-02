@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QDateTime>
 
-#include "logger.h"
+#include "backend/logger/logger.h"
 
 class ModelResultMeta : public QObject
 {
@@ -60,11 +60,11 @@ private:
     Signals splitToken(char delim) const {
       if(type == TokenType::SIGNALS) {
         auto list = data.trimmed().split(delim);
-        E_DEBUG(nullptr) << data;
-        E_DEBUG(nullptr) << list;
+//        E_DEBUG(nullptr) << data;
+//        E_DEBUG(nullptr) << list;
         return {list.first(), list.back()};
       } else {
-        E_WARNING(nullptr) << "Token type doesn't support splitting data";
+//        E_WARNING(nullptr) << "Token type doesn't support splitting data";
         return {"EMPTY", "UNIT"};
       }
     }

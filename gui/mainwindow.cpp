@@ -11,24 +11,22 @@
 #include <QToolBar>
 #include <QThread>
 #include <QTimer>
+#include <QAbstractItemModel>
 
-#include "logger.h"
+#include "backend/logger/logger.h"
+#include "backend/modelresult/modelresult.h"
+#include "gui/dialogs/metadatawindow.h"
+#include "gui/graphs/graphprocessor.h"
 #include "mainwindow.h"
-#include "modelresult.h"
-#include "metadatawindow.h"
-
 /**
  * @brief MainWindow::MainWindow
  * @param parent
  */
 MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
-{
-  this->setMinimumWidth(MIN_WINDOW_WIDTH);
-  this->setMinimumHeight(MIN_WINDOW_HEIGHT);
-
+{ 
+  setWindowState(Qt::WindowState::WindowMaximized);
   ModelResult* result = new ModelResult(this);
-
   QMenuBar* menuBar = new QMenuBar(this);
   QMenu* menuFile = new QMenu("&File", this);
   QMenu* menuEdit = new QMenu("&Edit", this);
@@ -43,24 +41,12 @@ MainWindow::MainWindow(QWidget *parent)
   menuBar->addMenu(menuTools);
   menuBar->addMenu(menuHelp);
 
-  QToolBar* toolBar = new QToolBar("Data", this);
-  toolBar->addAction("Open", result, &ModelResult::openFile);
-
-//  QIcon viewIcon("images/icon.png");
-//  toolBar->addAction(viewIcon, "View", result, &ModelResult::openFile);
-
   m_metaDataWindow = new QMessageBox(this);
   menuFile->addAction("&Open", result, &ModelResult::openFile, scKeyOpen);
 
   QGridLayout *layout = new QGridLayout(this);
+  setLayout(layout);
   layout->setMenuBar(menuBar);
-  layout->addWidget(toolBar, 0, 0, Qt::AlignTop);
-  layout->setSpacing(0);
-  auto margins = layout->contentsMargins();
-  margins.setTop(0);
-  margins.setLeft(0);
-  margins.setBottom(0);
-  layout->setContentsMargins(margins);
 
   if(m_metaDataWindow) {
     connect(result, &ModelResult::metaDataLoaded, this, &MainWindow::showMetaData);
@@ -81,7 +67,8 @@ MainWindow::~MainWindow()
 void MainWindow::showMetaData(const ModelResultMeta::Data* data, QString msg) {
   if(data) {
     MetaDataWindow* window = new MetaDataWindow(this);
-    window->loadModelResults(data);
+    connect(window, &MetaDataWindow::accepted, this, &MainWindow::DrawGraph);
+    graph_data = window->loadModelResults(data);
     window->show();
   } else {
     m_metaDataWindow->setIcon(QMessageBox::Warning);
@@ -89,4 +76,31 @@ void MainWindow::showMetaData(const ModelResultMeta::Data* data, QString msg) {
     m_metaDataWindow->setText(msg);
     m_metaDataWindow->setDefaultButton(QMessageBox::Close);
   }
+}
+
+void MainWindow::DrawGraph() {
+  if(layout()) {
+    if(w) {
+      layout()->removeWidget(w);
+//      delete w;
+    }
+    graph = new GraphProcessor();
+    w = new Widget(graph, this);
+    layout()->addWidget(w);
+  }
+
+  QStringList signal_names;
+  if(graph_data) {
+    int rows = graph_data->rowCount();
+    for(int i = 0; i < rows; i++) {
+      auto idx = graph_data->index(i, 0);
+      auto item = graph_data->data(idx);
+      if(item.isValid()) {
+        signal_names << item.toString();
+      }
+    }
+  }
+
+  w->setNames(signal_names);
+  w->plot();
 }

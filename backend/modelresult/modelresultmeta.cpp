@@ -1,5 +1,5 @@
 #include "modelresultmeta.h"
-#include "logger.h"
+#include "backend/logger/logger.h"
 
 // Map for search token
 const std::unordered_map<QString, ModelResultMeta::TokenType> ModelResultMeta::STR_TO_TOKEN_TYPE = {
@@ -25,7 +25,7 @@ ModelResultMeta::ModelResultMeta(QObject *parent) : QObject(parent)
  * @brief ModelResultMeta::~ModelResultMeta
  */
 ModelResultMeta::~ModelResultMeta() {
-  E_DEBUG(this) << "Destructor";
+//  E_DEBUG(this) << "Destructor";
 }
 
 /**
@@ -57,7 +57,7 @@ bool ModelResultMeta::addToken(ModelResultMeta::TokenType type, const QString& s
   bool result = false;
 
   if(type == TokenType::UNKNOWN) {
-    E_CRITICAL(this) << "Attempt to add UNKNOWN token" << str;
+//    E_CRITICAL(this) << "Attempt to add UNKNOWN token" << str;
   } else {
     auto pos = str.indexOf(':');
     if(pos != -1) {
@@ -92,7 +92,7 @@ void ModelResultMeta::parseSignalToken(const QString& str) {
       i++;
     }
   } else {
-    E_CRITICAL(this) << "Can't parse signals. No items to parse";
+//    E_CRITICAL(this) << "Can't parse signals. No items to parse";
   }
 }
 
@@ -141,7 +141,7 @@ void ModelResultMeta::parseToken(TokenType token, const QString& data) {
     parseSignalToken(data);
     break;
   case TokenType::UNKNOWN:
-    E_WARNING(this) << "Unknown meta data type" << data;
+//    E_WARNING(this) << "Unknown meta data type" << data;
     break;
   }
 }
@@ -161,13 +161,13 @@ void ModelResultMeta::parseData() {
  * @param data
  * @return
  */
-QDebug operator<<(QDebug& log, const ModelResultMeta::Flags& data) {
-  switch(data) {
-  case ModelResultMeta::Flags::REAL: log << "REAL"; break;
-  case ModelResultMeta::Flags::UNKNOWN: log << "UNKNOWN"; break;
-  }
-  return log;
-}
+//QDebug operator<<(QDebug& log, const ModelResultMeta::Flags& data) {
+//  switch(data) {
+//  case ModelResultMeta::Flags::REAL: log << "REAL"; break;
+//  case ModelResultMeta::Flags::UNKNOWN: log << "UNKNOWN"; break;
+//  }
+//  return log;
+//}
 
 /**
  * @brief operator <<
@@ -175,13 +175,13 @@ QDebug operator<<(QDebug& log, const ModelResultMeta::Flags& data) {
  * @param data
  * @return
  */
-QDebug operator<<(QDebug& log, const ModelResultMeta::Data& data) {
-  log << "Model result meta data:\n";
-  log << "Title:" << data.title << "\n";
-  log << "Plotname:" << data.plotname << "\n";
-  log << "Date:" << data.date.toString("yyyy/MM/dd hh:mm:ss") << "\n";
-  log << "Flags:" << data.flags << "\n";
-  log << "Number of signals" << data.varCount << data.signalSet << "\n";
-  log << "Number of points" << data.points;
-  return log;
-}
+//QDebug operator<<(QDebug& log, const ModelResultMeta::Data& data) {
+//  log << "Model result meta data:\n";
+//  log << "Title:" << data.title << "\n";
+//  log << "Plotname:" << data.plotname << "\n";
+//  log << "Date:" << data.date.toString("yyyy/MM/dd hh:mm:ss") << "\n";
+//  log << "Flags:" << data.flags << "\n";
+//  log << "Number of signals" << data.varCount << data.signalSet << "\n";
+//  log << "Number of points" << data.points;
+//  return log;
+//}

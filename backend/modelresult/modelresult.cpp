@@ -1,7 +1,7 @@
 #include <QFileDialog>
 #include <QFile>
 
-#include "logger.h"
+#include "backend/logger/logger.h"
 #include "modelresult.h"
 #include "modelresultvalidator.h"
 #include "modelresultmeta.h"
@@ -26,9 +26,9 @@ ModelResult::ModelResult(QObject *parent)
  * @param points: number of points of each signal
  */
 void ModelResult::init(size_t variables, size_t points) {
-  E_DEBUG(this) << "New storage for"
-                << variables << "variables,"
-                << points << "points";
+//  E_DEBUG(this) << "New storage for"
+//                << variables << "variables,"
+//                << points << "points";
 
   if(variables > MAX_VARIABLES_NUMBER || points > MAX_POINTS_NUMBER) {
     variables = 0;
@@ -69,12 +69,12 @@ size_t ModelResult::getPointsNumber() const {
  */
 void ModelResult::addDataPoint(size_t var, double point) {
   if(var >= m_data.size()) {
-    E_CRITICAL(this) << "Invalid variable identifier";
+//    E_CRITICAL(this) << "Invalid variable identifier";
     return;
   }
 
-  E_DEBUG(this) << "New data point for variable id" << var
-                << ", point" << point;
+//  E_DEBUG(this) << "New data point for variable id" << var
+//                << ", point" << point;
   m_data[var].push_back(point);
 }
 
@@ -85,12 +85,12 @@ void ModelResult::addDataPoint(size_t var, double point) {
  */
 void ModelResult::addDataPoint(size_t var, const DataPoints& data) {
   if(var >= m_data.size()) {
-    E_CRITICAL(this) << "Invalid variable identifier";
+//    E_CRITICAL(this) << "Invalid variable identifier";
     return;
   }
 
-  E_DEBUG(this) << "New data point for variable id" << var
-                << ", points number" << data.size();
+//  E_DEBUG(this) << "New data point for variable id" << var
+//                << ", points number" << data.size();
 
   m_data[var].insert(m_data[var].end(), data.begin(), data.end());
 }
@@ -113,7 +113,7 @@ const ModelResult::DataPoints& ModelResult::getDataPoints(size_t var) const {
   if(var >= m_signals.size()) {
     // @TODO: Consider to throw an exception
 
-    E_CRITICAL(this) << "Invalid variable identifier";
+//    E_CRITICAL(this) << "Invalid variable identifier";
     return ModelResult::dummyPoints;
   }
 
@@ -129,19 +129,19 @@ void ModelResult::openFile() {
                                                   "",
                                                   tr("Modeling result files (*.esk *.dat)"));
   if(filename.isEmpty()) {
-    E_DEBUG(this) << "No file selected";
+//    E_DEBUG(this) << "No file selected";
     emit metaDataLoaded(nullptr, "No file selected");
     return;
   }
 
   if(m_validator->validate(filename)) {
-    E_DEBUG(this) << "Meta data ready";
+//    E_DEBUG(this) << "Meta data ready";
     m_meta = m_validator->getMetaData();
     if(m_meta) {
       init(m_meta->getData().varCount, m_meta->getData().points);
       emit metaDataLoaded(&m_meta->getData(), "Chose signals to plot");
     } else {
-      E_CRITICAL(this) << "Unable to retrive meta data";
+//      E_CRITICAL(this) << "Unable to retrive meta data";
       emit metaDataLoaded(nullptr, "Meta data is expected");
     }
   } else {

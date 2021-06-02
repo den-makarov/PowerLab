@@ -1,8 +1,9 @@
+#include <iostream>
 #include <QApplication>
 
 #include "mainwindow.h"
-#include "version.h"
-#include "logger.h"
+#include "backend/version.h"
+#include "backend/logger/logger.h"
 
 int main(int argc, char *argv[])
 {
@@ -14,7 +15,11 @@ int main(int argc, char *argv[])
                        ELECTRONSHIK_VERSION_BUILD;
   QString appTitle = appName + " - " + appVersion;
 
-  E_DEBUG(&app) << appTitle << "started";
+  LogProvider::instance().addStream(std::cout);
+  LogMessage msg(LogMessage::Tag::SYSTEM,
+                 "Hello, " + appTitle.toStdString(),
+                 LogMessage::Severity::DEBUG);
+  LogSendMessage(msg);
 
   QCoreApplication::setApplicationVersion(appVersion);
   QCoreApplication::setApplicationName(appTitle);

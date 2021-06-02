@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "modelresultmeta.h"
+#include "backend/modelresult/modelresultmeta.h"
 
 class QAbstractItemModel;
 class QListView;
@@ -14,9 +14,7 @@ class MetaDataWindow : public QDialog
 public:
   explicit MetaDataWindow(QWidget *parent = nullptr);
   virtual ~MetaDataWindow() {}
-  void loadModelResults(const ModelResultMeta::Data* data);
-
-signals:
+  QAbstractItemModel* loadModelResults(const ModelResultMeta::Data* data);
 
 private:
   constexpr static size_t MIN_WINDOW_WIDTH = 500;

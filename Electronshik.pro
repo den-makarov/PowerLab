@@ -16,22 +16,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    metadatawindow.cpp \
-    modelresultmeta.cpp \
-    logger.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    modelresult.cpp \
-    modelresultvalidator.cpp
+    backend/modelresult/modelresultmeta.cpp \
+    backend/modelresult/modelresult.cpp \
+    backend/modelresult/modelresultvalidator.cpp \
+    backend/logger/logger.cpp \
+    gui/main.cpp \
+    gui/dialogs/metadatawindow.cpp \
+    gui/mainwindow.cpp \
+    gui/graphs/graphprocessor.cpp \
+    gui/graphs/plot.cpp
 
 HEADERS += \
-    include/logger.h \
-    include/metadatawindow.h \
-    include/modelresultmeta.h \
-    include/modelresultvalidator.h \
-    include/version.h \
-    mainwindow.h \
-    include/modelresult.h
+    backend/modelresult/modelresultmeta.h \
+    backend/modelresult/modelresultvalidator.h \
+    backend/modelresult/modelresult.h \
+    backend/logger/logger.h \
+    backend/version.h \
+    gui/mainwindow.h \
+    gui/dialogs/metadatawindow.h \
+    gui/graphs/graphprocessor.h \
+    gui/graphs/plot.h
 
 TRANSLATIONS += \
     Electronshik_en_US.ts

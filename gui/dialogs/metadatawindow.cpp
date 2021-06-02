@@ -10,7 +10,7 @@
 #include <QSplitter>
 
 #include "metadatawindow.h"
-#include "modelresultmeta.h"
+#include "backend/modelresult/modelresultmeta.h"
 
 /**
  * @brief MetaDataWindow::MetaDataWindow
@@ -40,12 +40,12 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
   QPushButton* ok = new QPushButton(this);
   ok->setText("&Ok");
   ok->setMaximumWidth(80);
-  connect(ok, &QPushButton::pressed, this, &MetaDataWindow::close);
+  connect(ok, &QPushButton::pressed, this, &MetaDataWindow::accept);
 
   QPushButton* cancel = new QPushButton(this);
   cancel->setText("&Cancel");
   cancel->setMaximumWidth(80);
-  connect(cancel, &QPushButton::pressed, this, &MetaDataWindow::close);
+  connect(cancel, &QPushButton::pressed, this, &MetaDataWindow::reject);
 
   QPushButton* add_signal = new QPushButton(this);
   add_signal->setText("&Add");
@@ -75,15 +75,15 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
  * @brief MetaDataWindow::loadModelResults
  * @param data
  */
-void MetaDataWindow::loadModelResults(const ModelResultMeta::Data* data) {
+QAbstractItemModel* MetaDataWindow::loadModelResults(const ModelResultMeta::Data* data) {
   if(!data) {
-    E_CRITICAL(this) << "meta data is expected";
-    return;
+//    E_CRITICAL(this) << "meta data is expected";
+    return nullptr;
   }
 
   if(!signals_model) {
-    E_CRITICAL(this) << "data model is expected";
-    return;
+//    E_CRITICAL(this) << "data model is expected";
+    return nullptr;
   }
 
   signals_model->removeRows(0, signals_model->rowCount());
@@ -96,6 +96,8 @@ void MetaDataWindow::loadModelResults(const ModelResultMeta::Data* data) {
     signals_model->setData(idx, item.first);
     row++;
   }
+
+  return graph_model;
 }
 
 /**
@@ -103,13 +105,13 @@ void MetaDataWindow::loadModelResults(const ModelResultMeta::Data* data) {
  */
 void MetaDataWindow::addSignalToGraph() {
   if(!graph_model || !signals_view) {
-    E_CRITICAL(this) << "data and graph model/view are expected";
+//    E_CRITICAL(this) << "data and graph model/view are expected";
     return;
   }
 
   QItemSelectionModel *selectionModel = signals_view->selectionModel();
   if(!selectionModel) {
-    E_CRITICAL(this) << "Valid selection is expected";
+//    E_CRITICAL(this) << "Valid selection is expected";
     return;
   }
 
@@ -125,7 +127,7 @@ void MetaDataWindow::addSignalToGraph() {
         auto row_idx = graph_model->index(graph_model->rowCount() - 1, 0);
         graph_model->setData(row_idx, data);
       } else {
-        E_DEBUG(this) << "Item already exists:" << data.toString();
+//        E_DEBUG(this) << "Item already exists:" << data.toString();
       }
     }
   }
@@ -138,13 +140,13 @@ void MetaDataWindow::addSignalToGraph() {
  */
 void MetaDataWindow::removeSignalFromGraph() {
   if(!graph_model || !graph_view) {
-    E_CRITICAL(this) << "graph model/view are expected";
+//    E_CRITICAL(this) << "graph model/view are expected";
     return;
   }
 
   QItemSelectionModel *selectionModel = graph_view->selectionModel();
   if(!selectionModel) {
-    E_CRITICAL(this) << "Valid selection is expected";
+//    E_CRITICAL(this) << "Valid selection is expected";
     return;
   }
 

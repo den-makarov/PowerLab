@@ -32,7 +32,7 @@ public slots:
   void openFile();
 
 signals:
-  void metaDataLoaded(const ModelResultMeta::Data* data, QString msg = "") const;
+  void metaDataLoaded(const ModelResultMeta::Data* data, QString msg = "");
 
 private:
   ModelResultValidator* m_validator;

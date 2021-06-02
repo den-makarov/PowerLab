@@ -2,7 +2,7 @@
 
 #include "modelresultvalidator.h"
 #include "modelresultmeta.h"
-#include "logger.h"
+#include "backend/logger/logger.h"
 
 /**
  * @brief ModelResultValidator::ModelResultValidator
@@ -16,7 +16,7 @@ ModelResultValidator::ModelResultValidator(QObject *parent)
 }
 
 ModelResultValidator::~ModelResultValidator() {
-  E_DEBUG(this) << "Destructor";
+//  E_DEBUG(this) << "Destructor";
 }
 
 /**
@@ -28,7 +28,7 @@ bool ModelResultValidator::validate(const QString& filename) {
   bool result = false;
 
   if(filename.isEmpty()) {
-    E_CRITICAL(this) << "empty filename";
+//    E_CRITICAL(this) << "empty filename";
     return result;
   }
 
@@ -42,7 +42,7 @@ bool ModelResultValidator::validate(const QString& filename) {
     auto token = m_meta->determineToken(line);
 
     if(token == ModelResultMeta::TokenType::UNKNOWN) {
-      E_DEBUG(this) << "End of meta";
+//      E_DEBUG(this) << "End of meta";
       break;
     } else if(token == ModelResultMeta::TokenType::SIGNALS) {
       if(readSignalLines(file, line)) {
@@ -53,7 +53,7 @@ bool ModelResultValidator::validate(const QString& filename) {
     } else {
       // Any meta data type that is determined successfully
       if(!m_meta->addToken(token, line)) {
-        E_DEBUG(this) << "Error while adding normal token";
+//        E_DEBUG(this) << "Error while adding normal token";
         break;
       }
     }
@@ -63,7 +63,7 @@ bool ModelResultValidator::validate(const QString& filename) {
     m_meta->parseData();
   }
 
-  E_DEBUG(this) << m_meta->getData();
+//  E_DEBUG(this) << m_meta->getData();
 
   file.close();
 
@@ -86,7 +86,7 @@ bool ModelResultValidator::readSignalLines(QFile& file, QByteArray& line) {
 
     for(size_t i = 0; i < num; i++) {
       if(i >= MAX_COUNT_OF_SIGNALS) {
-        E_WARNING(this) << "Limit of signals reached" << MAX_COUNT_OF_SIGNALS;
+//        E_WARNING(this) << "Limit of signals reached" << MAX_COUNT_OF_SIGNALS;
         break;
       }
 
@@ -94,7 +94,7 @@ bool ModelResultValidator::readSignalLines(QFile& file, QByteArray& line) {
         QByteArray signal = file.readLine();
         line.append(signal);
       } else {
-        E_CRITICAL(this) << "Unexpected file end";
+//        E_CRITICAL(this) << "Unexpected file end";
         return result;
       }
     }
