@@ -93,7 +93,7 @@ QAbstractItemModel* MetaDataWindow::loadModelResults(const ModelResultMeta::Data
   for(auto & item : signalsNames) {
     signals_model->insertRows(row, 1);
     auto idx = signals_model->index(row, 0);
-    signals_model->setData(idx, item.first);
+    signals_model->setData(idx, QString::fromStdString(item.name));
     row++;
   }
 

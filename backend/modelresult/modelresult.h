@@ -18,7 +18,8 @@ class ModelResult : public QObject
 public:
   using DataPoints = std::vector<double>;
   using DataNames = std::pair<std::string, std::string>;
-  explicit ModelResult(QObject *parent = nullptr);
+  ModelResult(QObject *parent = nullptr);
+  ~ModelResult();
 
   size_t getVariablesNumber() const;
   size_t getPointsNumber() const;
@@ -26,7 +27,7 @@ public:
   void addDataPoint(size_t var, const DataPoints& data);
 
   const DataPoints& getDataPoints(size_t var) const;
-  const std::vector<ModelResultMeta::Signals>* getSignalNames() const;
+  const std::vector<ModelResultMeta::SignalDescriptor>* getSignalNames() const;
 
 public slots:
   void openFile();

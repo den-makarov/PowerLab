@@ -14,9 +14,16 @@ ModelResult::DataNames ModelResult::dummyNames = std::make_pair<std::string, std
 
 ModelResult::ModelResult(QObject *parent)
   : QObject(parent)
-  , m_validator(new ModelResultValidator(parent))
+  , m_validator(new ModelResultValidator())
 {
   // EMPTY
+}
+
+ModelResult::~ModelResult() {
+  if(m_validator) {
+    delete m_validator;
+    m_validator = nullptr;
+  }
 }
 
 /**
@@ -100,7 +107,7 @@ void ModelResult::addDataPoint(size_t var, const DataPoints& data) {
  * @param var
  * @param names
  */
-const std::vector<ModelResultMeta::Signals>* ModelResult::getSignalNames() const {
+const std::vector<ModelResultMeta::SignalDescriptor>* ModelResult::getSignalNames() const {
   return m_meta ? &m_meta->getData().signalSet : nullptr;
 }
 
@@ -134,7 +141,7 @@ void ModelResult::openFile() {
     return;
   }
 
-  if(m_validator->validate(filename)) {
+  if(m_validator->validate(filename.toStdString())) {
 //    E_DEBUG(this) << "Meta data ready";
     m_meta = m_validator->getMetaData();
     if(m_meta) {

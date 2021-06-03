@@ -10,16 +10,11 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
 
   QString appName = QObject::tr(ELECTRONSHIK_PROGRAM_NAME);
-  QString appVersion = ELECTRONSHIK_VERSION_MAJOR"."
-                       ELECTRONSHIK_VERSION_MINOR"."
-                       ELECTRONSHIK_VERSION_BUILD;
+  QString appVersion = ELECTRONSHIK_VERSION;
   QString appTitle = appName + " - " + appVersion;
 
-  LogProvider::instance().addStream(std::cout);
-  LogMessage msg(LogMessage::Tag::SYSTEM,
-                 "Hello, " + appTitle.toStdString(),
-                 LogMessage::Severity::DEBUG);
-  LogSendMessage(msg);
+  Logger::LogProvider::instance().addStream(std::cout);
+  Logger::log(System::SystemMessage::DEBUG_APPLICATION_START, appTitle.toStdString());
 
   QCoreApplication::setApplicationVersion(appVersion);
   QCoreApplication::setApplicationName(appTitle);

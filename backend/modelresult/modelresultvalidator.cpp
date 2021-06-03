@@ -1,5 +1,3 @@
-#include <QFile>
-
 #include "modelresultvalidator.h"
 #include "modelresultmeta.h"
 #include "backend/logger/logger.h"
@@ -8,15 +6,17 @@
  * @brief ModelResultValidator::ModelResultValidator
  * @param parent
  */
-ModelResultValidator::ModelResultValidator(QObject *parent)
-  : QObject(parent)
-  , m_meta(new ModelResultMeta(parent))
+ModelResultValidator::ModelResultValidator()
+  : m_meta(new ModelResultMeta())
 {
 // EMPTY
 }
 
 ModelResultValidator::~ModelResultValidator() {
-//  E_DEBUG(this) << "Destructor";
+  if(m_meta) {
+    delete m_meta;
+    m_meta = nullptr;
+  }
 }
 
 /**
@@ -24,25 +24,25 @@ ModelResultValidator::~ModelResultValidator() {
  * @param filename
  * @return
  */
-bool ModelResultValidator::validate(const QString& filename) {
+bool ModelResultValidator::validate(const std::string& filename) {
   bool result = false;
 
-  if(filename.isEmpty()) {
-//    E_CRITICAL(this) << "empty filename";
+  if(filename.empty()) {
+    Logger::log(Model::ModelMessage::ERROR_NO_FILENAME_TO_VALIDATE);
     return result;
   }
 
-  QFile file(filename);
-  if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+  std::ifstream file(filename);
+  if(!file.is_open()) {
+    Logger::log(Model::ModelMessage::ERROR_FILE_NOT_OPEN, filename);
     return result;
   }
 
-  while(!file.atEnd()) {
-    QByteArray line = file.readLine();
+  for(std::string line; std::getline(file, line); ) {
     auto token = m_meta->determineToken(line);
 
     if(token == ModelResultMeta::TokenType::UNKNOWN) {
-//      E_DEBUG(this) << "End of meta";
+      Logger::log(Model::ModelMessage::WARNING_UNKNOWN_META_DATA, line);
       break;
     } else if(token == ModelResultMeta::TokenType::SIGNALS) {
       if(readSignalLines(file, line)) {
@@ -53,7 +53,7 @@ bool ModelResultValidator::validate(const QString& filename) {
     } else {
       // Any meta data type that is determined successfully
       if(!m_meta->addToken(token, line)) {
-//        E_DEBUG(this) << "Error while adding normal token";
+        Logger::log(Model::ModelMessage::ERROR_META_DATA_TOKEN_LOAD, token, line);
         break;
       }
     }
@@ -63,9 +63,7 @@ bool ModelResultValidator::validate(const QString& filename) {
     m_meta->parseData();
   }
 
-//  E_DEBUG(this) << m_meta->getData();
-
-  file.close();
+  Logger::log(Model::ModelMessage::DEBUG_META_DATA_PARSING_COMPLETE, m_meta->getData());
 
   return result;
 }
@@ -76,25 +74,26 @@ bool ModelResultValidator::validate(const QString& filename) {
  * @param line
  * @return
  */
-bool ModelResultValidator::readSignalLines(QFile& file, QByteArray& line) {
+bool ModelResultValidator::readSignalLines(std::ifstream& file, std::string& line) {
   bool result = false;
 
   auto varNumberRef = m_meta->peekTokenData(ModelResultMeta::TokenType::VAR_COUNT);
 
-  if(!varNumberRef.isEmpty()) {
-    auto num = varNumberRef.toUInt();
+  if(!varNumberRef.empty()) {
+    auto num = std::stoi(varNumberRef.data());
 
-    for(size_t i = 0; i < num; i++) {
+    for(int i = 0; i < num; i++) {
       if(i >= MAX_COUNT_OF_SIGNALS) {
-//        E_WARNING(this) << "Limit of signals reached" << MAX_COUNT_OF_SIGNALS;
+          Logger::log(Model::ModelMessage::WARNING_MAX_SIGNAL_NUMBER_LIMIT, MAX_COUNT_OF_SIGNALS);
         break;
       }
 
-      if(!file.atEnd()) {
-        QByteArray signal = file.readLine();
+      if(!file.eof()) {
+        std::string signal;
+        std::getline(file, signal);
         line.append(signal);
       } else {
-//        E_CRITICAL(this) << "Unexpected file end";
+        Logger::log(Model::ModelMessage::ERROR_UNEXPECTED_FILE_END);
         return result;
       }
     }
