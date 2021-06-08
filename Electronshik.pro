@@ -20,6 +20,10 @@ SOURCES += \
     backend/modelresult/modelresult.cpp \
     backend/modelresult/modelresultvalidator.cpp \
     backend/logger/logger.cpp \
+    backend/logger/message.cpp \
+    backend/logger/system_message.cpp \
+    backend/logger/gui_message.cpp \
+    backend/logger/model_message.cpp \
     gui/main.cpp \
     gui/dialogs/metadatawindow.cpp \
     gui/mainwindow.cpp \
@@ -31,6 +35,10 @@ HEADERS += \
     backend/modelresult/modelresultvalidator.h \
     backend/modelresult/modelresult.h \
     backend/logger/logger.h \
+    backend/logger/message.h \
+    backend/logger/system_message.h \
+    backend/logger/model_message.h \
+    backend/logger/gui_message.h \
     backend/version.h \
     gui/mainwindow.h \
     gui/dialogs/metadatawindow.h \
