@@ -1,6 +1,3 @@
-#include <QFileDialog>
-#include <QFile>
-
 #include "backend/logger/logger.h"
 #include "modelresult.h"
 #include "modelresultvalidator.h"
@@ -12,9 +9,8 @@ ModelResult::DataPoints ModelResult::dummyPoints = {};
 // Dummy static fields to init as default values
 ModelResult::DataNames ModelResult::dummyNames = std::make_pair<std::string, std::string>("EMPTY", "UNIT");
 
-ModelResult::ModelResult(QObject *parent)
-  : QObject(parent)
-  , m_validator(new ModelResultValidator())
+ModelResult::ModelResult()
+  : m_validator(new ModelResultValidator())
 {
   // EMPTY
 }
@@ -33,9 +29,7 @@ ModelResult::~ModelResult() {
  * @param points: number of points of each signal
  */
 void ModelResult::init(size_t variables, size_t points) {
-//  E_DEBUG(this) << "New storage for"
-//                << variables << "variables,"
-//                << points << "points";
+  Logger::log(Model::ModelMessage::DEBUG_NEW_MODEL_RESULT_STORAGE, variables, points);
 
   if(variables > MAX_VARIABLES_NUMBER || points > MAX_POINTS_NUMBER) {
     variables = 0;
@@ -76,12 +70,11 @@ size_t ModelResult::getPointsNumber() const {
  */
 void ModelResult::addDataPoint(size_t var, double point) {
   if(var >= m_data.size()) {
-//    E_CRITICAL(this) << "Invalid variable identifier";
+    Logger::log(Model::ModelMessage::ERROR_INVALID_SIGNAL_ID, var);
     return;
   }
 
-//  E_DEBUG(this) << "New data point for variable id" << var
-//                << ", point" << point;
+  Logger::log(Model::ModelMessage::DEBUG_NEW_DATA_POINT_FOR_SIGNAL, var, point);
   m_data[var].push_back(point);
 }
 
@@ -92,13 +85,11 @@ void ModelResult::addDataPoint(size_t var, double point) {
  */
 void ModelResult::addDataPoint(size_t var, const DataPoints& data) {
   if(var >= m_data.size()) {
-//    E_CRITICAL(this) << "Invalid variable identifier";
+    Logger::log(Model::ModelMessage::ERROR_INVALID_SIGNAL_ID, var);
     return;
   }
 
-//  E_DEBUG(this) << "New data point for variable id" << var
-//                << ", points number" << data.size();
-
+  Logger::log(Model::ModelMessage::DEBUG_NEW_DATA_FOR_SIGNAL, var, data.size());
   m_data[var].insert(m_data[var].end(), data.begin(), data.end());
 }
 
@@ -107,7 +98,7 @@ void ModelResult::addDataPoint(size_t var, const DataPoints& data) {
  * @param var
  * @param names
  */
-const std::vector<ModelResultMeta::SignalDescriptor>* ModelResult::getSignalNames() const {
+const ModelResult::SignalNames* ModelResult::getSignalNames() const {
   return m_meta ? &m_meta->getData().signalSet : nullptr;
 }
 
@@ -118,9 +109,7 @@ const std::vector<ModelResultMeta::SignalDescriptor>* ModelResult::getSignalName
  */
 const ModelResult::DataPoints& ModelResult::getDataPoints(size_t var) const {
   if(var >= m_signals.size()) {
-    // @TODO: Consider to throw an exception
-
-//    E_CRITICAL(this) << "Invalid variable identifier";
+    Logger::log(Model::ModelMessage::ERROR_INVALID_SIGNAL_ID, var);
     return ModelResult::dummyPoints;
   }
 
@@ -130,28 +119,38 @@ const ModelResult::DataPoints& ModelResult::getDataPoints(size_t var) const {
 /**
  * @brief ModelResult::openFile
  */
-void ModelResult::openFile() {
-  QString filename = QFileDialog::getOpenFileName(nullptr,
-                                                  tr("Open file with modeling results"),
-                                                  "",
-                                                  tr("Modeling result files (*.esk *.dat)"));
-  if(filename.isEmpty()) {
-//    E_DEBUG(this) << "No file selected";
-    emit metaDataLoaded(nullptr, "No file selected");
+void ModelResult::openFile(const std::string& filename) {
+  if(filename.empty()) {
+    Logger::log(Model::ModelMessage::DEBUG_NO_FILE_SELECTED);
+    m_metaDataLoadCB(nullptr, "No file selected");
     return;
   }
 
-  if(m_validator->validate(filename.toStdString())) {
-//    E_DEBUG(this) << "Meta data ready";
+  if(m_validator->validate(filename)) {
+    Logger::log(Model::ModelMessage::DEBUG_META_DATA_READY);
     m_meta = m_validator->getMetaData();
     if(m_meta) {
       init(m_meta->getData().varCount, m_meta->getData().points);
-      emit metaDataLoaded(&m_meta->getData(), "Chose signals to plot");
+      m_metaDataLoadCB(&m_meta->getData(), "Chose signals to plot");
     } else {
-//      E_CRITICAL(this) << "Unable to retrive meta data";
-      emit metaDataLoaded(nullptr, "Meta data is expected");
+      Logger::log(Model::ModelMessage::ERROR_META_DATA_NOT_READY);
+      m_metaDataLoadCB(nullptr, "Meta data is expected");
     }
   } else {
-    emit metaDataLoaded(nullptr, "Meta data validation failed");
+    m_metaDataLoadCB(nullptr, "Meta data validation failed");
+  }
+}
+
+void ModelResult::setupMetaDataLoadCB(ModelResult::MetaDataLoadCB cb) {
+  if(cb) {
+    m_metaDataLoadCB = cb;
+  }
+}
+
+void ModelResult::defaultMetaDataLoadSignal(const ModelResultMeta::Data* data, const std::string& msg) {
+  if(data) {
+    Logger::log(Model::ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, &data, msg);
+  } else {
+    Logger::log(Model::ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, "No meta-data", msg);
   }
 }

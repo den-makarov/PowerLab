@@ -5,6 +5,7 @@
 #include <QString>
 
 #include "backend/modelresult/modelresultmeta.h"
+#include "backend/modelresult/modelresult.h"
 
 class QMessageBox;
 class GraphProcessor;
@@ -13,19 +14,19 @@ class Widget;
 
 class MainWindow : public QWidget
 {
-  Q_OBJECT
-
 public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
 
-public slots:
-  void showMetaData(const ModelResultMeta::Data*, QString msg = "");
+  void showMetaData(const ModelResultMeta::Data*, const std::string& msg = "");
+  void openModelResults();
 
 private slots:
   void DrawGraph();
 
 private:
+  ModelResult::MetaDataLoadCB metaDataLoaded;
+  ModelResult* result = nullptr;
   GraphProcessor* graph = nullptr;
   QMessageBox* m_metaDataWindow = nullptr;
   QAbstractItemModel* graph_data = nullptr;

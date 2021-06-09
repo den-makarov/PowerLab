@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
 { 
   setWindowState(Qt::WindowState::WindowMaximized);
-  ModelResult* result = new ModelResult(this);
+  result = new ModelResult();
   QMenuBar* menuBar = new QMenuBar(this);
   QMenu* menuFile = new QMenu("&File", this);
   QMenu* menuEdit = new QMenu("&Edit", this);
@@ -41,15 +41,18 @@ MainWindow::MainWindow(QWidget *parent)
   menuBar->addMenu(menuTools);
   menuBar->addMenu(menuHelp);
 
-  m_metaDataWindow = new QMessageBox(this);
-  menuFile->addAction("&Open", result, &ModelResult::openFile, scKeyOpen);
+  menuFile->addAction("&Open", this, &MainWindow::openModelResults, scKeyOpen);
 
   QGridLayout *layout = new QGridLayout(this);
   setLayout(layout);
   layout->setMenuBar(menuBar);
 
-  if(m_metaDataWindow) {
-    connect(result, &ModelResult::metaDataLoaded, this, &MainWindow::showMetaData);
+  m_metaDataWindow = new QMessageBox(this);
+  if(m_metaDataWindow && result) {
+    metaDataLoaded = [this](const ModelResultMeta::Data* data, const std::string& msg){
+      this->showMetaData(data, msg);
+    };
+    result->setupMetaDataLoadCB(metaDataLoaded);
   }
 }
 
@@ -64,7 +67,7 @@ MainWindow::~MainWindow()
  * @brief MainWindow::ShowMetaData
  * @param msg
  */
-void MainWindow::showMetaData(const ModelResultMeta::Data* data, QString msg) {
+void MainWindow::showMetaData(const ModelResultMeta::Data* data, const std::string& msg) {
   if(data) {
     MetaDataWindow* window = new MetaDataWindow(this);
     connect(window, &MetaDataWindow::accepted, this, &MainWindow::DrawGraph);
@@ -73,8 +76,18 @@ void MainWindow::showMetaData(const ModelResultMeta::Data* data, QString msg) {
   } else {
     m_metaDataWindow->setIcon(QMessageBox::Warning);
     m_metaDataWindow->setWindowTitle("Error");
-    m_metaDataWindow->setText(msg);
+    m_metaDataWindow->setText(QString::fromStdString(msg));
     m_metaDataWindow->setDefaultButton(QMessageBox::Close);
+  }
+}
+
+void MainWindow::openModelResults() {
+  QString filename = QFileDialog::getOpenFileName(nullptr,
+                                                  tr("Open file with modeling results"),
+                                                  "",
+                                                  tr("Modeling result files (*.esk *.dat)"));
+  if(result) {
+    result->openFile(filename.toStdString());
   }
 }
 
