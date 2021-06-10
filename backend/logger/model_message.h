@@ -4,6 +4,7 @@
 #include <string>
 
 namespace Model {
+
 enum class ModelMessage {
   // DEBUG MESSAGES
   DEBUG_META_DATA_PARSING_COMPLETE,

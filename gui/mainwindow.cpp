@@ -13,11 +13,14 @@
 #include <QTimer>
 #include <QAbstractItemModel>
 
-#include "backend/logger/logger.h"
-#include "backend/modelresult/modelresult.h"
-#include "gui/dialogs/metadatawindow.h"
-#include "gui/graphs/graphprocessor.h"
+#include "logger.h"
+#include "modelresult/modelresult.h"
+#include "dialogs/metadatawindow.h"
+#include "graphs/graphprocessor.h"
 #include "mainwindow.h"
+
+namespace Gui {
+
 /**
  * @brief MainWindow::MainWindow
  * @param parent
@@ -26,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
 { 
   setWindowState(Qt::WindowState::WindowMaximized);
-  result = new ModelResult();
+  result = new Model::ModelResult();
   QMenuBar* menuBar = new QMenuBar(this);
   QMenu* menuFile = new QMenu("&File", this);
   QMenu* menuEdit = new QMenu("&Edit", this);
@@ -49,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
 
   m_metaDataWindow = new QMessageBox(this);
   if(m_metaDataWindow && result) {
-    metaDataLoaded = [this](const ModelResultMeta::Data* data, const std::string& msg){
+    metaDataLoaded = [this](const Model::ModelResultMeta::Data* data, const std::string& msg){
       this->showMetaData(data, msg);
     };
     result->setupMetaDataLoadCB(metaDataLoaded);
@@ -67,7 +70,7 @@ MainWindow::~MainWindow()
  * @brief MainWindow::ShowMetaData
  * @param msg
  */
-void MainWindow::showMetaData(const ModelResultMeta::Data* data, const std::string& msg) {
+void MainWindow::showMetaData(const Model::ModelResultMeta::Data* data, const std::string& msg) {
   if(data) {
     MetaDataWindow* window = new MetaDataWindow(this);
     connect(window, &MetaDataWindow::accepted, this, &MainWindow::DrawGraph);
@@ -95,7 +98,7 @@ void MainWindow::DrawGraph() {
   if(layout()) {
     if(w) {
       layout()->removeWidget(w);
-//      delete w;
+      delete w;
     }
     graph = new GraphProcessor();
     w = new Widget(graph, this);
@@ -117,3 +120,5 @@ void MainWindow::DrawGraph() {
   w->setNames(signal_names);
   w->plot();
 }
+
+} // namespace Gui

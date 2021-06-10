@@ -3,6 +3,8 @@
 
 #include "plot.h"
 
+namespace Gui {
+
 Plot::Plot(int width, int height)
   : mWidth(width)
   , mHeight(height)
@@ -143,3 +145,5 @@ void Plot::DrawGridValue(QPainter* painter, double number, int x, int y) const {
                     y - (painter->pen().width() + 1),
                     str.setNum(number, 'f', 2));
 }
+
+} // namespace Gui

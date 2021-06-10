@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 
+namespace Model {
+
 class ModelResultMeta;
 
 class ModelResultValidator {
@@ -22,5 +24,7 @@ private:
 
   bool readSignalLines(std::ifstream& file, std::string& line);
 };
+
+} // namespace Model
 
 #endif // MODELRESULTVALIDATOR_H

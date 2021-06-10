@@ -1,7 +1,9 @@
-#include "backend/logger/logger.h"
+#include "logger.h"
 #include "modelresult.h"
 #include "modelresultvalidator.h"
 #include "modelresultmeta.h"
+
+namespace Model {
 
 // Dummy static fields to init as default values
 ModelResult::DataPoints ModelResult::dummyPoints = {};
@@ -154,3 +156,5 @@ void ModelResult::defaultMetaDataLoadSignal(const ModelResultMeta::Data* data, c
     Logger::log(Model::ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, "No meta-data", msg);
   }
 }
+
+} // namespace Model

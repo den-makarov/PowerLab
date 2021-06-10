@@ -2,64 +2,10 @@
 #include <iomanip>
 
 #include "modelresultmeta.h"
-#include "backend/logger/logger.h"
+#include "logger.h"
+#include "string_utils.h"
 
-enum class DateFormat {
-  RFC2822Date
-};
-
-std::time_t fromString(const std::string& str, DateFormat format) {
-  std::time_t time = 0;
-  switch(format) {
-    case DateFormat::RFC2822Date: {
-      std::istringstream date(str);
-      std::tm tm{};
-      date >> std::get_time(&tm, "%a %b %d %H:%M:%S %Y");
-      time = std::mktime(&tm);
-    }
-    break;
-  }
-
-  return time;
-}
-
-std::string trimString(const std::string& str) {
-  std::string result;
-  size_t pos = 0;
-  while(pos < str.size()) {
-    if(str[pos] == ' ' || str[pos] == '\t' || str[pos] == '\n') {
-      pos++;
-    } else {
-      break;
-    }
-  }
-  result = str.substr(pos);
-  while(!result.empty()) {
-    if(result.back() == ' ' || result.back() == '\t' || result.back() == '\n') {
-      result.pop_back();
-    } else {
-      break;
-    }
-  }
-
-  return result;
-}
-
-std::vector<std::string> splitString(const std::string& str, char delim) {
-  std::vector<std::string> result;
-  size_t begin = 0;
-  size_t end = str.find(delim);
-  while(end != std::string::npos) {
-    result.push_back(str.substr(begin, end - begin));
-    begin = end + 1;
-    end = str.find(delim, begin);
-  }
-  if(begin != 0) {
-    result.push_back(str.substr(begin, str.size() - begin));
-  }
-
-  return result;
-}
+namespace Model {
 
 // Map for search token
 const std::unordered_map<std::string, ModelResultMeta::TokenType> ModelResultMeta::STR_TO_TOKEN_TYPE = {
@@ -80,7 +26,7 @@ const std::unordered_map<std::string, ModelResultMeta::TokenType> ModelResultMet
 ModelResultMeta::TokenType ModelResultMeta::determineToken(const std::string& str) const {
   TokenType token = TokenType::UNKNOWN;
 
-  auto list = splitString(str, ':');
+  auto list = Utilities::splitString(str, ':');
   if(!list.empty()) {
     auto type = STR_TO_TOKEN_TYPE.find(list[0]);
     if(type != STR_TO_TOKEN_TYPE.end()) {
@@ -105,7 +51,7 @@ bool ModelResultMeta::addToken(ModelResultMeta::TokenType type, const std::strin
   } else {
     auto pos = str.find(':');
     if(pos != std::string::npos) {
-      m_tokens.push_back({trimString(str.substr(pos + 1)), type});
+      m_tokens.push_back({Utilities::trimString(str.substr(pos + 1)), type});
       result = true;
     }
   }
@@ -119,19 +65,19 @@ bool ModelResultMeta::addToken(ModelResultMeta::TokenType type, const std::strin
  * @return
  */
 void ModelResultMeta::parseSignalToken(const std::string& str) {
-  auto list = splitString(str, '\t');
+  auto list = Utilities::splitString(str, '\t');
   // @NOTE: If there are any signals, size of container should be definitely more than 2
   // and number of items should be ratio of 3
   if(list.size() > 2 && !(list.size() % 3)) {
-    auto str_ref = trimString(list[0]);
+    auto str_ref = Utilities::trimString(list[0]);
     str_ref.resize(str_ref.size() - 1);
 
     // @NOTE: each signal consists of number, signal name and signal units
     // for example: 0 Idd Amps
     for(size_t i = 0; i < list.size();) {
       SignalDescriptor signal;
-      signal.name = trimString(list[++i]);
-      signal.units = trimString(list[++i]);
+      signal.name = Utilities::trimString(list[++i]);
+      signal.units = Utilities::trimString(list[++i]);
       m_data.signalSet.push_back(signal);
       i++;
     }
@@ -164,7 +110,7 @@ void ModelResultMeta::parseToken(TokenType token, const std::string& data) {
     m_data.title = data;
     break;
   case TokenType::DATE:
-    m_data.timeStamp = fromString(data, DateFormat::RFC2822Date);
+    m_data.timeStamp = Utilities::dateFromString(data, Utilities::DateFormat::RFC2822Date);
     break;
   case TokenType::PLOTNAME:
     m_data.plotname = data;
@@ -197,7 +143,7 @@ void ModelResultMeta::parseData() {
 
 ModelResultMeta::SignalDescriptor ModelResultMeta::Token::splitToken(char delim) const {
   if(type == TokenType::SIGNALS) {
-    auto list = splitString(trimString(data), delim);
+    auto list = Utilities::splitString(Utilities::trimString(data), delim);
     return {list.front(), list.back()};
   } else {
     return {"EMPTY", "UNIT"};
@@ -256,3 +202,5 @@ std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Data& data) {
   out << "Number of points: " << data.points;
   return out;
 }
+
+} // namespace Model

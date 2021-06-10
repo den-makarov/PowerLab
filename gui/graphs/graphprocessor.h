@@ -8,18 +8,15 @@
 #include <QPen>
 #include <QVector>
 
-#include "backend/logger/logger.h"
-
 class QPainter;
 class QPaintEvent;
 
-class GraphProcessor
-{
+namespace Gui {
+
+class GraphProcessor {
 public:
   GraphProcessor();
-  ~GraphProcessor() {
-//    E_DEBUG(nullptr) << "Graph proc destructor";
-  }
+
   void paint(QPainter *painter, int elapsed);
   void plot(QPainter *painter, QVector<double> x, double max);
 
@@ -29,15 +26,10 @@ private:
   QPen penTwo;
 };
 
-class Widget : public QWidget
-{
-  Q_OBJECT
-
+class Widget : public QWidget {
 public:
   Widget(GraphProcessor *graph, QWidget *parent);
-  virtual ~Widget() override {
-//    E_DEBUG(nullptr) << "Widget destructor";
-  }
+
   void setNames(QStringList names);
 
 public slots:
@@ -55,4 +47,5 @@ private:
   double maxI = 0.0;
 };
 
+} // namespace Gui
 #endif // GRAPHPROCESSOR_H

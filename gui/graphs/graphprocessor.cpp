@@ -6,6 +6,8 @@
 #include "graphprocessor.h"
 #include "plot.h"
 
+namespace Gui {
+
 GraphProcessor::GraphProcessor()
 {
   background = QBrush(QColor(0xA4, 0xA4, 0xA4));
@@ -142,3 +144,5 @@ void Widget::paintEvent(QPaintEvent *event)
   graph->paint(&painter, 0);
   painter.end();
 }
+
+} // namespace Gui

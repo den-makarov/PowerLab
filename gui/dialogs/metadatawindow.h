@@ -3,18 +3,19 @@
 
 #include <QDialog>
 
-#include "backend/modelresult/modelresultmeta.h"
+#include "modelresult/modelresultmeta.h"
+
 
 class QAbstractItemModel;
 class QListView;
 
-class MetaDataWindow : public QDialog
-{
-  Q_OBJECT
+namespace Gui {
+
+class MetaDataWindow : public QDialog {
 public:
   explicit MetaDataWindow(QWidget *parent = nullptr);
-  virtual ~MetaDataWindow() {}
-  QAbstractItemModel* loadModelResults(const ModelResultMeta::Data* data);
+
+  QAbstractItemModel* loadModelResults(const Model::ModelResultMeta::Data* data);
 
 private:
   constexpr static size_t MIN_WINDOW_WIDTH = 500;
@@ -28,5 +29,7 @@ private slots:
   void addSignalToGraph();
   void removeSignalFromGraph();
 };
+
+} // namespace Gui
 
 #endif // METADATAWINDOW_H

@@ -8,6 +8,8 @@
 
 #include "modelresultmeta.h"
 
+namespace Model {
+
 class ModelResultValidator;
 
 class ModelResult {
@@ -47,4 +49,5 @@ private:
                                         const std::string& msg);
 };
 
+} // namespace model
 #endif // MODELRESULT_H

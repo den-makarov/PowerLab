@@ -4,9 +4,10 @@
 #include <string>
 
 namespace Gui {
+
 enum class GuiMessage {
   // DEBUG MESSAGES
-  DEBUG_GUI_START,
+  DEBUG_ATTEMPT_ADD_ITEM_TWICE,
   DEBUG_LAST,
 
   // INFO MESSAGES
@@ -16,6 +17,8 @@ enum class GuiMessage {
   WARNING_LAST,
 
   // ERROR MESSAGES
+  ERROR_NO_META_DATA,
+  ERROR_SELECTION_INVALID,
   ERROR_LAST
 };
 

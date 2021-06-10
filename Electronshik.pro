@@ -24,6 +24,7 @@ SOURCES += \
     backend/logger/system_message.cpp \
     backend/logger/gui_message.cpp \
     backend/logger/model_message.cpp \
+    backend/utils/string_utils.cpp \
     gui/main.cpp \
     gui/dialogs/metadatawindow.cpp \
     gui/mainwindow.cpp \
@@ -40,6 +41,7 @@ HEADERS += \
     backend/logger/model_message.h \
     backend/logger/gui_message.h \
     backend/version.h \
+    backend/utils/string_utils.h \
     gui/mainwindow.h \
     gui/dialogs/metadatawindow.h \
     gui/graphs/graphprocessor.h \
@@ -49,7 +51,11 @@ TRANSLATIONS += \
     Electronshik_en_US.ts
 
 INCLUDEPATH += \
-    include
+    include \
+    backend \
+    gui \
+    backend/utils \
+    backend/logger
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

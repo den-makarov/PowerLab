@@ -9,8 +9,11 @@
 #include <QListView>
 #include <QSplitter>
 
+#include "logger.h"
 #include "metadatawindow.h"
-#include "backend/modelresult/modelresultmeta.h"
+#include "modelresult/modelresultmeta.h"
+
+namespace Gui {
 
 /**
  * @brief MetaDataWindow::MetaDataWindow
@@ -75,14 +78,9 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
  * @brief MetaDataWindow::loadModelResults
  * @param data
  */
-QAbstractItemModel* MetaDataWindow::loadModelResults(const ModelResultMeta::Data* data) {
+QAbstractItemModel* MetaDataWindow::loadModelResults(const Model::ModelResultMeta::Data* data) {
   if(!data) {
-//    E_CRITICAL(this) << "meta data is expected";
-    return nullptr;
-  }
-
-  if(!signals_model) {
-//    E_CRITICAL(this) << "data model is expected";
+    Logger::log(GuiMessage::ERROR_NO_META_DATA);
     return nullptr;
   }
 
@@ -104,14 +102,9 @@ QAbstractItemModel* MetaDataWindow::loadModelResults(const ModelResultMeta::Data
  * @brief MetaDataWindow::addSignalToGraph
  */
 void MetaDataWindow::addSignalToGraph() {
-  if(!graph_model || !signals_view) {
-//    E_CRITICAL(this) << "data and graph model/view are expected";
-    return;
-  }
-
   QItemSelectionModel *selectionModel = signals_view->selectionModel();
   if(!selectionModel) {
-//    E_CRITICAL(this) << "Valid selection is expected";
+    Logger::log(GuiMessage::ERROR_SELECTION_INVALID);
     return;
   }
 
@@ -127,7 +120,7 @@ void MetaDataWindow::addSignalToGraph() {
         auto row_idx = graph_model->index(graph_model->rowCount() - 1, 0);
         graph_model->setData(row_idx, data);
       } else {
-//        E_DEBUG(this) << "Item already exists:" << data.toString();
+        Logger::log(GuiMessage::DEBUG_ATTEMPT_ADD_ITEM_TWICE, data.toString().toStdString());
       }
     }
   }
@@ -139,14 +132,9 @@ void MetaDataWindow::addSignalToGraph() {
  * @brief MetaDataWindow::removeSignalFromGraph
  */
 void MetaDataWindow::removeSignalFromGraph() {
-  if(!graph_model || !graph_view) {
-//    E_CRITICAL(this) << "graph model/view are expected";
-    return;
-  }
-
   QItemSelectionModel *selectionModel = graph_view->selectionModel();
   if(!selectionModel) {
-//    E_CRITICAL(this) << "Valid selection is expected";
+    Logger::log(GuiMessage::ERROR_SELECTION_INVALID);
     return;
   }
 
@@ -158,3 +146,5 @@ void MetaDataWindow::removeSignalFromGraph() {
 
   selectionModel->clearSelection();
 }
+
+} // namespace Gui

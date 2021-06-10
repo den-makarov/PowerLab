@@ -4,6 +4,7 @@
 #include <string>
 
 namespace System {
+
 enum class SystemMessage {
   // DEBUG MESSAGES
   DEBUG_APPLICATION_START,

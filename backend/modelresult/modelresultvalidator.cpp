@@ -1,6 +1,8 @@
 #include "modelresultvalidator.h"
 #include "modelresultmeta.h"
-#include "backend/logger/logger.h"
+#include "logger.h"
+
+namespace Model {
 
 /**
  * @brief ModelResultValidator::ModelResultValidator
@@ -28,13 +30,13 @@ bool ModelResultValidator::validate(const std::string& filename) {
   bool result = false;
 
   if(filename.empty()) {
-    Logger::log(Model::ModelMessage::ERROR_NO_FILENAME_TO_VALIDATE);
+    Logger::log(ModelMessage::ERROR_NO_FILENAME_TO_VALIDATE);
     return result;
   }
 
   std::ifstream file(filename);
   if(!file.is_open()) {
-    Logger::log(Model::ModelMessage::ERROR_FILE_NOT_OPEN, filename);
+    Logger::log(ModelMessage::ERROR_FILE_NOT_OPEN, filename);
     return result;
   }
 
@@ -42,7 +44,7 @@ bool ModelResultValidator::validate(const std::string& filename) {
     auto token = m_meta->determineToken(line);
 
     if(token == ModelResultMeta::TokenType::UNKNOWN) {
-      Logger::log(Model::ModelMessage::WARNING_UNKNOWN_META_DATA, line);
+      Logger::log(ModelMessage::WARNING_UNKNOWN_META_DATA, line);
       break;
     } else if(token == ModelResultMeta::TokenType::SIGNALS) {
       if(readSignalLines(file, line)) {
@@ -53,7 +55,7 @@ bool ModelResultValidator::validate(const std::string& filename) {
     } else {
       // Any meta data type that is determined successfully
       if(!m_meta->addToken(token, line)) {
-        Logger::log(Model::ModelMessage::ERROR_META_DATA_TOKEN_LOAD, token, line);
+        Logger::log(ModelMessage::ERROR_META_DATA_TOKEN_LOAD, token, line);
         break;
       }
     }
@@ -63,7 +65,7 @@ bool ModelResultValidator::validate(const std::string& filename) {
     m_meta->parseData();
   }
 
-  Logger::log(Model::ModelMessage::DEBUG_META_DATA_PARSING_COMPLETE, m_meta->getData());
+  Logger::log(ModelMessage::DEBUG_META_DATA_PARSING_COMPLETE, m_meta->getData());
 
   return result;
 }
@@ -84,7 +86,7 @@ bool ModelResultValidator::readSignalLines(std::ifstream& file, std::string& lin
 
     for(int i = 0; i < num; i++) {
       if(i >= MAX_COUNT_OF_SIGNALS) {
-          Logger::log(Model::ModelMessage::WARNING_MAX_SIGNAL_NUMBER_LIMIT, MAX_COUNT_OF_SIGNALS);
+          Logger::log(ModelMessage::WARNING_MAX_SIGNAL_NUMBER_LIMIT, MAX_COUNT_OF_SIGNALS);
         break;
       }
 
@@ -93,7 +95,7 @@ bool ModelResultValidator::readSignalLines(std::ifstream& file, std::string& lin
         std::getline(file, signal);
         line.append(signal);
       } else {
-        Logger::log(Model::ModelMessage::ERROR_UNEXPECTED_FILE_END);
+        Logger::log(ModelMessage::ERROR_UNEXPECTED_FILE_END);
         return result;
       }
     }
@@ -102,3 +104,5 @@ bool ModelResultValidator::readSignalLines(std::ifstream& file, std::string& lin
 
   return result;
 }
+
+} // namespace Model

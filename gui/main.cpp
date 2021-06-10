@@ -2,8 +2,8 @@
 #include <QApplication>
 
 #include "mainwindow.h"
-#include "backend/version.h"
-#include "backend/logger/logger.h"
+#include "version.h"
+#include "logger.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
   QCoreApplication::setApplicationVersion(appVersion);
   QCoreApplication::setApplicationName(appTitle);
 
-  MainWindow w;
+  Gui::MainWindow w;
   w.show();
   return app.exec();
 }

@@ -5,7 +5,9 @@
 #include <string_view>
 #include <iostream>
 
-#include "backend/logger/logger.h"
+#include "logger.h"
+
+namespace Model {
 
 class ModelResultMeta {
 public:
@@ -71,5 +73,7 @@ std::ostream& operator<<(std::ostream& out, ModelResultMeta::TokenType token);
 std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Flags& data);
 std::ostream& operator<<(std::ostream& out, const ModelResultMeta::SignalDescriptor& signal);
 std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Data& data);
+
+} // namespace Model
 
 #endif // MODELRESULTMETA_H

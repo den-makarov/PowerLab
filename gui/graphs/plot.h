@@ -9,6 +9,8 @@
 
 class QPainter;
 
+namespace Gui {
+
 class Plot
 {
 public:
@@ -83,4 +85,5 @@ private:
   void DrawGridValue(QPainter* painter, double number, int x, int y) const;
 };
 
+} // namespace Gui
 #endif // PLOT_H
