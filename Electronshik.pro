@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     backend/modelresult/modelresultmeta.cpp \
     backend/modelresult/modelresult.cpp \
+    backend/modelresult/modelresultvalues.cpp \
     backend/modelresult/modelresultvalidator.cpp \
     backend/logger/logger.cpp \
     backend/logger/message.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     backend/modelresult/modelresultmeta.h \
     backend/modelresult/modelresultvalidator.h \
     backend/modelresult/modelresult.h \
+    backend/modelresult/modelresultvalues.h \
     backend/logger/logger.h \
     backend/logger/message.h \
     backend/logger/system_message.h \

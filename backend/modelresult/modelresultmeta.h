@@ -24,6 +24,7 @@ public:
     VAR_COUNT,
     POINT_COUNT,
     SIGNALS,
+    VALUES,
     UNKNOWN
   };
 

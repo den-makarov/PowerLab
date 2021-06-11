@@ -36,7 +36,7 @@ bool ModelResultValidator::validate(const std::string& filename) {
 
   std::ifstream file(filename);
   if(!file.is_open()) {
-    Logger::log(ModelMessage::ERROR_FILE_NOT_OPEN, filename);
+    Logger::log(ModelMessage::ERROR_META_DATA_FILE_NOT_OPEN, filename);
     return result;
   }
 

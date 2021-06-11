@@ -1,15 +1,12 @@
+#include <iterator>
+
 #include "logger.h"
 #include "modelresult.h"
 #include "modelresultvalidator.h"
 #include "modelresultmeta.h"
+#include "modelresultvalues.h"
 
 namespace Model {
-
-// Dummy static fields to init as default values
-ModelResult::DataPoints ModelResult::dummyPoints = {};
-
-// Dummy static fields to init as default values
-ModelResult::DataNames ModelResult::dummyNames = std::make_pair<std::string, std::string>("EMPTY", "UNIT");
 
 ModelResult::ModelResult()
   : m_validator(new ModelResultValidator())
@@ -24,103 +21,88 @@ ModelResult::~ModelResult() {
   }
 }
 
-/**
- * @brief ModelResult::init. Initialize internal storage for new data
- *
- * @param variables: number of signals in model result
- * @param points: number of points of each signal
- */
-void ModelResult::init(size_t variables, size_t points) {
-  Logger::log(Model::ModelMessage::DEBUG_NEW_MODEL_RESULT_STORAGE, variables, points);
-
-  if(variables > MAX_VARIABLES_NUMBER || points > MAX_POINTS_NUMBER) {
-    variables = 0;
-    points = 0;
-  }
-
-  m_data = std::vector<DataPoints>(variables);
-  for(auto& item : m_data) {
-    item.reserve(points);
-  }
-
-  m_signals = std::vector<DataNames>(variables);
-  for(auto& item : m_signals) {
-    item = ModelResult::dummyNames;
-  }
-}
-
-/**
- * @brief ModelResult::getVariablesNumber
- * @return
- */
 size_t ModelResult::getVariablesNumber() const {
   return m_meta ? m_meta->getData().varCount : 0;
 }
 
-/**
- * @brief ModelResult::getPointsNumber
- * @return
- */
 size_t ModelResult::getPointsNumber() const {
   return m_meta ? m_meta->getData().points : 0;
 }
 
-/**
- * @brief ModelResult::addDataPoint
- * @param var
- * @param point
- */
-void ModelResult::addDataPoint(size_t var, double point) {
-  if(var >= m_data.size()) {
-    Logger::log(Model::ModelMessage::ERROR_INVALID_SIGNAL_ID, var);
+void ModelResult::addSignalDataPoint(const SignalName& signalName, DataPoint point) {
+  auto signalIt = m_signals.find(signalName);
+  if(signalIt == m_signals.end()) {
+    Logger::log(Model::ModelMessage::ERROR_UNKNOWN_SIGNAL_NAME, signalName);
     return;
   }
 
-  Logger::log(Model::ModelMessage::DEBUG_NEW_DATA_POINT_FOR_SIGNAL, var, point);
-  m_data[var].push_back(point);
+  Logger::log(Model::ModelMessage::DEBUG_NEW_DATA_POINT_FOR_SIGNAL, signalName, point);
+  auto& signal = signalIt->second;
+  signal.points.push_back(point);
 }
 
-/**
- * @brief ModelResult::addDataPoint
- * @param var
- * @param data
- */
-void ModelResult::addDataPoint(size_t var, const DataPoints& data) {
-  if(var >= m_data.size()) {
-    Logger::log(Model::ModelMessage::ERROR_INVALID_SIGNAL_ID, var);
+
+void ModelResult::addSignalDataPoints(const SignalName& signalName,
+                                      const SignalDataPoints& data) {
+  auto signalIt = m_signals.find(signalName);
+  if(signalIt == m_signals.end()) {
+    Logger::log(Model::ModelMessage::ERROR_UNKNOWN_SIGNAL_NAME, signalName);
     return;
   }
 
-  Logger::log(Model::ModelMessage::DEBUG_NEW_DATA_FOR_SIGNAL, var, data.size());
-  m_data[var].insert(m_data[var].end(), data.begin(), data.end());
+  Logger::log(Model::ModelMessage::DEBUG_NEW_DATA_FOR_SIGNAL, signalName, data.size());
+  auto& signal = signalIt->second;
+  signal.points.insert(signal.points.end(), data.begin(), data.end());
 }
 
-/**
- * @brief ModelResult::setDataNames
- * @param var
- * @param names
- */
-const ModelResult::SignalNames* ModelResult::getSignalNames() const {
-  return m_meta ? &m_meta->getData().signalSet : nullptr;
-}
-
-/**
- * @brief ModelResult::getDataPoints
- * @param var
- * @return
- */
-const ModelResult::DataPoints& ModelResult::getDataPoints(size_t var) const {
-  if(var >= m_signals.size()) {
-    Logger::log(Model::ModelMessage::ERROR_INVALID_SIGNAL_ID, var);
-    return ModelResult::dummyPoints;
+template<typename DataIterator>
+void ModelResult::addSignalDataPoints(const SignalName& signalName, DataIterator begin, DataIterator end) {
+  auto signalIt = m_signals.find(signalName);
+  if(signalIt == m_signals.end()) {
+    Logger::log(Model::ModelMessage::ERROR_UNKNOWN_SIGNAL_NAME, signalName);
+    return;
   }
 
-  return m_data[var];
+  Logger::log(Model::ModelMessage::DEBUG_NEW_DATA_FOR_SIGNAL, signalName, std::distance(begin, end));
+  auto& signal = signalIt->second;
+  signal.points.insert(signal.points.end(), begin, end);
 }
 
-/**
- * @brief ModelResult::openFile
- */
+
+std::vector<ModelResult::SignalName> ModelResult::getAllSignalNames() const {
+  std::vector<SignalName> result;
+  for(auto& [key, value] : m_signals) {
+    result.push_back(key);
+  }
+
+  return result;
+}
+
+ModelResult::SignalDataPoints ModelResult::getSignalDataPoints(const SignalName& name) const {
+  auto signalIt = m_signals.find(name);
+  if(signalIt == m_signals.end()) {
+    Logger::log(Model::ModelMessage::ERROR_UNKNOWN_SIGNAL_NAME, name);
+    return {};
+  }
+
+  auto& signal = signalIt->second;
+  return signal.points;
+}
+
+void ModelResult::extractSignalsDataPoints(const std::string& filename) {
+  auto signalCount = getVariablesNumber();
+  auto* values = new ModelResultValue<double>(filename, getPointsNumber(), signalCount);
+
+  const auto& signalDescriptors = m_meta->getData().signalSet;
+  for(size_t i = 0; i < signalCount; i++) {
+    SignalName signalName = signalDescriptors.at(i).name;
+    m_signals[signalName] = {SignalDataPoints(), signalDescriptors.at(i)};
+    addSignalDataPoints(signalName, values->getSignalPoints(i));
+  }
+
+  delete values;
+}
+
 void ModelResult::openFile(const std::string& filename) {
   if(filename.empty()) {
     Logger::log(Model::ModelMessage::DEBUG_NO_FILE_SELECTED);
@@ -132,7 +114,11 @@ void ModelResult::openFile(const std::string& filename) {
     Logger::log(Model::ModelMessage::DEBUG_META_DATA_READY);
     m_meta = m_validator->getMetaData();
     if(m_meta) {
-      init(m_meta->getData().varCount, m_meta->getData().points);
+      Logger::log(Model::ModelMessage::DEBUG_NEW_MODEL_RESULT_DATA,
+                  getVariablesNumber(),
+                  getPointsNumber());
+
+      extractSignalsDataPoints(filename);
       m_metaDataLoadCB(&m_meta->getData(), "Chose signals to plot");
     } else {
       Logger::log(Model::ModelMessage::ERROR_META_DATA_NOT_READY);

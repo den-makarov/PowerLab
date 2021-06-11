@@ -15,7 +15,8 @@ const std::unordered_map<std::string, ModelResultMeta::TokenType> ModelResultMet
   {"Flags", TokenType::FLAGS},
   {"No. Variables", TokenType::VAR_COUNT},
   {"No. Points", TokenType::POINT_COUNT},
-  {"Variables", TokenType::SIGNALS}
+  {"Variables", TokenType::SIGNALS},
+  {"Values", TokenType::VALUES}
 };
 
 /**
@@ -127,6 +128,9 @@ void ModelResultMeta::parseToken(TokenType token, const std::string& data) {
   case TokenType::SIGNALS:
     parseSignalToken(data);
     break;
+  case TokenType::VALUES:
+    parseSignalToken(data);
+    break;
   case TokenType::UNKNOWN:
     break;
   }
@@ -179,6 +183,7 @@ std::ostream& operator<<(std::ostream& out, ModelResultMeta::TokenType token) {
   case ModelResultMeta::TokenType::VAR_COUNT: str = "Number of variables"; break;
   case ModelResultMeta::TokenType::POINT_COUNT: str = "Number of points"; break;
   case ModelResultMeta::TokenType::SIGNALS: str = "Variables"; break;
+  case ModelResultMeta::TokenType::VALUES: str = ""; break;
   case ModelResultMeta::TokenType::UNKNOWN: str = "Unknown"; break;
   }
 

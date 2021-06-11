@@ -14,9 +14,9 @@ class ModelResultValidator;
 
 class ModelResult {
 public:
-  using DataPoints = std::vector<double>;
-  using DataNames = std::pair<std::string, std::string>;
-  using SignalNames = std::vector<ModelResultMeta::SignalDescriptor>;
+  using DataPoint = double;
+  using SignalName = std::string;
+  using SignalDataPoints = std::vector<DataPoint>;
   using MetaDataLoadCB = std::function<void(const ModelResultMeta::Data*, const std::string&)>;
 
   ModelResult();
@@ -24,29 +24,36 @@ public:
 
   size_t getVariablesNumber() const;
   size_t getPointsNumber() const;
-  void addDataPoint(size_t var, double point);
-  void addDataPoint(size_t var, const DataPoints& data);
+  void addSignalDataPoint(const SignalName& signalName, DataPoint point);
+  void addSignalDataPoints(const SignalName& signalName, const SignalDataPoints& points);
+  template<typename DataIterator>
+  void addSignalDataPoints(const SignalName& signalName,
+                           DataIterator begin,
+                           DataIterator end);
 
-  const DataPoints& getDataPoints(size_t var) const;
-  const SignalNames* getSignalNames() const;
+  SignalDataPoints getSignalDataPoints(const SignalName& name) const;
+  std::vector<SignalName> getAllSignalNames() const;
   void openFile(const std::string& filename);
   void setupMetaDataLoadCB(MetaDataLoadCB cb);
 
 private:
+  struct Signal {
+    SignalDataPoints points;
+    ModelResultMeta::SignalDescriptor signal;
+  };
+
   ModelResultValidator* m_validator;
-  std::vector<DataPoints> m_data;
-  std::vector<DataNames> m_signals;
+  std::map<SignalName, Signal> m_signals;
   MetaDataLoadCB m_metaDataLoadCB = defaultMetaDataLoadSignal;
   const ModelResultMeta* m_meta = nullptr;
 
-  static DataPoints dummyPoints;
-  static DataNames dummyNames;
   static constexpr size_t MAX_VARIABLES_NUMBER = 25;
   static constexpr size_t MAX_POINTS_NUMBER = 1'000'000;
 
-  void init(size_t variables, size_t points);
   static void defaultMetaDataLoadSignal(const ModelResultMeta::Data* data,
                                         const std::string& msg);
+
+  void extractSignalsDataPoints(const std::string& filename);
 };
 
 } // namespace model
