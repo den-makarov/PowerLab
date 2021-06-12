@@ -101,11 +101,6 @@ void GraphProcessor::plot(QPainter *painter, QVector<double> x, double max) {
   }
 }
 
-/**
- * @brief Widget::Widget
- * @param graph
- * @param parent
- */
 Widget::Widget(GraphProcessor *graph, QWidget *parent)
   : QWidget(parent)
   , graph(graph)

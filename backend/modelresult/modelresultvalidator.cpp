@@ -4,10 +4,6 @@
 
 namespace Model {
 
-/**
- * @brief ModelResultValidator::ModelResultValidator
- * @param parent
- */
 ModelResultValidator::ModelResultValidator()
   : m_meta(new ModelResultMeta())
 {
@@ -21,11 +17,6 @@ ModelResultValidator::~ModelResultValidator() {
   }
 }
 
-/**
- * @brief ModelResultValidator::validate
- * @param filename
- * @return
- */
 bool ModelResultValidator::validate(const std::string& filename) {
   bool result = false;
 
@@ -70,12 +61,6 @@ bool ModelResultValidator::validate(const std::string& filename) {
   return result;
 }
 
-/**
- * @brief ModelResultValidator::validateSignals
- * @param file
- * @param line
- * @return
- */
 bool ModelResultValidator::readSignalLines(std::ifstream& file, std::string& line) {
   bool result = false;
 

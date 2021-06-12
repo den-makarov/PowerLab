@@ -21,10 +21,6 @@
 
 namespace Gui {
 
-/**
- * @brief MainWindow::MainWindow
- * @param parent
- */
 MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
 { 
@@ -59,17 +55,8 @@ MainWindow::MainWindow(QWidget *parent)
   }
 }
 
-/**
- * @brief MainWindow::~MainWindow
- */
-MainWindow::~MainWindow()
-{
-}
+MainWindow::~MainWindow() {}
 
-/**
- * @brief MainWindow::ShowMetaData
- * @param msg
- */
 void MainWindow::showMetaData(const Model::ModelResultMeta::Data* data, const std::string& msg) {
   if(data) {
     MetaDataWindow* window = new MetaDataWindow(this);

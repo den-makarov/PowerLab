@@ -19,11 +19,6 @@ const std::unordered_map<std::string, ModelResultMeta::TokenType> ModelResultMet
   {"Values", TokenType::VALUES}
 };
 
-/**
- * @brief ModelResultMeta::determineToken
- * @param str
- * @return
- */
 ModelResultMeta::TokenType ModelResultMeta::determineToken(const std::string& str) const {
   TokenType token = TokenType::UNKNOWN;
 
@@ -38,12 +33,6 @@ ModelResultMeta::TokenType ModelResultMeta::determineToken(const std::string& st
   return token;
 }
 
-/**
- * @brief ModelResultMeta::addToken
- * @param type
- * @param str
- * @return
- */
 bool ModelResultMeta::addToken(ModelResultMeta::TokenType type, const std::string& str) {
   bool result = false;
 
@@ -60,11 +49,6 @@ bool ModelResultMeta::addToken(ModelResultMeta::TokenType type, const std::strin
   return result;
 }
 
-/**
- * @brief ModelResultMeta::addSignalToken
- * @param list
- * @return
- */
 void ModelResultMeta::parseSignalToken(const std::string& str) {
   auto list = Utilities::splitString(str, '\t');
   // @NOTE: If there are any signals, size of container should be definitely more than 2
@@ -85,11 +69,6 @@ void ModelResultMeta::parseSignalToken(const std::string& str) {
   }
 }
 
-/**
- * @brief ModelResultMeta::peekTokenData
- * @param token
- * @return
- */
 std::string_view ModelResultMeta::peekTokenData(TokenType token) const {
   for(const auto & item : m_tokens) {
     if(item.type == token) {
@@ -100,11 +79,6 @@ std::string_view ModelResultMeta::peekTokenData(TokenType token) const {
   return {};
 }
 
-/**
- * @brief ModelResultMeta::parseToken
- * @param token
- * @param data
- */
 void ModelResultMeta::parseToken(TokenType token, const std::string& data) {
   switch(token) {
   case TokenType::TITLE:
@@ -136,9 +110,6 @@ void ModelResultMeta::parseToken(TokenType token, const std::string& data) {
   }
 }
 
-/**
- * @brief ModelResultMeta::parseData
- */
 void ModelResultMeta::parseData() {
   for(const auto& item : m_tokens) {
     parseToken(item.type, item.data);
@@ -154,12 +125,6 @@ ModelResultMeta::SignalDescriptor ModelResultMeta::Token::splitToken(char delim)
   }
 }
 
-/**
- * @brief operator <<
- * @param log
- * @param data
- * @return
- */
 std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Flags& data) {
   switch(data) {
     case ModelResultMeta::Flags::REAL: out << "REAL"; break;
@@ -191,12 +156,6 @@ std::ostream& operator<<(std::ostream& out, ModelResultMeta::TokenType token) {
   return out;
 }
 
-/**
- * @brief operator <<
- * @param log
- * @param data
- * @return
- */
 std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Data& data) {
   out << "Model result meta data:\n";
   out << "Title: " << data.title << "\n";

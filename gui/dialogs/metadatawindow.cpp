@@ -15,10 +15,6 @@
 
 namespace Gui {
 
-/**
- * @brief MetaDataWindow::MetaDataWindow
- * @param parent
- */
 MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
 {
   setWindowModality(Qt::ApplicationModal);
@@ -74,10 +70,6 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
   button_layout->addWidget(cancel, 1, 3, Qt::AlignRight);
 }
 
-/**
- * @brief MetaDataWindow::loadModelResults
- * @param data
- */
 QAbstractItemModel* MetaDataWindow::loadModelResults(const Model::ModelResultMeta::Data* data) {
   if(!data) {
     Logger::log(GuiMessage::ERROR_NO_META_DATA);
@@ -98,9 +90,6 @@ QAbstractItemModel* MetaDataWindow::loadModelResults(const Model::ModelResultMet
   return graph_model;
 }
 
-/**
- * @brief MetaDataWindow::addSignalToGraph
- */
 void MetaDataWindow::addSignalToGraph() {
   QItemSelectionModel *selectionModel = signals_view->selectionModel();
   if(!selectionModel) {
@@ -128,9 +117,6 @@ void MetaDataWindow::addSignalToGraph() {
   selectionModel->clearSelection();
 }
 
-/**
- * @brief MetaDataWindow::removeSignalFromGraph
- */
 void MetaDataWindow::removeSignalFromGraph() {
   QItemSelectionModel *selectionModel = graph_view->selectionModel();
   if(!selectionModel) {
