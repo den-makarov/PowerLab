@@ -92,19 +92,19 @@ void MainWindow::DrawGraph() {
     layout()->addWidget(m_graphWidget);
   }
 
-  QStringList signalNames;
+  std::vector<std::string> signalNames;
   if(m_graphData) {
     int rows = m_graphData->rowCount();
     for(int i = 0; i < rows; i++) {
       auto idx = m_graphData->index(i, 0);
       auto item = m_graphData->data(idx);
       if(item.isValid()) {
-        signalNames << item.toString();
+        signalNames.push_back(item.toString().toStdString());
       }
     }
   }
 
-  m_graphWidget->setNames(signalNames);
+  m_graphWidget->addGraphData(signalNames[0], m_modelResult->getSignalDataPoints(signalNames[0]));
   m_graphWidget->plot();
 }
 

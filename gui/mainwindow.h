@@ -8,8 +8,8 @@
 #include "modelresult/modelresult.h"
 
 class QMessageBox;
-class GraphProcessor;
 class QAbstractItemModel;
+class GraphProcessor;
 class GraphWidget;
 
 namespace Gui {

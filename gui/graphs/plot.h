@@ -32,7 +32,7 @@ public:
        int gridWidth = 0,
        int gridHeight = 0);
 
-  void SetBackground(uint8_t R = 0xFF, uint8_t G = 0xFF, uint8_t B = 0xFF) {
+  void setBackground(uint8_t R = 0xFF, uint8_t G = 0xFF, uint8_t B = 0xFF) {
     m_background[0] = R;
     m_background[1] = G;
     m_background[2] = B;
