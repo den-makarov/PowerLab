@@ -21,14 +21,14 @@ public:
   void plot(QPainter *painter, QVector<double> x, double max);
 
 private:
-  QBrush background;
-  QPen penOne;
-  QPen penTwo;
+  QBrush m_background;
+  QPen m_penOne;
+  QPen m_penTwo;
 };
 
-class Widget : public QWidget {
+class GraphWidget : public QWidget {
 public:
-  Widget(GraphProcessor *graph, QWidget *parent);
+  GraphWidget(GraphProcessor *graph, QWidget *parent);
 
   void setNames(QStringList names);
 
@@ -40,11 +40,11 @@ protected:
 
 private:
   QStringList m_names;
-  GraphProcessor *graph;
-  QVector<double> lineV;
-  QVector<double> lineI;
-  double maxV = 0.0;
-  double maxI = 0.0;
+  GraphProcessor* m_graphProcessor;
+  QVector<double> m_lineV;
+  QVector<double> m_lineI;
+  double m_maxV = 0.0;
+  double m_maxI = 0.0;
 };
 
 } // namespace Gui

@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
   QCoreApplication::setApplicationVersion(appVersion);
   QCoreApplication::setApplicationName(appTitle);
 
-  Gui::MainWindow w;
-  w.show();
+  Gui::MainWindow window;
+  window.show();
   return app.exec();
 }

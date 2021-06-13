@@ -11,8 +11,7 @@ class QPainter;
 
 namespace Gui {
 
-class Plot
-{
+class Plot {
 public:
   enum class Axis {
     X,
@@ -34,32 +33,32 @@ public:
        int gridHeight = 0);
 
   void SetBackground(uint8_t R = 0xFF, uint8_t G = 0xFF, uint8_t B = 0xFF) {
-    mBackground[0] = R;
-    mBackground[1] = G;
-    mBackground[2] = B;
+    m_background[0] = R;
+    m_background[1] = G;
+    m_background[2] = B;
   }
 
-  void SetAxisLabel(const Axis& axis, const std::string& label) {
+  void setAxisLabel(const Axis& axis, const std::string& label) {
     if(axis == Axis::X) {
-      mAxisLabels[0] = label;
+      m_axisLabels[0] = label;
     } else {
-      mAxisLabels[1] = label;
+      m_axisLabels[1] = label;
     }
   }
 
-  void SetBounds(const Bounds& boundaries) {
-    mBounds = boundaries;
+  void setBounds(const Bounds& boundaries) {
+    m_bounds = boundaries;
   }
 
-  void SetLogarithmic(const Axis& axis, bool isLog) {
+  void setLogarithmic(const Axis& axis, bool isLog) {
     if(axis == Axis::X) {
-      isWidthLogarithmic = isLog;
+      m_isWidthLogarithmic = isLog;
     } else {
-      isHeightLogarithmic = isLog;
+      m_isHeightLogarithmic = isLog;
     }
   }
 
-  void Update(QPainter* painter) const;
+  void update(QPainter* painter) const;
 
 private:
   struct Graph {
@@ -67,22 +66,22 @@ private:
     QColor color;
   };
 
-  const int mWidth;
-  const int mHeight;
-  bool mBorder;
-  bool isWidthLogarithmic = false;
-  bool isHeightLogarithmic = false;
-  int mGridWidth;
-  int mGridHeight;
-  Bounds mBounds = {0.6, 0.0, 0.12, -0.12};
-  std::string mAxisLabels[2] = {"", ""};
-  uint8_t mBackground[3] = {0xFF, 0xFF, 0xA0};
-  std::vector<Graph> graphs;
+  const int m_width;
+  const int m_height;
+  bool m_border;
+  bool m_isWidthLogarithmic = false;
+  bool m_isHeightLogarithmic = false;
+  int m_gridWidth;
+  int m_gridHeight;
+  Bounds m_bounds = {0.6, 0.0, 0.12, -0.12};
+  std::string m_axisLabels[2] = {"", ""};
+  uint8_t m_background[3] = {0xFF, 0xFF, 0xA0};
+  std::vector<Graph> m_graphs;
 
-  void DrawBorder(QPainter* painter) const;
-  void DrawGrid(QPainter* painter) const;
-  void DrawAxisLabels(QPainter* painter) const;
-  void DrawGridValue(QPainter* painter, double number, int x, int y) const;
+  void drawBorder(QPainter* painter) const;
+  void drawGrid(QPainter* painter) const;
+  void drawAxisLabels(QPainter* painter) const;
+  void drawGridValue(QPainter* painter, double number, int x, int y) const;
 };
 
 } // namespace Gui

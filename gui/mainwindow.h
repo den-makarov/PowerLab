@@ -10,7 +10,7 @@
 class QMessageBox;
 class GraphProcessor;
 class QAbstractItemModel;
-class Widget;
+class GraphWidget;
 
 namespace Gui {
 
@@ -27,14 +27,14 @@ private slots:
   void DrawGraph();
 
 private:
-  Model::ModelResult::MetaDataLoadCB metaDataLoaded;
-  Model::ModelResult* result = nullptr;
-  GraphProcessor* graph = nullptr;
+  Model::ModelResult::MetaDataLoadCB m_metaDataLoadedCB;
+  Model::ModelResult* m_modelResult = nullptr;
+  GraphProcessor* m_graphProcessor = nullptr;
   QMessageBox* m_metaDataWindow = nullptr;
-  QAbstractItemModel* graph_data = nullptr;
-  int m_graphColumns = 1;
-  Widget* w = nullptr;
+  QAbstractItemModel* m_graphData = nullptr;
+  GraphWidget* m_graphWidget = nullptr;
 
+  int m_graphColumns = 1;
   constexpr static size_t MIN_WINDOW_WIDTH = 400;
   constexpr static size_t MIN_WINDOW_HEIGHT = 200;
 };

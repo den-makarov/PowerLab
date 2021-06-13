@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
 { 
   setWindowState(Qt::WindowState::WindowMaximized);
-  result = new Model::ModelResult();
+  m_modelResult = new Model::ModelResult();
   QMenuBar* menuBar = new QMenuBar(this);
   QMenu* menuFile = new QMenu("&File", this);
   QMenu* menuEdit = new QMenu("&Edit", this);
@@ -47,11 +47,11 @@ MainWindow::MainWindow(QWidget *parent)
   layout->setMenuBar(menuBar);
 
   m_metaDataWindow = new QMessageBox(this);
-  if(m_metaDataWindow && result) {
-    metaDataLoaded = [this](const Model::ModelResultMeta::Data* data, const std::string& msg){
+  if(m_metaDataWindow && m_modelResult) {
+    m_metaDataLoadedCB = [this](const Model::ModelResultMeta::Data* data, const std::string& msg) {
       this->showMetaData(data, msg);
     };
-    result->setupMetaDataLoadCB(metaDataLoaded);
+    m_modelResult->setupMetaDataLoadCB(m_metaDataLoadedCB);
   }
 }
 
@@ -61,7 +61,7 @@ void MainWindow::showMetaData(const Model::ModelResultMeta::Data* data, const st
   if(data) {
     MetaDataWindow* window = new MetaDataWindow(this);
     connect(window, &MetaDataWindow::accepted, this, &MainWindow::DrawGraph);
-    graph_data = window->loadModelResults(data);
+    m_graphData = window->loadModelResults(data);
     window->show();
   } else {
     m_metaDataWindow->setIcon(QMessageBox::Warning);
@@ -76,36 +76,36 @@ void MainWindow::openModelResults() {
                                                   tr("Open file with modeling results"),
                                                   "",
                                                   tr("Modeling result files (*.esk *.dat)"));
-  if(result) {
-    result->openFile(filename.toStdString());
+  if(m_modelResult) {
+    m_modelResult->openFile(filename.toStdString());
   }
 }
 
 void MainWindow::DrawGraph() {
   if(layout()) {
-    if(w) {
-      layout()->removeWidget(w);
-      delete w;
+    if(m_graphWidget) {
+      layout()->removeWidget(m_graphWidget);
+      delete m_graphWidget;
     }
-    graph = new GraphProcessor();
-    w = new Widget(graph, this);
-    layout()->addWidget(w);
+    m_graphProcessor = new GraphProcessor();
+    m_graphWidget = new GraphWidget(m_graphProcessor, this);
+    layout()->addWidget(m_graphWidget);
   }
 
-  QStringList signal_names;
-  if(graph_data) {
-    int rows = graph_data->rowCount();
+  QStringList signalNames;
+  if(m_graphData) {
+    int rows = m_graphData->rowCount();
     for(int i = 0; i < rows; i++) {
-      auto idx = graph_data->index(i, 0);
-      auto item = graph_data->data(idx);
+      auto idx = m_graphData->index(i, 0);
+      auto item = m_graphData->data(idx);
       if(item.isValid()) {
-        signal_names << item.toString();
+        signalNames << item.toString();
       }
     }
   }
 
-  w->setNames(signal_names);
-  w->plot();
+  m_graphWidget->setNames(signalNames);
+  m_graphWidget->plot();
 }
 
 } // namespace Gui
