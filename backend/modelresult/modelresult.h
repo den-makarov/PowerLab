@@ -31,6 +31,7 @@ public:
                            DataIterator begin,
                            DataIterator end);
 
+  std::string getSignalUnitsSISymbol(const std::string& signalName) const;
   SignalDataPoints getSignalDataPoints(const SignalName& name) const;
   std::vector<SignalName> getAllSignalNames() const;
   void openFile(const std::string& filename);

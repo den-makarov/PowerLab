@@ -4,6 +4,7 @@
 #include <QtMath>
 
 #include "graphprocessor.h"
+#include "logger.h"
 #include "plot.h"
 
 namespace {
@@ -80,7 +81,7 @@ namespace Gui {
 GraphProcessor::GraphProcessor()
 {
   m_background = QBrush(QColor(0xA4, 0xA4, 0xA4));
-  m_penOne = QPen(Qt::black);
+  m_penOne = QPen(Qt::red);
   m_penOne.setWidth(1);
 
   m_penTwo = QPen(Qt::blue);
@@ -120,22 +121,60 @@ GraphWidget::GraphWidget(GraphProcessor *graph, QWidget *parent)
   }
 }
 
-void GraphWidget::addGraphData(std::string name, std::vector<double> dataPoints) {
-  if(m_graphs.find(name) == m_graphs.end()) {
-    m_graphs.emplace(name, dataPoints);
-  } else {
-    // ERROR Attempt to add new graph with the similar name
-  }
-}
-
 void GraphWidget::plot() {
   update();
 }
 
+void GraphWidget::addGraphData(std::string name,
+                               std::string units,
+                               std::vector<double> dataPoints) {
+  if(m_graphs.find(name) == m_graphs.end()) {
+    m_graphs.emplace(name, GraphData{units, dataPoints, 0.0, 0.0});
+  } else {
+    Logger::log(GuiMessage::ERROR_ATTEMPT_PLOT_SAME_SIGNAL, name);
+  }
+}
+
+void GraphWidget::addHorizontalScaleData(std::string name,
+                                         std::string units,
+                                         std::vector<double> dataPoints) {
+  m_horizontalScale.first = name;
+  m_horizontalScale.second.units = units;
+  m_horizontalScale.second.points = dataPoints;
+}
+
+void GraphWidget::configureHorizontalScale(Plot& plot) {
+  auto& graphData = m_horizontalScale.second;
+  auto& graphName = m_horizontalScale.first;
+
+  graphData.minValue = graphData.points.front();
+  graphData.maxValue = graphData.points.back();
+
+  plot.setAxisLabel(Plot::Axis::X, graphName + ", [" + graphData.units + "]");
+  auto& plotBounds = plot.getBounds();
+  plotBounds.xMin = graphData.minValue;
+  plotBounds.xMax = graphData.maxValue;
+}
+
+void GraphWidget::configureVerticalScale(Plot& plot) {
+  for(auto& [graphName, graphData] : m_graphs) {
+    plot.setAxisLabel(Plot::Axis::Y, graphName + ", [" + graphData.units + "]");
+    auto& plotBounds = plot.getBounds();
+
+    graphData.minValue = *std::min_element(graphData.points.begin(),
+                                           graphData.points.end());
+    graphData.maxValue = *std::max_element(graphData.points.begin(),
+                                           graphData.points.end());
+
+    plotBounds.yMin = graphData.minValue;
+    plotBounds.yMax = graphData.maxValue;
+  }
+}
+
 void GraphWidget::paintEvent(QPaintEvent *event)
 {
-  if(m_graphs.empty()) {
-    // ERROR No graphs to plot
+  if(m_graphs.size() < 1) {
+    Logger::log(GuiMessage::ERROR_NO_DATA_TO_PLOT);
     return;
   }
 
@@ -144,20 +183,15 @@ void GraphWidget::paintEvent(QPaintEvent *event)
   painter.setRenderHint(QPainter::Antialiasing);
 
   Plot plot(event->rect().width(), event->rect().height(), true, 7, 9);
-  const auto& graphData = m_graphs.begin()->second;
-  const auto& graphName = m_graphs.begin()->first;
+  configureHorizontalScale(plot);
+  configureVerticalScale(plot);
 
-  plot.setAxisLabel(Plot::Axis::X, "Time, [s]");
-  plot.setAxisLabel(Plot::Axis::Y, graphName);
-
-  auto maxValue = *std::max_element(graphData.begin(), graphData.end());
-  auto minValue = *std::min_element(graphData.begin(), graphData.end());
-
-  plot.setBounds({1.0, -1.0, maxValue, minValue});
   plot.update(&painter);
 
 //  paintDemoThreePhaseSignal(&painter, 0);
-  m_graphProcessor->plot(&painter, graphData, maxValue);
+  for(auto& [graphName, graphData] : m_graphs) {
+    m_graphProcessor->plot(&painter, graphData.points, graphData.maxValue);
+  }
   painter.end();
 }
 

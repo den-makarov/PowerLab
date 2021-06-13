@@ -1,5 +1,6 @@
 #include <sstream>
 #include <iomanip>
+#include <map>
 
 #include "modelresultmeta.h"
 #include "logger.h"
@@ -18,6 +19,46 @@ const std::unordered_map<std::string, ModelResultMeta::TokenType> ModelResultMet
   {"Variables", TokenType::SIGNALS},
   {"Values", TokenType::VALUES}
 };
+
+std::string ModelResultMeta::convertUnitTypeToString(UnitType type) {
+  std::string out;
+  switch(type) {
+    case UnitType::CURRENT: out = "current"; break;
+    case UnitType::VOLTAGE: out = "voltage"; break;
+    case UnitType::TIME: out = "time"; break;
+    case UnitType::UNITLESS: out = "no unit"; break;
+  }
+
+  return out;
+}
+
+std::string ModelResultMeta::convertUnitTypeToISSymbol(UnitType type) {
+  std::string out;
+  switch(type) {
+    case UnitType::CURRENT: out = "A"; break;
+    case UnitType::VOLTAGE: out = "V"; break;
+    case UnitType::TIME: out = "s"; break;
+    case UnitType::UNITLESS: out = ""; break;
+  }
+
+  return out;
+}
+
+ModelResultMeta::UnitType ModelResultMeta::convertUnitTypeFromString(const std::string& str) {
+  const static std::map<std::string, UnitType> strToUnitsType = {
+    {"current", UnitType::CURRENT},
+    {"voltage", UnitType::VOLTAGE},
+    {"time", UnitType::TIME},
+  };
+
+  auto it = strToUnitsType.find(str);
+  if(it != strToUnitsType.end()) {
+    return it->second;
+  }
+
+  return UnitType::UNITLESS;
+}
+
 
 ModelResultMeta::TokenType ModelResultMeta::determineToken(const std::string& str) const {
   TokenType token = TokenType::UNKNOWN;
@@ -62,7 +103,7 @@ void ModelResultMeta::parseSignalToken(const std::string& str) {
     for(size_t i = 0; i < list.size();) {
       SignalDescriptor signal;
       signal.name = Utilities::trimString(list[++i]);
-      signal.units = Utilities::trimString(list[++i]);
+      signal.unit = convertUnitTypeFromString(Utilities::trimString(list[++i]));
       m_data.signalSet.push_back(signal);
       i++;
     }
@@ -119,10 +160,15 @@ void ModelResultMeta::parseData() {
 ModelResultMeta::SignalDescriptor ModelResultMeta::Token::splitToken(char delim) const {
   if(type == TokenType::SIGNALS) {
     auto list = Utilities::splitString(Utilities::trimString(data), delim);
-    return {list.front(), list.back()};
+    return {convertUnitTypeFromString(list.front()), list.back()};
   } else {
-    return {"EMPTY", "UNIT"};
+    return {UnitType::UNITLESS, "EMPTY"};
   }
+}
+
+std::ostream& operator<<(std::ostream& out, const ModelResultMeta::UnitType& type) {
+  out << ModelResultMeta::convertUnitTypeToISSymbol(type);
+  return out;
 }
 
 std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Flags& data) {
@@ -134,7 +180,7 @@ std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Flags& data) 
 }
 
 std::ostream& operator<<(std::ostream& out, const ModelResultMeta::SignalDescriptor& signal) {
-  out << "Signal " << signal.name << " [" << signal.units << "]";
+  out << "Signal " << signal.name << " [" << signal.unit << "]";
   return out;
 }
 

@@ -11,11 +11,6 @@ namespace Model {
 
 class ModelResultMeta {
 public:
-  struct SignalDescriptor {
-    std::string name;
-    std::string units;
-  };
-
   enum class TokenType {
     TITLE,
     DATE,
@@ -31,6 +26,22 @@ public:
   enum class Flags {
     REAL,
     UNKNOWN
+  };
+
+  enum class UnitType {
+    TIME,
+    VOLTAGE,
+    CURRENT,
+    UNITLESS
+  };
+
+  static std::string convertUnitTypeToString(UnitType type);
+  static std::string convertUnitTypeToISSymbol(UnitType type);
+  static UnitType convertUnitTypeFromString(const std::string& str);
+
+  struct SignalDescriptor {
+    UnitType unit = UnitType::UNITLESS;
+    std::string name;
   };
 
   struct Data {

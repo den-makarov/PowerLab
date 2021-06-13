@@ -78,6 +78,10 @@ std::vector<ModelResult::SignalName> ModelResult::getAllSignalNames() const {
   return result;
 }
 
+std::string ModelResult::getSignalUnitsSISymbol(const std::string& signalName) const {
+  return ModelResultMeta::convertUnitTypeToISSymbol(m_signals.at(signalName).signal.unit);
+}
+
 ModelResult::SignalDataPoints ModelResult::getSignalDataPoints(const SignalName& name) const {
   auto signalIt = m_signals.find(name);
   if(signalIt == m_signals.end()) {

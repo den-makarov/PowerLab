@@ -15,6 +15,8 @@ class QPaintEvent;
 
 namespace Gui {
 
+class Plot;
+
 class GraphProcessor {
 public:
   GraphProcessor();
@@ -32,9 +34,21 @@ private:
 
 class GraphWidget : public QWidget {
 public:
+  struct GraphData {
+    std::string units;
+    std::vector<double> points;
+    double minValue = 0.0;
+    double maxValue = 0.0;
+  };
+
   GraphWidget(GraphProcessor *graph, QWidget *parent);
 
-  void addGraphData(std::string name, std::vector<double> dataPoints);
+  void addGraphData(std::string name,
+                    std::string units,
+                    std::vector<double> dataPoints);
+  void addHorizontalScaleData(std::string name,
+                              std::string units,
+                              std::vector<double> dataPoints);
 
 public slots:
   void plot();
@@ -43,7 +57,11 @@ protected:
   void paintEvent(QPaintEvent *event) override;
 
 private:
-  std::map<std::string, const std::vector<double>> m_graphs;
+  void configureHorizontalScale(Plot& plot);
+  void configureVerticalScale(Plot& plot);
+
+  std::map<std::string, GraphData> m_graphs;
+  std::pair<std::string, GraphData> m_horizontalScale;
   GraphProcessor* m_graphProcessor;
 };
 

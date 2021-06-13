@@ -50,6 +50,14 @@ public:
     m_bounds = boundaries;
   }
 
+  Bounds& getBounds() {
+    return m_bounds;
+  }
+
+  const Bounds& getBounds() const {
+    return m_bounds;
+  }
+
   void setLogarithmic(const Axis& axis, bool isLog) {
     if(axis == Axis::X) {
       m_isWidthLogarithmic = isLog;

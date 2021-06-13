@@ -104,7 +104,21 @@ void MainWindow::DrawGraph() {
     }
   }
 
-  m_graphWidget->addGraphData(signalNames[0], m_modelResult->getSignalDataPoints(signalNames[0]));
+  if(signalNames.size() < 2) {
+    Logger::log(GuiMessage::ERROR_NO_SELECTED_SIGNALS_TO_PLOT);
+    return;
+  }
+
+  m_graphWidget->addHorizontalScaleData(signalNames[0],
+                                        m_modelResult->getSignalUnitsSISymbol(signalNames[0]),
+                                        m_modelResult->getSignalDataPoints(signalNames[0]));
+
+  for(size_t i = 1; i < signalNames.size(); i++) {
+    m_graphWidget->addGraphData(signalNames[1],
+                                m_modelResult->getSignalUnitsSISymbol(signalNames[1]),
+                                m_modelResult->getSignalDataPoints(signalNames[1]));
+  }
+
   m_graphWidget->plot();
 }
 
