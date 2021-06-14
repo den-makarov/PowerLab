@@ -34,6 +34,7 @@ public:
   std::string getSignalUnitsSISymbol(const std::string& signalName) const;
   SignalDataPoints getSignalDataPoints(const SignalName& name) const;
   std::vector<SignalName> getAllSignalNames() const;
+  SignalName getReferenceSignalName() const;
   void openFile(const std::string& filename);
   void setupMetaDataLoadCB(MetaDataLoadCB cb);
 

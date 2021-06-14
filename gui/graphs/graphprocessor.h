@@ -21,15 +21,16 @@ class GraphProcessor {
 public:
   GraphProcessor();
 
+  void setPenColor(QColor color);
   void paint(QPainter *painter, int elapsed);
   void plot(QPainter *painter,
-            const std::vector<double>& x,
+            const std::vector<double>& yData,
+            const std::vector<double>& xData,
             double normalizationFactor) const;
 
 private:
   QBrush m_background;
-  QPen m_penOne;
-  QPen m_penTwo;
+  QPen m_pen;
 };
 
 class GraphWidget : public QWidget {

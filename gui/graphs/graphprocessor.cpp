@@ -74,40 +74,49 @@ void paintDemoThreePhaseSignal(QPainter *painter, int bias = 0) {
   }
 }
 
+static std::vector<QColor> defaultColorList = {
+  Qt::red, Qt::green, Qt::blue, Qt::cyan, Qt::magenta, Qt::yellow, Qt::gray
+};
+
 } // namespace anonymous
 
 namespace Gui {
 
-GraphProcessor::GraphProcessor()
-{
+GraphProcessor::GraphProcessor() {
   m_background = QBrush(QColor(0xA4, 0xA4, 0xA4));
-  m_penOne = QPen(Qt::red);
-  m_penOne.setWidth(1);
-
-  m_penTwo = QPen(Qt::blue);
-  m_penTwo.setWidth(1);
+  m_pen = QPen(Qt::red);
+  m_pen.setWidth(1);
 }
 
 void GraphProcessor::plot(QPainter *painter,
-                          const std::vector<double>& x,
+                          const std::vector<double>& yData,
+                          const std::vector<double>& xData,
                           double normalizationFactor) const {
-  painter->setPen(m_penOne);
-  double plotVerticalFactor = painter->window().height() / 2.0;
-  double plotHorizontalFactor = painter->window().width() / static_cast<double>(x.size());
-  int offset = painter->window().height() / 2;
-  if(x.empty()) {
+  if(yData.empty() || xData.empty() || xData.size() != yData.size()) {
     return;
   }
 
-  QPointF point(0.0, offset - plotVerticalFactor * x[0] / normalizationFactor);
+  painter->setPen(m_pen);
 
-  for(size_t j = 0; j < x.size(); j++) {
-    double amp = offset - plotVerticalFactor * x[j] / normalizationFactor;
-    double delta = plotHorizontalFactor * static_cast<double>(j);
-    QPointF nextPoint(delta, amp);
-    painter->drawLine(point, nextPoint);
-    point = nextPoint;
+  double plotVerticalFactor = painter->window().height() / 2.0;
+  double plotHorizontalFactor = painter->window().width() / (1.0 * xData.back());
+  int offset = painter->window().height() / 2;
+
+  QPointF point(0.0, offset - plotVerticalFactor * yData[0] / normalizationFactor);
+
+  for(size_t j = 0; j < yData.size(); j++) {
+    double y = offset - plotVerticalFactor * yData[j] / normalizationFactor;
+    double x = plotHorizontalFactor * xData[j];
+    QPointF nextPoint(x, y);
+    if(nextPoint != point) {
+      painter->drawLine(point, nextPoint);
+      point = nextPoint;
+    }
   }
+}
+
+void GraphProcessor::setPenColor(QColor color) {
+  m_pen.setColor(color);
 }
 
 GraphWidget::GraphWidget(GraphProcessor *graph, QWidget *parent)
@@ -189,8 +198,15 @@ void GraphWidget::paintEvent(QPaintEvent *event)
   plot.update(&painter);
 
 //  paintDemoThreePhaseSignal(&painter, 0);
+  size_t penColorId = 0;
   for(auto& [graphName, graphData] : m_graphs) {
-    m_graphProcessor->plot(&painter, graphData.points, graphData.maxValue);
+    m_graphProcessor->setPenColor(defaultColorList[penColorId++]);
+    penColorId %= defaultColorList.size();
+
+    m_graphProcessor->plot(&painter,
+                           graphData.points,
+                           m_horizontalScale.second.points,
+                           graphData.maxValue);
   }
   painter.end();
 }

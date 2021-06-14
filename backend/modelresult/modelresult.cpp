@@ -68,6 +68,9 @@ void ModelResult::addSignalDataPoints(const SignalName& signalName, DataIterator
   signal.points.insert(signal.points.end(), begin, end);
 }
 
+ModelResult::SignalName ModelResult::getReferenceSignalName() const {
+  return m_meta->getData().signalSet.at(0).name;
+}
 
 std::vector<ModelResult::SignalName> ModelResult::getAllSignalNames() const {
   std::vector<SignalName> result;

@@ -70,8 +70,8 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
   button_layout->addWidget(cancel, 1, 3, Qt::AlignRight);
 }
 
-QAbstractItemModel* MetaDataWindow::loadModelResults(const Model::ModelResultMeta::Data* data) {
-  if(!data) {
+QAbstractItemModel* MetaDataWindow::loadModelResults(const Model::ModelResultMeta::Data* modelResults) {
+  if(!modelResults) {
     Logger::log(GuiMessage::ERROR_NO_META_DATA);
     return nullptr;
   }
@@ -79,11 +79,13 @@ QAbstractItemModel* MetaDataWindow::loadModelResults(const Model::ModelResultMet
   signals_model->removeRows(0, signals_model->rowCount());
   int row = 0;
 
-  auto signalsNames = data->signalSet;
-  for(auto & item : signalsNames) {
+  auto signalsNames = modelResults->signalSet;
+
+  // Skip 0-index signal, cause it is horizontal scale. No need to select
+  for(size_t i = 1; i < signalsNames.size(); i++) {
     signals_model->insertRows(row, 1);
     auto idx = signals_model->index(row, 0);
-    signals_model->setData(idx, QString::fromStdString(item.name));
+    signals_model->setData(idx, QString::fromStdString(signalsNames[i].name));
     row++;
   }
 

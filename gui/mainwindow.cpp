@@ -104,19 +104,20 @@ void MainWindow::DrawGraph() {
     }
   }
 
-  if(signalNames.size() < 2) {
+  if(signalNames.size() < 1) {
     Logger::log(GuiMessage::ERROR_NO_SELECTED_SIGNALS_TO_PLOT);
     return;
   }
 
-  m_graphWidget->addHorizontalScaleData(signalNames[0],
-                                        m_modelResult->getSignalUnitsSISymbol(signalNames[0]),
-                                        m_modelResult->getSignalDataPoints(signalNames[0]));
+  std::string refSigName = m_modelResult->getReferenceSignalName();
+  m_graphWidget->addHorizontalScaleData(refSigName,
+                                        m_modelResult->getSignalUnitsSISymbol(refSigName),
+                                        m_modelResult->getSignalDataPoints(refSigName));
 
-  for(size_t i = 1; i < signalNames.size(); i++) {
-    m_graphWidget->addGraphData(signalNames[1],
-                                m_modelResult->getSignalUnitsSISymbol(signalNames[1]),
-                                m_modelResult->getSignalDataPoints(signalNames[1]));
+  for(auto& item : signalNames) {
+    m_graphWidget->addGraphData(item,
+                                m_modelResult->getSignalUnitsSISymbol(item),
+                                m_modelResult->getSignalDataPoints(item));
   }
 
   m_graphWidget->plot();

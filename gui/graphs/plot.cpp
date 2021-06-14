@@ -144,7 +144,7 @@ void Plot::drawGridValue(QPainter* painter, double number, int x, int y) const {
   QString str;
   painter->drawText((painter->pen().width() + 1) + x,
                     y - (painter->pen().width() + 1),
-                    str.setNum(number, 'f', 2));
+                    str.setNum(number, 'g', 3));
 }
 
 } // namespace Gui
