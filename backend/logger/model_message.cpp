@@ -17,7 +17,7 @@ std::string getMessagePhrase(ModelMessage msg) {
     {ModelMessage::DEBUG_NEW_DATA_FOR_SIGNAL, "New data for signal \"%1%\", number of points %2%"},
     {ModelMessage::DEBUG_NO_FILE_SELECTED, "No file selected"},
     {ModelMessage::DEBUG_META_DATA_READY, "Meta data ready"},
-    {ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, "Default meta-data parser used with message: %2%. Meta-data: %1%"},
+    {ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, "Default meta-data parser used with message: %1%, %2%"},
     {ModelMessage::DEBUG_VALUES_FILE_EXPECTED_END_REACHED, "All values are exctracted successfully"},
     // Info messages
     // Warning messages

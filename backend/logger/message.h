@@ -9,7 +9,7 @@ namespace Logger {
 
 enum class DefaultMessage {
   // DEBUG MESSAGES
-  DEBUG_DEFAULT,
+  DEBUG_MSG,
   DEBUG_LAST,
 
   // INFO MESSAGES

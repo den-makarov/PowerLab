@@ -46,8 +46,8 @@ void Plot::drawAxisLabels(QPainter *painter) const {
     return;
   }
 
-  const auto& xLabel = m_axisLabels[0];
-  const auto& yLabel = m_axisLabels[1];
+  const auto& xLabel = m_axisLabels.first;
+  const auto& yLabel = m_axisLabels.second;
 
   if(!xLabel.empty()) {
     QPen pen(Qt::black);

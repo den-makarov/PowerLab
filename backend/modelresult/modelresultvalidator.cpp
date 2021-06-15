@@ -10,13 +10,6 @@ ModelResultValidator::ModelResultValidator()
 // EMPTY
 }
 
-ModelResultValidator::~ModelResultValidator() {
-  if(m_meta) {
-    delete m_meta;
-    m_meta = nullptr;
-  }
-}
-
 bool ModelResultValidator::validate(const std::string& filename) {
   bool result = false;
 

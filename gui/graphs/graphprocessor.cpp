@@ -119,7 +119,7 @@ void GraphProcessor::setPenColor(QColor color) {
   m_pen.setColor(color);
 }
 
-GraphWidget::GraphWidget(GraphProcessor *graph, QWidget *parent)
+GraphWidget::GraphWidget(QWidget *parent, GraphProcessor* graph)
   : QWidget(parent)
   , m_graphProcessor(graph)
 {
@@ -127,6 +127,10 @@ GraphWidget::GraphWidget(GraphProcessor *graph, QWidget *parent)
     setFixedSize(parent->width() - 50, parent->height() - 50);
   } else {
     setFixedSize(400, 200);
+  }
+
+  if(!m_graphProcessor) {
+    m_graphProcessor = std::make_unique<GraphProcessor>();
   }
 }
 
@@ -159,25 +163,36 @@ void GraphWidget::configureHorizontalScale(Plot& plot) {
   graphData.minValue = graphData.points.front();
   graphData.maxValue = graphData.points.back();
 
-  plot.setAxisLabel(Plot::Axis::X, graphName + ", [" + graphData.units + "]");
+  plot.setAxisLabel(Plot::Axis::X, graphName + "[" + graphData.units + "]");
   auto& plotBounds = plot.getBounds();
   plotBounds.xMin = graphData.minValue;
   plotBounds.xMax = graphData.maxValue;
 }
 
 void GraphWidget::configureVerticalScale(Plot& plot) {
+  double min = std::numeric_limits<double>::max();
+  double max = std::numeric_limits<double>::min();
+
   for(auto& [graphName, graphData] : m_graphs) {
-    plot.setAxisLabel(Plot::Axis::Y, graphName + ", [" + graphData.units + "]");
-    auto& plotBounds = plot.getBounds();
+    plot.addAxisLabel(Plot::Axis::Y, graphName + "[" + graphData.units + "]");
+
 
     graphData.minValue = *std::min_element(graphData.points.begin(),
                                            graphData.points.end());
+    if(min > graphData.minValue) {
+      min = graphData.minValue;
+    }
+
     graphData.maxValue = *std::max_element(graphData.points.begin(),
                                            graphData.points.end());
-
-    plotBounds.yMin = graphData.minValue;
-    plotBounds.yMax = graphData.maxValue;
+    if(max < graphData.maxValue) {
+      max = graphData.maxValue;
+    }
   }
+
+  auto& plotBounds = plot.getBounds();
+  plotBounds.yMin = min * 1.2;
+  plotBounds.yMax = max * 1.2;
 }
 
 void GraphWidget::paintEvent(QPaintEvent *event)
@@ -191,7 +206,7 @@ void GraphWidget::paintEvent(QPaintEvent *event)
   painter.begin(this);
   painter.setRenderHint(QPainter::Antialiasing);
 
-  Plot plot(event->rect().width(), event->rect().height(), true, 7, 9);
+  Plot plot(event->rect().width(), event->rect().height(), true, 7, 11);
   configureHorizontalScale(plot);
   configureVerticalScale(plot);
 
@@ -206,7 +221,7 @@ void GraphWidget::paintEvent(QPaintEvent *event)
     m_graphProcessor->plot(&painter,
                            graphData.points,
                            m_horizontalScale.second.points,
-                           graphData.maxValue);
+                           plot.getBounds().yMax);
   }
   painter.end();
 }

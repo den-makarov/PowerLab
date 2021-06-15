@@ -14,19 +14,12 @@ ModelResult::ModelResult()
   // EMPTY
 }
 
-ModelResult::~ModelResult() {
-  if(m_validator) {
-    delete m_validator;
-    m_validator = nullptr;
-  }
-}
-
 size_t ModelResult::getVariablesNumber() const {
-  return m_meta ? m_meta->getData().varCount : 0;
+  return m_validator ? m_validator->getMetaData().getData().varCount : 0;
 }
 
 size_t ModelResult::getPointsNumber() const {
-  return m_meta ? m_meta->getData().points : 0;
+  return m_validator ? m_validator->getMetaData().getData().points : 0;
 }
 
 void ModelResult::addSignalDataPoint(const SignalName& signalName, DataPoint point) {
@@ -40,7 +33,6 @@ void ModelResult::addSignalDataPoint(const SignalName& signalName, DataPoint poi
   auto& signal = signalIt->second;
   signal.points.push_back(point);
 }
-
 
 void ModelResult::addSignalDataPoints(const SignalName& signalName,
                                       const SignalDataPoints& data) {
@@ -69,13 +61,21 @@ void ModelResult::addSignalDataPoints(const SignalName& signalName, DataIterator
 }
 
 ModelResult::SignalName ModelResult::getReferenceSignalName() const {
-  return m_meta->getData().signalSet.at(0).name;
+  for(auto& [key, value] : m_signals) {
+    if(value.isReference) {
+      return key;
+    }
+  }
+
+  return SignalName();
 }
 
 std::vector<ModelResult::SignalName> ModelResult::getAllSignalNames() const {
   std::vector<SignalName> result;
   for(auto& [key, value] : m_signals) {
-    result.push_back(key);
+    if(!value.isReference) {
+      result.push_back(key);
+    }
   }
 
   return result;
@@ -98,41 +98,41 @@ ModelResult::SignalDataPoints ModelResult::getSignalDataPoints(const SignalName&
 
 void ModelResult::extractSignalsDataPoints(const std::string& filename) {
   auto signalCount = getVariablesNumber();
-  auto* values = new ModelResultValue<double>(filename, getPointsNumber(), signalCount);
 
-  const auto& signalDescriptors = m_meta->getData().signalSet;
-  for(size_t i = 0; i < signalCount; i++) {
-    SignalName signalName = signalDescriptors.at(i).name;
-    m_signals[signalName] = {SignalDataPoints(), signalDescriptors.at(i)};
-    addSignalDataPoints(signalName, values->getSignalPoints(i));
+
+  if(m_validator) {
+    auto values = std::make_unique<ModelResultValue<double>>(filename, getPointsNumber(), signalCount);
+    const auto& signalDescriptors = m_validator->getMetaData().getData().signalSet;
+    for(size_t i = 0; i < signalCount; i++) {
+      bool signalDataUsedAsHorizontalPoints = i == 0 ? true : false;
+      SignalName signalName = signalDescriptors.at(i).name;
+      m_signals[signalName] = {SignalDataPoints(),
+                               signalDescriptors.at(i),
+                               signalDataUsedAsHorizontalPoints};
+      addSignalDataPoints(signalName, values->getSignalPoints(i));
+    }
+  } else {
+    Logger::log(Model::ModelMessage::ERROR_META_DATA_NOT_READY);
   }
-
-  delete values;
 }
 
 void ModelResult::openFile(const std::string& filename) {
   if(filename.empty()) {
     Logger::log(Model::ModelMessage::DEBUG_NO_FILE_SELECTED);
-    m_metaDataLoadCB(nullptr, "No file selected");
+    m_metaDataLoadCB(false, "No file selected");
     return;
   }
 
   if(m_validator->validate(filename)) {
-    Logger::log(Model::ModelMessage::DEBUG_META_DATA_READY);
-    m_meta = m_validator->getMetaData();
-    if(m_meta) {
-      Logger::log(Model::ModelMessage::DEBUG_NEW_MODEL_RESULT_DATA,
+    Logger::log(Model::ModelMessage::DEBUG_NEW_MODEL_RESULT_DATA,
                   getVariablesNumber(),
                   getPointsNumber());
 
-      extractSignalsDataPoints(filename);
-      m_metaDataLoadCB(&m_meta->getData(), "Chose signals to plot");
-    } else {
-      Logger::log(Model::ModelMessage::ERROR_META_DATA_NOT_READY);
-      m_metaDataLoadCB(nullptr, "Meta data is expected");
-    }
+    extractSignalsDataPoints(filename);
+    Logger::log(Model::ModelMessage::DEBUG_META_DATA_READY);
+    m_metaDataLoadCB(true, "Chose signals to plot");
   } else {
-    m_metaDataLoadCB(nullptr, "Meta data validation failed");
+    m_metaDataLoadCB(false, "Meta data validation failed");
   }
 }
 
@@ -142,11 +142,11 @@ void ModelResult::setupMetaDataLoadCB(ModelResult::MetaDataLoadCB cb) {
   }
 }
 
-void ModelResult::defaultMetaDataLoadSignal(const ModelResultMeta::Data* data, const std::string& msg) {
-  if(data) {
-    Logger::log(Model::ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, &data, msg);
+void ModelResult::defaultMetaDataLoadSignal(bool parseResult, const std::string& msg) {
+  if(parseResult) {
+    Logger::log(Model::ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, "Parsing success", msg);
   } else {
-    Logger::log(Model::ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, "No meta-data", msg);
+    Logger::log(Model::ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, "Parsing failed", msg);
   }
 }
 

@@ -11,7 +11,7 @@
 
 #include "logger.h"
 #include "metadatawindow.h"
-#include "modelresult/modelresultmeta.h"
+#include "modelresult/modelresult.h"
 
 namespace Gui {
 
@@ -25,16 +25,16 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
 
   QSplitter *signals_splitter = new QSplitter(this);
 
-  signals_model = new QStringListModel(this);
-  signals_view = new QListView(this);
-  signals_view->setModel(signals_model);
+  m_signalsModel = new QStringListModel(this);
+  m_signalsView = new QListView(this);
+  m_signalsView->setModel(m_signalsModel);
 
-  graph_model = new QStringListModel(this);
-  graph_view = new QListView(this);
-  graph_view->setModel(graph_model);
+  m_graphModel = new QStringListModel(this);
+  m_graphView = new QListView(this);
+  m_graphView->setModel(m_graphModel);
 
-  signals_splitter->addWidget(signals_view);
-  signals_splitter->addWidget(graph_view);
+  signals_splitter->addWidget(m_signalsView);
+  signals_splitter->addWidget(m_graphView);
 
   QPushButton* ok = new QPushButton(this);
   ok->setText("&Ok");
@@ -56,10 +56,10 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
   del_signal->setMaximumWidth(80);
   connect(del_signal, &QPushButton::pressed, this, &MetaDataWindow::removeSignalFromGraph);
 
-  QGridLayout *layout = new QGridLayout();
+  QGridLayout *layout = new QGridLayout(this);
   setLayout(layout);
 
-  QGridLayout *button_layout = new QGridLayout();
+  QGridLayout *button_layout = new QGridLayout(this);
   layout->addLayout(button_layout, 2, 0);
   layout->addWidget(label, 0, 0);
   layout->addWidget(signals_splitter, 1, 0);
@@ -70,30 +70,23 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
   button_layout->addWidget(cancel, 1, 3, Qt::AlignRight);
 }
 
-QAbstractItemModel* MetaDataWindow::loadModelResults(const Model::ModelResultMeta::Data* modelResults) {
-  if(!modelResults) {
-    Logger::log(GuiMessage::ERROR_NO_META_DATA);
-    return nullptr;
-  }
-
-  signals_model->removeRows(0, signals_model->rowCount());
+QAbstractItemModel* MetaDataWindow::loadModelResults(const Model::ModelResult& modelResults) {
+  m_signalsModel->removeRows(0, m_signalsModel->rowCount());
   int row = 0;
 
-  auto signalsNames = modelResults->signalSet;
-
   // Skip 0-index signal, cause it is horizontal scale. No need to select
-  for(size_t i = 1; i < signalsNames.size(); i++) {
-    signals_model->insertRows(row, 1);
-    auto idx = signals_model->index(row, 0);
-    signals_model->setData(idx, QString::fromStdString(signalsNames[i].name));
+  for(auto& signalName : modelResults.getAllSignalNames()) {
+    m_signalsModel->insertRows(row, 1);
+    auto idx = m_signalsModel->index(row, 0);
+    m_signalsModel->setData(idx, QString::fromStdString(signalName));
     row++;
   }
 
-  return graph_model;
+  return m_graphModel;
 }
 
 void MetaDataWindow::addSignalToGraph() {
-  QItemSelectionModel *selectionModel = signals_view->selectionModel();
+  QItemSelectionModel *selectionModel = m_signalsView->selectionModel();
   if(!selectionModel) {
     Logger::log(GuiMessage::ERROR_SELECTION_INVALID);
     return;
@@ -104,12 +97,12 @@ void MetaDataWindow::addSignalToGraph() {
   for(const QModelIndex &idx : indexes) {
     auto data = idx.data();
     if(data.isValid()) {
-      auto startIdx = graph_model->index(0, 0);
-      auto matches = graph_model->match(startIdx, Qt::DisplayRole, data, 1, Qt::MatchExactly);
+      auto startIdx = m_graphModel->index(0, 0);
+      auto matches = m_graphModel->match(startIdx, Qt::DisplayRole, data, 1, Qt::MatchExactly);
       if(matches.isEmpty()) {
-        graph_model->insertRow(graph_model->rowCount());
-        auto row_idx = graph_model->index(graph_model->rowCount() - 1, 0);
-        graph_model->setData(row_idx, data);
+        m_graphModel->insertRow(m_graphModel->rowCount());
+        auto row_idx = m_graphModel->index(m_graphModel->rowCount() - 1, 0);
+        m_graphModel->setData(row_idx, data);
       } else {
         Logger::log(GuiMessage::DEBUG_ATTEMPT_ADD_ITEM_TWICE, data.toString().toStdString());
       }
@@ -120,7 +113,7 @@ void MetaDataWindow::addSignalToGraph() {
 }
 
 void MetaDataWindow::removeSignalFromGraph() {
-  QItemSelectionModel *selectionModel = graph_view->selectionModel();
+  QItemSelectionModel *selectionModel = m_graphView->selectionModel();
   if(!selectionModel) {
     Logger::log(GuiMessage::ERROR_SELECTION_INVALID);
     return;
@@ -129,7 +122,7 @@ void MetaDataWindow::removeSignalFromGraph() {
   const QModelIndexList indexes = selectionModel->selectedIndexes();
 
   for(const QModelIndex &idx : indexes) {
-    graph_model->removeRow(idx.row());
+    m_graphModel->removeRow(idx.row());
   }
 
   selectionModel->clearSelection();

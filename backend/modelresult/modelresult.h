@@ -5,6 +5,7 @@
 #include <string>
 #include <utility>
 #include <functional>
+#include <memory>
 
 #include "modelresultmeta.h"
 
@@ -17,10 +18,9 @@ public:
   using DataPoint = double;
   using SignalName = std::string;
   using SignalDataPoints = std::vector<DataPoint>;
-  using MetaDataLoadCB = std::function<void(const ModelResultMeta::Data*, const std::string&)>;
+  using MetaDataLoadCB = std::function<void(bool, const std::string&)>;
 
   ModelResult();
-  ~ModelResult();
 
   size_t getVariablesNumber() const;
   size_t getPointsNumber() const;
@@ -42,17 +42,17 @@ private:
   struct Signal {
     SignalDataPoints points;
     ModelResultMeta::SignalDescriptor signal;
+    bool isReference;
   };
 
-  ModelResultValidator* m_validator;
+  std::unique_ptr<ModelResultValidator> m_validator;
   std::map<SignalName, Signal> m_signals;
   MetaDataLoadCB m_metaDataLoadCB = defaultMetaDataLoadSignal;
-  const ModelResultMeta* m_meta = nullptr;
 
   static constexpr size_t MAX_VARIABLES_NUMBER = 25;
   static constexpr size_t MAX_POINTS_NUMBER = 1'000'000;
 
-  static void defaultMetaDataLoadSignal(const ModelResultMeta::Data* data,
+  static void defaultMetaDataLoadSignal(bool parsingResult,
                                         const std::string& msg);
 
   void extractSignalsDataPoints(const std::string& filename);

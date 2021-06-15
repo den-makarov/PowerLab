@@ -38,11 +38,27 @@ public:
     m_background[2] = B;
   }
 
-  void setAxisLabel(const Axis& axis, const std::string& label) {
+  void setAxisLabel(Axis axis, const std::string& label) {
     if(axis == Axis::X) {
-      m_axisLabels[0] = label;
+      m_axisLabels.first = label;
     } else {
-      m_axisLabels[1] = label;
+      m_axisLabels.second = label;
+    }
+  }
+
+  void addAxisLabel(Axis axis, const std::string& label) {
+    if(axis == Axis::X) {
+      if(m_axisLabels.first.empty()) {
+        setAxisLabel(axis, label);
+      } else {
+        m_axisLabels.first += ", " + label;
+      }
+    } else {
+      if(m_axisLabels.second.empty()) {
+        setAxisLabel(axis, label);
+      } else {
+        m_axisLabels.second += " " + label;
+      }
     }
   }
 
@@ -82,7 +98,7 @@ private:
   int m_gridWidth;
   int m_gridHeight;
   Bounds m_bounds = {0.6, 0.0, 0.12, -0.12};
-  std::string m_axisLabels[2] = {"", ""};
+  std::pair<std::string, std::string> m_axisLabels;
   uint8_t m_background[3] = {0xFF, 0xFF, 0xA0};
   std::vector<Graph> m_graphs;
 

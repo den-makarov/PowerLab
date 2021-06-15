@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <functional>
+#include <memory>
 
 #include <QWidget>
 #include <QBrush>
@@ -42,7 +43,7 @@ public:
     double maxValue = 0.0;
   };
 
-  GraphWidget(GraphProcessor *graph, QWidget *parent);
+  GraphWidget(QWidget *parent = nullptr, GraphProcessor* graph = nullptr);
 
   void addGraphData(std::string name,
                     std::string units,
@@ -63,7 +64,7 @@ private:
 
   std::map<std::string, GraphData> m_graphs;
   std::pair<std::string, GraphData> m_horizontalScale;
-  GraphProcessor* m_graphProcessor;
+  std::unique_ptr<GraphProcessor> m_graphProcessor;
 };
 
 } // namespace Gui

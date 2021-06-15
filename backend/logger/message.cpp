@@ -6,7 +6,7 @@ namespace Logger {
 
 std::ostream& operator<<(std::ostream& out, const LogMessage::Tag& tag) {
   switch(tag) {
-    case LogMessage::Tag::NONE: break;
+    case LogMessage::Tag::NONE: out << "NONE"; break;
     case LogMessage::Tag::GUI: out << "GUI"; break;
     case LogMessage::Tag::SYSTEM: out << "SYSTEM"; break;
     case LogMessage::Tag::MODEL_RESULT: out << "MODEL_RESULT"; break;
@@ -60,6 +60,7 @@ std::string getMessagePhrase(DefaultMessage msg) {
     {DefaultMessage::WARNING_LAST, "Restricted to use"},
     {DefaultMessage::ERROR_LAST, "Restricted to use"},
     // Debug messagess
+    {DefaultMessage::DEBUG_MSG, "%1%"},
     // Info messages
     // Warning messages
     // Error messages

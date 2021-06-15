@@ -14,7 +14,8 @@
 #include <QAbstractItemModel>
 
 #include "logger.h"
-#include "modelresult/modelresult.h"
+#include "modelresult/modelresultvalidator.h"
+#include "modelresult/modelresultmeta.h"
 #include "dialogs/metadatawindow.h"
 #include "graphs/graphprocessor.h"
 #include "mainwindow.h"
@@ -25,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
   : QWidget(parent)
 { 
   setWindowState(Qt::WindowState::WindowMaximized);
-  m_modelResult = new Model::ModelResult();
   QMenuBar* menuBar = new QMenuBar(this);
   QMenu* menuFile = new QMenu("&File", this);
   QMenu* menuEdit = new QMenu("&Edit", this);
@@ -42,26 +42,20 @@ MainWindow::MainWindow(QWidget *parent)
 
   menuFile->addAction("&Open", this, &MainWindow::openModelResults, scKeyOpen);
 
-  QGridLayout *layout = new QGridLayout(this);
+  QGridLayout* layout = new QGridLayout(this);
   setLayout(layout);
   layout->setMenuBar(menuBar);
 
   m_metaDataWindow = new QMessageBox(this);
-  if(m_metaDataWindow && m_modelResult) {
-    m_metaDataLoadedCB = [this](const Model::ModelResultMeta::Data* data, const std::string& msg) {
-      this->showMetaData(data, msg);
-    };
-    m_modelResult->setupMetaDataLoadCB(m_metaDataLoadedCB);
-  }
 }
 
 MainWindow::~MainWindow() {}
 
-void MainWindow::showMetaData(const Model::ModelResultMeta::Data* data, const std::string& msg) {
-  if(data) {
+void MainWindow::showMetaData(bool parsingResult, const std::string& msg) {
+  if(parsingResult) {
     MetaDataWindow* window = new MetaDataWindow(this);
     connect(window, &MetaDataWindow::accepted, this, &MainWindow::DrawGraph);
-    m_graphData = window->loadModelResults(data);
+    m_graphData = window->loadModelResults(*m_modelResult);
     window->show();
   } else {
     m_metaDataWindow->setIcon(QMessageBox::Warning);
@@ -76,6 +70,16 @@ void MainWindow::openModelResults() {
                                                   tr("Open file with modeling results"),
                                                   "",
                                                   tr("Modeling result files (*.esk *.dat)"));
+
+  m_modelResult = std::make_unique<Model::ModelResult>();
+
+  if(m_metaDataWindow && m_modelResult) {
+    m_metaDataLoadedCB = [this](bool parsingResult, const std::string& msg) {
+      this->showMetaData(parsingResult, msg);
+    };
+    m_modelResult->setupMetaDataLoadCB(m_metaDataLoadedCB);
+  }
+
   if(m_modelResult) {
     m_modelResult->openFile(filename.toStdString());
   }
@@ -87,8 +91,8 @@ void MainWindow::DrawGraph() {
       layout()->removeWidget(m_graphWidget);
       delete m_graphWidget;
     }
-    m_graphProcessor = new GraphProcessor();
-    m_graphWidget = new GraphWidget(m_graphProcessor, this);
+
+    m_graphWidget = new GraphWidget(this);
     layout()->addWidget(m_graphWidget);
   }
 
