@@ -29,14 +29,13 @@ public:
 
   void loadFile(const QString &fileName);
 
-  void showMetaData(bool parsingResult, const std::string& msg = "");
   void openModelResults(const QString& filename);
 
 protected:
   void closeEvent(QCloseEvent *event) override;
 
 private slots:
-  void DrawGraph();
+  void drawGraph();
   void newFile();
   void open();
   bool save();
@@ -56,6 +55,8 @@ private:
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
 
+  void showMetaData(bool parsingResult, const std::string& msg = "");
+
   std::unique_ptr<Model::ModelResult> m_modelResult;
 
   QString m_currentFile;
@@ -67,6 +68,7 @@ private:
   Model::ModelResult::MetaDataLoadCB m_metaDataLoadedCB;
 
   int m_graphColumns = 1;
+  QAction* m_addGraphAction = nullptr;
   constexpr static size_t MIN_WINDOW_WIDTH = 400;
   constexpr static size_t MIN_WINDOW_HEIGHT = 200;
 };

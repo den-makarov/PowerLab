@@ -105,7 +105,7 @@ void MainWindow::createActions() {
   QToolBar* fileToolBar = addToolBar(tr("File"));
   const QIcon newIcon = QIcon::fromTheme("document-new", QIcon(":/images/new.png"));
   QAction* newAct = new QAction(newIcon, tr("&New"), this);
-  newAct->setShortcuts(QKeySequence::New);
+//  newAct->setShortcuts(QKeySequence::New);
   newAct->setStatusTip(tr("Create a new file"));
   connect(newAct, &QAction::triggered, this, &MainWindow::newFile);
   fileMenu->addAction(newAct);
@@ -171,6 +171,18 @@ void MainWindow::createActions() {
   editToolBar->addAction(pasteAct);
 
   menuBar()->addSeparator();
+
+  const QIcon addIcon = QIcon::fromTheme("edit-add", QIcon(":/images/add.png"));
+  m_addGraphAction = new QAction(addIcon, tr("&Add"), this);
+  m_addGraphAction->setShortcuts(QKeySequence::New);
+  m_addGraphAction->setStatusTip(tr("Select signals to plot new graph"));
+  editToolBar->addAction(m_addGraphAction);
+  m_addGraphAction->setDisabled(true);
+  connect(m_addGraphAction, &QAction::triggered, this, [this](){
+    if(this->m_modelResult) {
+      this->showMetaData(true, "");
+    }
+  });
 
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
   QAction* aboutAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
@@ -289,9 +301,11 @@ void MainWindow::commitData(QSessionManager &manager) {
 void MainWindow::showMetaData(bool parsingResult, const std::string& msg) {
   if(parsingResult) {
     MetaDataWindow* window = new MetaDataWindow(this);
-    connect(window, &MetaDataWindow::accepted, this, &MainWindow::DrawGraph);
+    connect(window, &MetaDataWindow::accepted, this, &MainWindow::drawGraph);
     m_graphData = window->loadModelResults(*m_modelResult);
     window->show();
+
+    m_addGraphAction->setEnabled(true);
   } else {
     m_metaDataWindow->setIcon(QMessageBox::Warning);
     m_metaDataWindow->setWindowTitle("Error");
@@ -315,7 +329,7 @@ void MainWindow::openModelResults(const QString& filename) {
   }
 }
 
-void MainWindow::DrawGraph() {
+void MainWindow::drawGraph() {
   m_graphWidget = new GraphWidget(this);
   createDockWindow(m_graphWidget,
                    QString::fromStdString(m_modelResult->getModelTitle()));
