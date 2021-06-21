@@ -18,7 +18,7 @@
 #include "modelresult/modelresultvalidator.h"
 #include "modelresult/modelresultmeta.h"
 #include "dialogs/metadatawindow.h"
-#include "graphs/graphprocessor.h"
+#include "graphs/graphwidget.h"
 #include "mainwindow.h"
 
 namespace Gui {
@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget* parent)
 
   createActions();
   createStatusBar();
-
+  layout()->addItem(new QGridLayout(this));
   readSettings();
 
   QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -39,26 +39,6 @@ MainWindow::MainWindow(QWidget* parent)
 
   setCurrentFile(QString());
   setUnifiedTitleAndToolBarOnMac(true);
-
-//  QMenuBar* menuBar = new QMenuBar(this);
-//  QMenu* menuFile = new QMenu("&File", this);
-//  QMenu* menuEdit = new QMenu("&Edit", this);
-//  QMenu* menuSelection = new QMenu("&Selection", this);
-//  QMenu* menuTools = new QMenu("&Tools", this);
-//  QMenu* menuHelp = new QMenu("&Help", this);
-
-//  QKeySequence scKeyOpen(QKeySequence::Open);
-//  menuBar->addMenu(menuFile);
-//  menuBar->addMenu(menuEdit);
-//  menuBar->addMenu(menuSelection);
-//  menuBar->addMenu(menuTools);
-//  menuBar->addMenu(menuHelp);
-
-//  menuFile->addAction("&Open", this, &MainWindow::open, scKeyOpen);
-
-//  QGridLayout* layout = new QGridLayout(this);
-//  setLayout(layout);
-//  layout->setMenuBar(menuBar);
 
   m_metaDataWindow = new QMessageBox(this);
 }
@@ -205,6 +185,14 @@ void MainWindow::createActions() {
 //    connect(textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
 }
 
+void MainWindow::createDockWindow(QWidget* widget, const QString& windowTitle) {
+    QDockWidget *dock = new QDockWidget(windowTitle, this);
+    dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    dock->setWidget(widget);
+    addDockWidget(Qt::RightDockWidgetArea, dock);
+//    m_viewMenu->addAction(dock->toggleViewAction());
+}
+
 void MainWindow::createStatusBar() {
   statusBar()->showMessage(tr("Ready"));
 }
@@ -328,16 +316,9 @@ void MainWindow::openModelResults(const QString& filename) {
 }
 
 void MainWindow::DrawGraph() {
-  if(layout()) {
-    if(m_graphWidget) {
-      layout()->removeWidget(m_graphWidget);
-      delete m_graphWidget;
-    }
-
-    m_graphWidget = new GraphWidget(this);
-    layout()->addWidget(m_graphWidget);
-//    setCentralWidget(m_graphWidget);
-  }
+  m_graphWidget = new GraphWidget(this);
+  createDockWindow(m_graphWidget,
+                   QString::fromStdString(m_modelResult->getModelTitle()));
 
   std::vector<std::string> signalNames;
   if(m_graphData) {

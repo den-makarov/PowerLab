@@ -30,6 +30,7 @@ SOURCES += \
     gui/dialogs/metadatawindow.cpp \
     gui/mainwindow.cpp \
     gui/graphs/graphprocessor.cpp \
+    gui/graphs/graphwidget.cpp \
     gui/graphs/plot.cpp
 
 HEADERS += \
@@ -47,6 +48,7 @@ HEADERS += \
     gui/mainwindow.h \
     gui/dialogs/metadatawindow.h \
     gui/graphs/graphprocessor.h \
+    gui/graphs/graphwidget.h \
     gui/graphs/plot.h
 
 TRANSLATIONS += \

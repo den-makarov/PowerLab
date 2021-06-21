@@ -22,6 +22,7 @@ public:
 
   ModelResult();
 
+  std::string getModelTitle() const;
   size_t getVariablesNumber() const;
   size_t getPointsNumber() const;
   void addSignalDataPoint(const SignalName& signalName, DataPoint point);

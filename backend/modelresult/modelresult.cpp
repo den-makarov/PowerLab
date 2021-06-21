@@ -14,6 +14,10 @@ ModelResult::ModelResult()
   // EMPTY
 }
 
+std::string ModelResult::getModelTitle() const {
+  return m_validator->getMetaData().getData().plotname;
+}
+
 size_t ModelResult::getVariablesNumber() const {
   return m_validator ? m_validator->getMetaData().getData().varCount : 0;
 }

@@ -20,7 +20,6 @@ QT_END_NAMESPACE
 
 namespace Gui {
 
-class GraphProcessor;
 class GraphWidget;
 
 class MainWindow : public QMainWindow {
@@ -48,6 +47,7 @@ private slots:
 
 private:
   void createActions();
+  void createDockWindow(QWidget* widget, const QString& windowTitle = "Empty");
   void createStatusBar();
   void readSettings();
   void writeSettings();
@@ -62,6 +62,7 @@ private:
   GraphWidget* m_graphWidget = nullptr;
   QMessageBox* m_metaDataWindow = nullptr;
   QAbstractItemModel* m_graphData = nullptr;
+  QMenu *m_viewMenu;
 
   Model::ModelResult::MetaDataLoadCB m_metaDataLoadedCB;
 
