@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget* parent)
 
   createActions();
   createStatusBar();
-  layout()->addItem(new QGridLayout(this));
+  createCentralWindow();
   readSettings();
 
   QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -98,6 +98,22 @@ void MainWindow::about() {
 
 void MainWindow::documentWasModified() {
   setWindowModified(false);
+}
+
+void MainWindow::createCentralWindow() {
+  m_centralWindow = new QTabWidget(this);
+  m_centralWindow->setTabsClosable(true);
+  m_centralWindow->setMovable(true);
+
+  connect(m_centralWindow, &QTabWidget::tabCloseRequested, [this](int tabIndex){
+    auto widget = this->m_centralWindow->widget(tabIndex);
+    this->m_centralWindow->removeTab(tabIndex);
+    if(widget) {
+      delete widget;
+    }
+  });
+
+  setCentralWidget(m_centralWindow);
 }
 
 void MainWindow::createActions() {
@@ -203,6 +219,10 @@ void MainWindow::createDockWindow(QWidget* widget, const QString& windowTitle) {
     dock->setWidget(widget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
 //    m_viewMenu->addAction(dock->toggleViewAction());
+}
+
+void MainWindow::createTabWindow(QWidget* widget, const QString& tabTitle) {
+  m_centralWindow->addTab(widget, tabTitle);
 }
 
 void MainWindow::createStatusBar() {
@@ -330,9 +350,11 @@ void MainWindow::openModelResults(const QString& filename) {
 }
 
 void MainWindow::drawGraph() {
-  m_graphWidget = new GraphWidget(this);
-  createDockWindow(m_graphWidget,
-                   QString::fromStdString(m_modelResult->getModelTitle()));
+  m_graphWidget = new GraphWidget();
+//  createDockWindow(m_graphWidget,
+//                   QString::fromStdString(m_modelResult->getModelTitle()));
+  createTabWindow(m_graphWidget,
+                  QString::fromStdString(m_modelResult->getModelTitle()));
 
   std::vector<std::string> signalNames;
   if(m_graphData) {

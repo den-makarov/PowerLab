@@ -28,6 +28,7 @@ public:
   };
 
   GraphWidget(QWidget *parent = nullptr, GraphProcessor* graph = nullptr);
+  ~GraphWidget() override;
 
   void addGraphData(std::string name,
                     std::string units,

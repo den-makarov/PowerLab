@@ -82,6 +82,10 @@ static std::vector<QColor> defaultColorList = {
 
 namespace Gui {
 
+GraphWidget::~GraphWidget() {
+  Logger::log(Logger::DefaultMessage::DEBUG_MSG, "Graph widget destructor");
+}
+
 GraphWidget::GraphWidget(QWidget *parent, GraphProcessor* graph)
   : QWidget(parent)
   , m_graphProcessor(graph)

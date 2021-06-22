@@ -23,7 +23,7 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
   QLabel* label = new QLabel(this);
   label->setText("Signals");
 
-  QSplitter *signals_splitter = new QSplitter(this);
+  QSplitter* signals_splitter = new QSplitter(this);
 
   m_signalsModel = new QStringListModel(this);
   m_signalsView = new QListView(this);
@@ -56,13 +56,12 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
   del_signal->setMaximumWidth(80);
   connect(del_signal, &QPushButton::pressed, this, &MetaDataWindow::removeSignalFromGraph);
 
-  QGridLayout *layout = new QGridLayout(this);
-  setLayout(layout);
+  QGridLayout* grid = new QGridLayout(this);
 
-  QGridLayout *button_layout = new QGridLayout(this);
-  layout->addLayout(button_layout, 2, 0);
-  layout->addWidget(label, 0, 0);
-  layout->addWidget(signals_splitter, 1, 0);
+  QGridLayout* button_layout = new QGridLayout();
+  grid->addLayout(button_layout, 2, 0);
+  grid->addWidget(label, 0, 0);
+  grid->addWidget(signals_splitter, 1, 0);
 
   button_layout->addWidget(add_signal, 0, 0, Qt::AlignLeft);
   button_layout->addWidget(del_signal, 0, 1, Qt::AlignLeft);

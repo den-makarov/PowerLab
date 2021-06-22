@@ -12,6 +12,7 @@
 QT_BEGIN_NAMESPACE
 class QAction;
 class QMenu;
+class QTabWidget;
 class QMessageBox;
 class QAbstractItemModel;
 class QPlainTextEdit;
@@ -46,7 +47,9 @@ private slots:
 
 private:
   void createActions();
+  void createCentralWindow();
   void createDockWindow(QWidget* widget, const QString& windowTitle = "Empty");
+  void createTabWindow(QWidget* widget, const QString& tabTitle = "Empty");
   void createStatusBar();
   void readSettings();
   void writeSettings();
@@ -63,12 +66,13 @@ private:
   GraphWidget* m_graphWidget = nullptr;
   QMessageBox* m_metaDataWindow = nullptr;
   QAbstractItemModel* m_graphData = nullptr;
-  QMenu *m_viewMenu;
+  QMenu* m_viewMenu;
+  QTabWidget* m_centralWindow;
 
   Model::ModelResult::MetaDataLoadCB m_metaDataLoadedCB;
 
-  int m_graphColumns = 1;
   QAction* m_addGraphAction = nullptr;
+
   constexpr static size_t MIN_WINDOW_WIDTH = 400;
   constexpr static size_t MIN_WINDOW_HEIGHT = 200;
 };
