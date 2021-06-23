@@ -130,7 +130,7 @@ void GraphWidget::configureHorizontalScale(Plot& plot) {
   graphData.minValue = graphData.points.front();
   graphData.maxValue = graphData.points.back();
 
-  plot.setAxisLabel(Plot::Axis::X, graphName + "[" + graphData.units + "]");
+  plot.addXAxisLabel(graphName + "[" + graphData.units + "]");
   auto& plotBounds = plot.getBounds();
   plotBounds.xMin = graphData.minValue;
   plotBounds.xMax = graphData.maxValue;
@@ -141,7 +141,7 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
   double max = std::numeric_limits<double>::min();
 
   for(auto& [graphName, graphData] : m_graphs) {
-    plot.addAxisLabel(Plot::Axis::Y, graphName + "[" + graphData.units + "]");
+    plot.addYAxisLabel(graphName + "[" + graphData.units + "]");
 
 
     graphData.minValue = *std::min_element(graphData.points.begin(),
@@ -173,7 +173,16 @@ void GraphWidget::paintEvent(QPaintEvent *event)
   painter.begin(this);
   painter.setRenderHint(QPainter::Antialiasing);
 
-  Plot plot(event->rect().width(), event->rect().height(), true, 7, 11);
+  Plot plot(event->rect().width(), event->rect().height());
+  plot.setBackground(QColor(0xFF, 0xFF, 0xA0));
+  plot.setBorder(true);
+  plot.setMainGridLinesNumber(7, 11);
+  auto& margins = plot.getMargins();
+  margins.left = 40;
+  margins.right = 20;
+  margins.top = 20;
+  margins.bottom = 20;
+
   configureHorizontalScale(plot);
   configureVerticalScale(plot);
 

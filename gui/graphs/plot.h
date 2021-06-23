@@ -13,99 +13,69 @@ namespace Gui {
 
 class Plot {
 public:
-  enum class Axis {
-    X,
-    Y
-  };
-
-  struct Bounds {
+  struct ValueBounds {
     double xMax;
     double xMin;
     double yMax;
     double yMin;
   };
 
+  struct Margins {
+    int left;
+    int right;
+    int top;
+    int bottom;
+  };
+
   Plot(int width, int height);
-  Plot(int width,
-       int height,
-       bool border,
-       int gridWidth = 0,
-       int gridHeight = 0);
 
-  void setBackground(uint8_t R = 0xFF, uint8_t G = 0xFF, uint8_t B = 0xFF) {
-    m_background[0] = R;
-    m_background[1] = G;
-    m_background[2] = B;
-  }
+  void setBackground(QColor bgcolor);
+  const QColor& getBackground() const;
+  QColor& getBackground();
 
-  void setAxisLabel(Axis axis, const std::string& label) {
-    if(axis == Axis::X) {
-      m_axisLabels.first = label;
-    } else {
-      m_axisLabels.second = label;
-    }
-  }
+  void setBounds(const ValueBounds& boundaries);
+  ValueBounds& getBounds();
+  const ValueBounds& getBounds() const;
 
-  void addAxisLabel(Axis axis, const std::string& label) {
-    if(axis == Axis::X) {
-      if(m_axisLabels.first.empty()) {
-        setAxisLabel(axis, label);
-      } else {
-        m_axisLabels.first += ", " + label;
-      }
-    } else {
-      if(m_axisLabels.second.empty()) {
-        setAxisLabel(axis, label);
-      } else {
-        m_axisLabels.second += " " + label;
-      }
-    }
-  }
+  void setMargins(const Margins& boundaries);
+  Margins& getMargins();
+  const Margins& getMargins() const;
 
-  void setBounds(const Bounds& boundaries) {
-    m_bounds = boundaries;
-  }
+  void setAxisXLog(bool isLog);
+  void setAxisYLog(bool isLog);
 
-  Bounds& getBounds() {
-    return m_bounds;
-  }
+  void addXAxisLabel(const std::string& label);
+  void addYAxisLabel(const std::string& label);
 
-  const Bounds& getBounds() const {
-    return m_bounds;
-  }
-
-  void setLogarithmic(const Axis& axis, bool isLog) {
-    if(axis == Axis::X) {
-      m_isWidthLogarithmic = isLog;
-    } else {
-      m_isHeightLogarithmic = isLog;
-    }
-  }
+  void setMainGridLinesNumber(int xNumber, int yNumber);
+  void setBorder(bool isBorder);
 
   void update(QPainter* painter) const;
-
 private:
-  struct Graph {
-    std::vector<int> graph;
-    QColor color;
-  };
+  void drawBorder(QPainter& painter) const;
+
+  void drawGrid(QPainter& painter) const;
+  void drawXGrid(QPainter& painter) const;
+  void drawYGrid(QPainter& painter) const;
+
+  void drawAxisLabels(QPainter& painter) const;
+  void drawXAxisLabels(QPainter& painter) const;
+  void drawYAxisLabels(QPainter& painter) const;
+
+  void drawGridValue(QPainter& painter, double number, int x, int y) const;
 
   const int m_width;
   const int m_height;
-  bool m_border;
-  bool m_isWidthLogarithmic = false;
-  bool m_isHeightLogarithmic = false;
-  int m_gridWidth;
-  int m_gridHeight;
-  Bounds m_bounds = {0.6, 0.0, 0.12, -0.12};
-  std::pair<std::string, std::string> m_axisLabels;
-  uint8_t m_background[3] = {0xFF, 0xFF, 0xA0};
-  std::vector<Graph> m_graphs;
-
-  void drawBorder(QPainter* painter) const;
-  void drawGrid(QPainter* painter) const;
-  void drawAxisLabels(QPainter* painter) const;
-  void drawGridValue(QPainter* painter, double number, int x, int y) const;
+  bool m_border = false;
+  bool m_isXLog = false;
+  bool m_isYLog = false;
+  int m_gridXNumber = 0;
+  int m_gridYNumber = 0;
+  ValueBounds m_bounds = {0.6, 0.0, 0.12, -0.12};
+  Margins m_margins = {0, 0, 0, 0};
+  std::string m_XLabel = "";
+  std::string m_YLabel = "";
+  QColor m_bgcolor = Qt::white;
 };
 
 } // namespace Gui
