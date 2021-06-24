@@ -6,6 +6,7 @@
 #include <string>
 
 #include <QColor>
+#include <QRect>
 
 class QPainter;
 
@@ -13,6 +14,12 @@ namespace Gui {
 
 class Plot {
 public:
+  enum class TextAlign {
+    LEFT,
+    CENTER,
+    RIGHT
+  };
+
   struct ValueBounds {
     double xMax;
     double xMin;
@@ -28,6 +35,9 @@ public:
   };
 
   Plot(int width, int height);
+
+  int getWidth() const;
+  int getHeight() const;
 
   void setBackground(QColor bgcolor);
   const QColor& getBackground() const;
@@ -62,7 +72,10 @@ private:
   void drawXAxisLabels(QPainter& painter) const;
   void drawYAxisLabels(QPainter& painter) const;
 
-  void drawGridValue(QPainter& painter, double number, int x, int y) const;
+  void drawGridValue(QPainter& painter,
+                     double number,
+                     QRect textRect,
+                     TextAlign align = TextAlign::LEFT) const;
 
   const int m_width;
   const int m_height;

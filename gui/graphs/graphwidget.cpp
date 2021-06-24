@@ -130,7 +130,7 @@ void GraphWidget::configureHorizontalScale(Plot& plot) {
   graphData.minValue = graphData.points.front();
   graphData.maxValue = graphData.points.back();
 
-  plot.addXAxisLabel(graphName + "[" + graphData.units + "]");
+  plot.addXAxisLabel(graphName + " [" + graphData.units + "]");
   auto& plotBounds = plot.getBounds();
   plotBounds.xMin = graphData.minValue;
   plotBounds.xMax = graphData.maxValue;
@@ -141,8 +141,7 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
   double max = std::numeric_limits<double>::min();
 
   for(auto& [graphName, graphData] : m_graphs) {
-    plot.addYAxisLabel(graphName + "[" + graphData.units + "]");
-
+    plot.addYAxisLabel(graphName + " [" + graphData.units + "]");
 
     graphData.minValue = *std::min_element(graphData.points.begin(),
                                            graphData.points.end());
@@ -183,6 +182,11 @@ void GraphWidget::paintEvent(QPaintEvent *event)
   margins.top = 20;
   margins.bottom = 20;
 
+  m_graphProcessor->setPlotLimits(QRect(margins.left,
+                                        margins.top,
+                                        plot.getWidth() - (margins.right + margins.left),
+                                        plot.getHeight() - (margins.bottom + margins.top)));
+
   configureHorizontalScale(plot);
   configureVerticalScale(plot);
 
@@ -194,10 +198,42 @@ void GraphWidget::paintEvent(QPaintEvent *event)
     m_graphProcessor->setPenColor(defaultColorList[penColorId++]);
     penColorId %= defaultColorList.size();
 
-    m_graphProcessor->plot(&painter,
-                           graphData.points,
-                           m_horizontalScale.second.points,
-                           plot.getBounds().yMax);
+    if(graphName == "i(vin)") {
+      auto points = std::vector<double>(graphData.points.size(), 0.0);
+      m_graphProcessor->plot(&painter,
+                             points,
+                             m_horizontalScale.second.points,
+                             plot.getBounds().yMax);
+
+      points = std::vector<double>(graphData.points.size(), 0.5);
+      m_graphProcessor->plot(&painter,
+                             points,
+                             m_horizontalScale.second.points,
+                             plot.getBounds().yMax);
+
+      points = std::vector<double>(graphData.points.size(), -0.5);
+      m_graphProcessor->plot(&painter,
+                             points,
+                             m_horizontalScale.second.points,
+                             plot.getBounds().yMax);
+
+      points = std::vector<double>(graphData.points.size(), -1.0);
+      m_graphProcessor->plot(&painter,
+                             points,
+                             m_horizontalScale.second.points,
+                             plot.getBounds().yMax);
+
+      points = std::vector<double>(graphData.points.size(), 1.0);
+      m_graphProcessor->plot(&painter,
+                             points,
+                             m_horizontalScale.second.points,
+                             plot.getBounds().yMax);
+    } else {
+      m_graphProcessor->plot(&painter,
+                             graphData.points,
+                             m_horizontalScale.second.points,
+                             plot.getBounds().yMax);
+    }
   }
   painter.end();
 }

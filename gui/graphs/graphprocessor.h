@@ -17,13 +17,14 @@ public:
   GraphProcessor();
 
   void setPenColor(QColor color);
-  void paint(QPainter *painter, int elapsed);
+  void setPlotLimits(QRect plotLimits);
   void plot(QPainter *painter,
             const std::vector<double>& yData,
             const std::vector<double>& xData,
             double normalizationFactor) const;
 
 private:
+  QRect m_plotLimits;
   QBrush m_background;
   QPen m_pen;
 };

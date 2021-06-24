@@ -12,6 +12,15 @@ Plot::Plot(int width, int height)
   //EMPTY
 }
 
+int Plot::getWidth() const {
+  return m_width;
+}
+
+int Plot::getHeight() const {
+  return m_height;
+}
+
+
 void Plot::setBorder(bool isBorder) {
   m_border = isBorder;
 }
@@ -76,16 +85,16 @@ void Plot::update(QPainter* painter) const {
                     m_height - (m_margins.top + m_margins.bottom),
                     m_bgcolor);
 
-  drawAxisLabels(*painter);
   drawBorder(*painter);
   drawGrid(*painter);
+  drawAxisLabels(*painter);
 }
 
 void Plot::drawXAxisLabels(QPainter& painter) const {
   if(!m_XLabel.empty()) {
     QRect rect(0,
-               m_height - painter.font().pixelSize() - (painter.pen().width() + 4),
-               m_width - 2,
+               m_height - m_margins.bottom,
+               m_width,
                painter.font().pixelSize() + 2);
     painter.drawText(rect, Qt::AlignRight, QString(m_XLabel.c_str()));
   }
@@ -93,8 +102,8 @@ void Plot::drawXAxisLabels(QPainter& painter) const {
 
 void Plot::drawYAxisLabels(QPainter& painter) const {
   if(!m_YLabel.empty()) {
-    painter.drawText((painter.pen().width() + 1),
-                     (painter.pen().width() + 1) + painter.font().pixelSize(),
+    painter.drawText(m_margins.left,
+                     m_margins.top - 4,
                      QString(m_YLabel.c_str()));
   }
 }
@@ -138,28 +147,57 @@ void Plot::drawBorder(QPainter& painter) const {
 
 void Plot::drawXGrid(QPainter& painter) const {
   if(m_gridXNumber > 0) {
-    int step = m_width / (m_gridXNumber + 1);
-    double gridLabelStep = (m_bounds.xMax - m_bounds.xMin) / (m_gridXNumber + 1);
-    double gridLabel = m_bounds.xMin + gridLabelStep;
+    int distBetweenGridLines = (m_width - (m_margins.left + m_margins.right)) / (m_gridXNumber + 1);
+    double gridLineLabelStep = (m_bounds.xMax - m_bounds.xMin) / (m_gridXNumber + 1);
+    double gridLineLabel = m_bounds.xMin + gridLineLabelStep;
 
-    for(int i = step; i < m_width; i += step) {
-      painter.drawLine(i, 0, i, m_height);
-      drawGridValue(painter, gridLabel, i, m_height);
-      gridLabel += gridLabelStep;
+    int leftLimit = distBetweenGridLines + m_margins.left;
+    int rightLimit = m_width - (m_margins.left + m_margins.right);
+
+    for(int i = leftLimit; i < rightLimit; i += distBetweenGridLines) {
+      painter.drawLine(i, m_margins.bottom, i, m_height - m_margins.top);
+
+      auto gridLabelYOffset = m_height - m_margins.top;
+      auto gridLabelXOffset = i;
+
+      if(m_border) {
+        gridLabelYOffset += 2;
+      }
+
+      QRect textRect(gridLabelXOffset - distBetweenGridLines / 2,
+                     gridLabelYOffset,
+                     distBetweenGridLines,
+                     painter.font().pixelSize());
+
+      drawGridValue(painter, gridLineLabel, textRect, TextAlign::CENTER);
+      gridLineLabel += gridLineLabelStep;
     }
   }
 }
 
 void Plot::drawYGrid(QPainter& painter) const {
   if(m_gridYNumber > 0) {
-    int step = m_height / (m_gridYNumber + 1);
-    double gridLabelStep = (m_bounds.yMax - m_bounds.yMin) / (m_gridYNumber + 1);
-    double gridLabel = m_bounds.yMax - gridLabelStep;
+    int distBetweenGridLines = (m_height - (m_margins.top + m_margins.bottom)) / (m_gridYNumber + 1);
+    double gridLineLabelStep = (m_bounds.yMax - m_bounds.yMin) / (m_gridYNumber + 1);
+    double gridLineLabel = m_bounds.yMax - gridLineLabelStep;
 
-    for(int i = step; i < m_height; i += step) {
-      painter.drawLine(0, i, m_width, i);
-      drawGridValue(painter, gridLabel, 0, i + painter.font().pixelSize());
-      gridLabel -= gridLabelStep;
+    int topLimit = distBetweenGridLines + m_margins.top;
+    int bottomLimit = m_height - (m_margins.top + m_margins.bottom);
+
+    for(int i = topLimit; i < bottomLimit; i += distBetweenGridLines) {
+      painter.drawLine(m_margins.left, i, m_width - m_margins.right, i);
+
+      auto gridLabelYOffset = i;
+      auto gridLabelXOffset = 0;
+
+      QRect textRect(gridLabelXOffset,
+                     gridLabelYOffset - painter.font().pixelSize() / 2,
+                     m_margins.left - 1,
+                     painter.font().pixelSize());
+
+      drawGridValue(painter, gridLineLabel, textRect, TextAlign::RIGHT);
+
+      gridLineLabel -= gridLineLabelStep;
     }
   }
 }
@@ -178,11 +216,17 @@ void Plot::drawGrid(QPainter& painter) const {
   drawYGrid(painter);
 }
 
-void Plot::drawGridValue(QPainter& painter, double number, int x, int y) const {
-  QString str;
-  painter.drawText((painter.pen().width() + 1) + x,
-                   y - (painter.pen().width() + 1),
-                   str.setNum(number, 'g', 3));
+void Plot::drawGridValue(QPainter& painter, double number, QRect textRect, TextAlign align) const {
+  QString str = QString::number(number, 'g', 4);
+
+  auto textAlign = Qt::AlignLeft;
+  if(align == TextAlign::CENTER) {
+    textAlign = Qt::AlignCenter;
+  } else if(align == TextAlign::RIGHT) {
+    textAlign = Qt::AlignRight;
+  }
+
+  painter.drawText(textRect, textAlign, str);
 }
 
 } // namespace Gui

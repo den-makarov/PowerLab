@@ -21,15 +21,15 @@ void GraphProcessor::plot(QPainter *painter,
 
   painter->setPen(m_pen);
 
-  double plotVerticalFactor = painter->window().height() / 2.0;
-  double plotHorizontalFactor = painter->window().width() / (1.0 * xData.back());
-  int offset = painter->window().height() / 2;
+  double plotVerticalFactor = m_plotLimits.height() / 2.0;
+  double plotHorizontalFactor = m_plotLimits.width() / (1.0 * xData.back());
+  int offset = m_plotLimits.height() / 2 + m_plotLimits.top();
 
-  QPointF point(0.0, offset - plotVerticalFactor * yData[0] / normalizationFactor);
+  QPointF point(m_plotLimits.left(), offset - plotVerticalFactor * yData[0] / normalizationFactor);
 
   for(size_t j = 0; j < yData.size(); j++) {
     double y = offset - plotVerticalFactor * yData[j] / normalizationFactor;
-    double x = plotHorizontalFactor * xData[j];
+    double x = plotHorizontalFactor * xData[j] + m_plotLimits.left();
     QPointF nextPoint(x, y);
     if(nextPoint != point) {
       painter->drawLine(point, nextPoint);
@@ -40,6 +40,10 @@ void GraphProcessor::plot(QPainter *painter,
 
 void GraphProcessor::setPenColor(QColor color) {
   m_pen.setColor(color);
+}
+
+void GraphProcessor::setPlotLimits(QRect plotLimits) {
+  m_plotLimits = plotLimits;
 }
 
 } // namespace Gui
