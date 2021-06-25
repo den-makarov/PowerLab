@@ -1,3 +1,7 @@
+#include <algorithm>
+#include <limits>
+#include <cmath>
+
 #include <QPainter>
 
 #include "graphprocessor.h"
@@ -20,16 +24,24 @@ void GraphProcessor::plot(QPainter *painter,
   }
 
   painter->setPen(m_pen);
+  double yFactor = (m_plotLimits.height() - 1) / normalizationFactor;
 
-  double plotVerticalFactor = m_plotLimits.height() / 2.0;
-  double plotHorizontalFactor = m_plotLimits.width() / (1.0 * xData.back());
-  int offset = m_plotLimits.height() / 2 + m_plotLimits.top();
+  double xMax = *std::max_element(xData.begin(), xData.end());
+  double xMin = *std::min_element(xData.begin(), xData.end());
+  double xFactor = m_plotLimits.width() / 1.0;
 
-  QPointF point(m_plotLimits.left(), offset - plotVerticalFactor * yData[0] / normalizationFactor);
+  if(std::fabs(xMax - xMin) >= std::numeric_limits<double>::epsilon()) {
+    xFactor /= (xMax - xMin);
+  }
 
-  for(size_t j = 0; j < yData.size(); j++) {
-    double y = offset - plotVerticalFactor * yData[j] / normalizationFactor;
-    double x = plotHorizontalFactor * xData[j] + m_plotLimits.left();
+  int yOffset = (m_plotLimits.height() - 1) / 2 + m_plotLimits.top();
+  int xOffset = m_plotLimits.left();
+
+  QPointF point(xOffset + xFactor * xData[0], yOffset - yFactor * yData[0]);
+
+  for(size_t i = 0; i < yData.size(); i++) {
+    double y = yOffset - yFactor * yData[i];
+    double x = xOffset + xFactor * xData[i];
     QPointF nextPoint(x, y);
     if(nextPoint != point) {
       painter->drawLine(point, nextPoint);

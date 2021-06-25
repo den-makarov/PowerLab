@@ -28,10 +28,12 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
   m_signalsModel = new QStringListModel(this);
   m_signalsView = new QListView(this);
   m_signalsView->setModel(m_signalsModel);
+  m_signalsView->setSelectionMode(QAbstractItemView::MultiSelection);
 
   m_graphModel = new QStringListModel(this);
   m_graphView = new QListView(this);
   m_graphView->setModel(m_graphModel);
+  m_graphView->setSelectionMode(QAbstractItemView::MultiSelection);
 
   signals_splitter->addWidget(m_signalsView);
   signals_splitter->addWidget(m_graphView);

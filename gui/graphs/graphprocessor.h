@@ -21,7 +21,7 @@ public:
   void plot(QPainter *painter,
             const std::vector<double>& yData,
             const std::vector<double>& xData,
-            double normalizationFactor) const;
+            double normalizationFactor = 1.0) const;
 
 private:
   QRect m_plotLimits;

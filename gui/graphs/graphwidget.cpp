@@ -107,9 +107,13 @@ void GraphWidget::plot() {
 
 void GraphWidget::addGraphData(std::string name,
                                std::string units,
-                               std::vector<double> dataPoints) {
-  if(m_graphs.find(name) == m_graphs.end()) {
-    m_graphs.emplace(name, GraphData{units, dataPoints, 0.0, 0.0});
+                               std::vector<double>&& dataPoints) {
+  auto contains = std::any_of(m_graphs.begin(), m_graphs.end(), [&name](const GraphData& data){
+    return data.name == name;
+  });
+
+  if(!contains) {
+    m_graphs.push_back({name, units, std::move(dataPoints), 0.0, 0.0});
   } else {
     Logger::log(GuiMessage::ERROR_ATTEMPT_PLOT_SAME_SIGNAL, name);
   }
@@ -117,20 +121,24 @@ void GraphWidget::addGraphData(std::string name,
 
 void GraphWidget::addHorizontalScaleData(std::string name,
                                          std::string units,
-                                         std::vector<double> dataPoints) {
+                                         std::vector<double>&& dataPoints) {
   m_horizontalScale.first = name;
   m_horizontalScale.second.units = units;
-  m_horizontalScale.second.points = dataPoints;
+  m_horizontalScale.second.points = std::move(dataPoints);
 }
 
 void GraphWidget::configureHorizontalScale(Plot& plot) {
   auto& graphData = m_horizontalScale.second;
   auto& graphName = m_horizontalScale.first;
 
-  graphData.minValue = graphData.points.front();
-  graphData.maxValue = graphData.points.back();
-
   plot.addXAxisLabel(graphName + " [" + graphData.units + "]");
+
+  graphData.minValue = *std::min_element(graphData.points.begin(),
+                                         graphData.points.end());
+
+  graphData.maxValue = *std::max_element(graphData.points.begin(),
+                                         graphData.points.end());
+
   auto& plotBounds = plot.getBounds();
   plotBounds.xMin = graphData.minValue;
   plotBounds.xMax = graphData.maxValue;
@@ -140,8 +148,8 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
   double min = std::numeric_limits<double>::max();
   double max = std::numeric_limits<double>::min();
 
-  for(auto& [graphName, graphData] : m_graphs) {
-    plot.addYAxisLabel(graphName + " [" + graphData.units + "]");
+  for(auto& graphData : m_graphs) {
+    plot.addYAxisLabel(graphData.name + " [" + graphData.units + "]");
 
     graphData.minValue = *std::min_element(graphData.points.begin(),
                                            graphData.points.end());
@@ -161,8 +169,7 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
   plotBounds.yMax = max * 1.2;
 }
 
-void GraphWidget::paintEvent(QPaintEvent *event)
-{
+void GraphWidget::paintEvent(QPaintEvent *event) {
   if(m_graphs.size() < 1) {
     Logger::log(GuiMessage::ERROR_NO_DATA_TO_PLOT);
     return;
@@ -194,46 +201,14 @@ void GraphWidget::paintEvent(QPaintEvent *event)
 
 //  paintDemoThreePhaseSignal(&painter, 0);
   size_t penColorId = 0;
-  for(auto& [graphName, graphData] : m_graphs) {
+  for(auto& graphData : m_graphs) {
     m_graphProcessor->setPenColor(defaultColorList[penColorId++]);
     penColorId %= defaultColorList.size();
 
-    if(graphName == "i(vin)") {
-      auto points = std::vector<double>(graphData.points.size(), 0.0);
-      m_graphProcessor->plot(&painter,
-                             points,
-                             m_horizontalScale.second.points,
-                             plot.getBounds().yMax);
-
-      points = std::vector<double>(graphData.points.size(), 0.5);
-      m_graphProcessor->plot(&painter,
-                             points,
-                             m_horizontalScale.second.points,
-                             plot.getBounds().yMax);
-
-      points = std::vector<double>(graphData.points.size(), -0.5);
-      m_graphProcessor->plot(&painter,
-                             points,
-                             m_horizontalScale.second.points,
-                             plot.getBounds().yMax);
-
-      points = std::vector<double>(graphData.points.size(), -1.0);
-      m_graphProcessor->plot(&painter,
-                             points,
-                             m_horizontalScale.second.points,
-                             plot.getBounds().yMax);
-
-      points = std::vector<double>(graphData.points.size(), 1.0);
-      m_graphProcessor->plot(&painter,
-                             points,
-                             m_horizontalScale.second.points,
-                             plot.getBounds().yMax);
-    } else {
-      m_graphProcessor->plot(&painter,
-                             graphData.points,
-                             m_horizontalScale.second.points,
-                             plot.getBounds().yMax);
-    }
+    m_graphProcessor->plot(&painter,
+                           graphData.points,
+                           m_horizontalScale.second.points,
+                           plot.getBounds().yMax - plot.getBounds().yMin);
   }
   painter.end();
 }

@@ -21,6 +21,7 @@ class GraphWidget : public QWidget {
 Q_OBJECT
 public:
   struct GraphData {
+    std::string name;
     std::string units;
     std::vector<double> points;
     double minValue = 0.0;
@@ -32,10 +33,10 @@ public:
 
   void addGraphData(std::string name,
                     std::string units,
-                    std::vector<double> dataPoints);
+                    std::vector<double>&& dataPoints);
   void addHorizontalScaleData(std::string name,
                               std::string units,
-                              std::vector<double> dataPoints);
+                              std::vector<double>&& dataPoints);
 
 public slots:
   void plot();
@@ -47,7 +48,7 @@ private:
   void configureHorizontalScale(Plot& plot);
   void configureVerticalScale(Plot& plot);
 
-  std::map<std::string, GraphData> m_graphs;
+  std::vector<GraphData> m_graphs;
   std::pair<std::string, GraphData> m_horizontalScale;
   std::unique_ptr<GraphProcessor> m_graphProcessor;
 };

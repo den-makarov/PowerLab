@@ -351,8 +351,7 @@ void MainWindow::openModelResults(const QString& filename) {
 
 void MainWindow::drawGraph() {
   m_graphWidget = new GraphWidget();
-//  createDockWindow(m_graphWidget,
-//                   QString::fromStdString(m_modelResult->getModelTitle()));
+
   createTabWindow(m_graphWidget,
                   QString::fromStdString(m_modelResult->getModelTitle()));
 

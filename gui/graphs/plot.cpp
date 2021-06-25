@@ -20,7 +20,6 @@ int Plot::getHeight() const {
   return m_height;
 }
 
-
 void Plot::setBorder(bool isBorder) {
   m_border = isBorder;
 }
@@ -177,17 +176,18 @@ void Plot::drawXGrid(QPainter& painter) const {
 
 void Plot::drawYGrid(QPainter& painter) const {
   if(m_gridYNumber > 0) {
-    int distBetweenGridLines = (m_height - (m_margins.top + m_margins.bottom)) / (m_gridYNumber + 1);
-    double gridLineLabelStep = (m_bounds.yMax - m_bounds.yMin) / (m_gridYNumber + 1);
+    double distBetweenGridLines = (m_height - (m_margins.top + m_margins.bottom) - 1) * 1.0 / (m_gridYNumber + 1.0);
+    double gridLineLabelStep = (m_bounds.yMax - m_bounds.yMin) / (m_gridYNumber + 1.0);
     double gridLineLabel = m_bounds.yMax - gridLineLabelStep;
 
-    int topLimit = distBetweenGridLines + m_margins.top;
-    int bottomLimit = m_height - (m_margins.top + m_margins.bottom);
+    double topLimit = distBetweenGridLines + m_margins.top;
+    double bottomLimit = m_height - (m_margins.top + m_margins.bottom);
 
-    for(int i = topLimit; i < bottomLimit; i += distBetweenGridLines) {
-      painter.drawLine(m_margins.left, i, m_width - m_margins.right, i);
+    for(double i = topLimit; i < bottomLimit; i += distBetweenGridLines) {
+      auto y = static_cast<int>(i);
+      painter.drawLine(m_margins.left, y, m_width - m_margins.right, y);
 
-      auto gridLabelYOffset = i;
+      auto gridLabelYOffset = y;
       auto gridLabelXOffset = 0;
 
       QRect textRect(gridLabelXOffset,
@@ -217,7 +217,7 @@ void Plot::drawGrid(QPainter& painter) const {
 }
 
 void Plot::drawGridValue(QPainter& painter, double number, QRect textRect, TextAlign align) const {
-  QString str = QString::number(number, 'g', 4);
+  QString str = QString::number(number, 'g', 2);
 
   auto textAlign = Qt::AlignLeft;
   if(align == TextAlign::CENTER) {
