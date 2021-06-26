@@ -9,8 +9,8 @@ int main(int argc, char *argv[])
 {
   QApplication app(argc, argv);
 
-  QString appName = QObject::tr(ELECTRONSHIK_PROGRAM_NAME);
-  QString appVersion = ELECTRONSHIK_VERSION;
+  QString appName = QObject::tr(POWERLAB_APP_NAME);
+  QString appVersion = POWERLAB_APP_VERSION;
   QString appTitle = appName + " - " + appVersion;
 
   Logger::LogProvider::instance().addStream(std::cout);

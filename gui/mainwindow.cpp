@@ -89,11 +89,11 @@ bool MainWindow::saveAs() {
 }
 
 void MainWindow::about() {
-  auto aboutMsg = tr("The <b>Electronshik</b> is to help modeling electronic schemes "
+  auto aboutMsg = tr("The <b>PowerLab</b> is to help modeling electronic schemes "
                      "by providing simple interface and convinient tools to analyze model results "
                      "as transient and spectral analyzis");
 
-  QMessageBox::about(this, tr("About Electronshik"), aboutMsg);
+  QMessageBox::about(this, tr("About PowerLab"), aboutMsg);
 }
 
 void MainWindow::documentWasModified() {
@@ -253,7 +253,7 @@ bool MainWindow::maybeSave() {
   auto msgText = tr("The document has been modified.\n"
                     "Do you want to save your changes?");
   auto msgBoxes = QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel;
-  const QMessageBox::StandardButton ret = QMessageBox::warning(this, tr("Electronshik"), msgText, msgBoxes);
+  const QMessageBox::StandardButton ret = QMessageBox::warning(this, tr("PowerLab"), msgText, msgBoxes);
 
   switch (ret) {
     case QMessageBox::Save:

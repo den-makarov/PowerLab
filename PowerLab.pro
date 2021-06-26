@@ -52,7 +52,7 @@ HEADERS += \
     gui/graphs/plot.h
 
 TRANSLATIONS += \
-    Electronshik_en_US.ts
+    PowerLab_en_US.ts
 
 INCLUDEPATH += \
     include \
