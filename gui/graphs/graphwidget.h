@@ -49,8 +49,11 @@ private:
   void configureVerticalScale(Plot& plot);
 
   std::vector<GraphData> m_graphs;
-  std::pair<std::string, GraphData> m_horizontalScale;
+  GraphData m_horizontalScale;
   std::unique_ptr<GraphProcessor> m_graphProcessor;
+
+  constexpr static double PLOT_VERTICAL_EXTENSION = 1.2;
+  constexpr static double PLOT_HORIZONTAL_EXTENSION = 1.0;
 };
 
 } // namespace Gui

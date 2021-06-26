@@ -1,3 +1,7 @@
+#include <algorithm>
+#include <limits>
+#include <cmath>
+
 #include <QPainter>
 #include <QPaintEvent>
 #include <QtMath>
@@ -122,26 +126,26 @@ void GraphWidget::addGraphData(std::string name,
 void GraphWidget::addHorizontalScaleData(std::string name,
                                          std::string units,
                                          std::vector<double>&& dataPoints) {
-  m_horizontalScale.first = name;
-  m_horizontalScale.second.units = units;
-  m_horizontalScale.second.points = std::move(dataPoints);
+  m_horizontalScale = {name, units, std::move(dataPoints)};
 }
 
 void GraphWidget::configureHorizontalScale(Plot& plot) {
-  auto& graphData = m_horizontalScale.second;
-  auto& graphName = m_horizontalScale.first;
+  auto& g = m_horizontalScale;
 
-  plot.addXAxisLabel(graphName + " [" + graphData.units + "]");
+  plot.addXAxisLabel(g.name + " [" + g.units + "]");
 
-  graphData.minValue = *std::min_element(graphData.points.begin(),
-                                         graphData.points.end());
+  g.minValue = *std::min_element(g.points.begin(), g.points.end());
 
-  graphData.maxValue = *std::max_element(graphData.points.begin(),
-                                         graphData.points.end());
+  g.maxValue = *std::max_element(g.points.begin(), g.points.end());
 
   auto& plotBounds = plot.getBounds();
-  plotBounds.xMin = graphData.minValue;
-  plotBounds.xMax = graphData.maxValue;
+  if(std::fabs(g.maxValue - g.minValue) < std::numeric_limits<double>::epsilon()) {
+    plotBounds.xMax = g.maxValue + PLOT_HORIZONTAL_EXTENSION;
+    plotBounds.xMin = g.maxValue - PLOT_HORIZONTAL_EXTENSION;
+  } else {
+    plotBounds.xMin = g.minValue * PLOT_HORIZONTAL_EXTENSION;
+    plotBounds.xMax = g.maxValue * PLOT_HORIZONTAL_EXTENSION;
+  }
 }
 
 void GraphWidget::configureVerticalScale(Plot& plot) {
@@ -165,8 +169,13 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
   }
 
   auto& plotBounds = plot.getBounds();
-  plotBounds.yMin = min * 1.2;
-  plotBounds.yMax = max * 1.2;
+  if(std::fabs(max - min) < std::numeric_limits<double>::epsilon()) {
+    plotBounds.yMax = max + PLOT_VERTICAL_EXTENSION;
+    plotBounds.yMin = max - PLOT_VERTICAL_EXTENSION;
+  } else {
+    plotBounds.yMin = min * PLOT_VERTICAL_EXTENSION;
+    plotBounds.yMax = max * PLOT_VERTICAL_EXTENSION;
+  }
 }
 
 void GraphWidget::paintEvent(QPaintEvent *event) {
@@ -207,8 +216,9 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 
     m_graphProcessor->plot(&painter,
                            graphData.points,
-                           m_horizontalScale.second.points,
-                           plot.getBounds().yMax - plot.getBounds().yMin);
+                           m_horizontalScale.points,
+                           plot.getBounds().yMax - plot.getBounds().yMin,
+                           plot.getBounds().xMax - plot.getBounds().xMin);
   }
   painter.end();
 }

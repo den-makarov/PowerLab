@@ -222,7 +222,9 @@ void MainWindow::createDockWindow(QWidget* widget, const QString& windowTitle) {
 }
 
 void MainWindow::createTabWindow(QWidget* widget, const QString& tabTitle) {
+  auto index = m_centralWindow->count();
   m_centralWindow->addTab(widget, tabTitle);
+  m_centralWindow->setCurrentIndex(index);
 }
 
 void MainWindow::createStatusBar() {
@@ -372,6 +374,7 @@ void MainWindow::drawGraph() {
     return;
   }
 
+//  std::string refSigName = signalNames.front();
   std::string refSigName = m_modelResult->getReferenceSignalName();
   auto unit = m_modelResult->getSignalUnitsSISymbol(refSigName);
   auto&& signalData = m_modelResult->getSignalDataPoints(refSigName);
