@@ -31,7 +31,6 @@ public:
   void loadFile(const QString &fileName);
 
   void openModelResults(const QString& filename);
-
 protected:
   void closeEvent(QCloseEvent *event) override;
 
@@ -46,10 +45,17 @@ private slots:
   void commitData(QSessionManager &);
 
 private:
+  enum class WidgetType {
+    MODEL_DESIGN,
+    MODEL_RESULT,
+    PARAMS
+  };
+
   void createActions();
-  void createCentralWindow();
-  void createDockWindow(QWidget* widget, const QString& windowTitle = "Empty");
-  void createTabWindow(QWidget* widget, const QString& tabTitle = "Empty");
+  void addDefaultModelDesignWidget();
+  void createDockWindow(QWidget* widget, WidgetType pos, const QString& windowTitle = "Empty");
+  Qt::DockWidgetArea getDockAreaForWidgetType(WidgetType type) const;
+  void addModelResultWidget(QWidget* widget, const QString& title = "Empty");
   void createStatusBar();
   void readSettings();
   void writeSettings();
@@ -67,11 +73,11 @@ private:
   QMessageBox* m_metaDataWindow = nullptr;
   QAbstractItemModel* m_graphData = nullptr;
   QMenu* m_viewMenu;
-  QTabWidget* m_centralWindow;
 
   Model::ModelResult::MetaDataLoadCB m_metaDataLoadedCB;
 
   QAction* m_addGraphAction = nullptr;
+  std::vector<QDockWidget*> m_docksList;
 
   constexpr static size_t MIN_WINDOW_WIDTH = 400;
   constexpr static size_t MIN_WINDOW_HEIGHT = 200;

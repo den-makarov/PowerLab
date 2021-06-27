@@ -30,7 +30,8 @@ MainWindow::MainWindow(QWidget* parent)
 
   createActions();
   createStatusBar();
-  createCentralWindow();
+  addDefaultModelDesignWidget();
+  setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowTabbedDocks | QMainWindow::AllowNestedDocks);
   readSettings();
 
   QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -100,20 +101,9 @@ void MainWindow::documentWasModified() {
   setWindowModified(false);
 }
 
-void MainWindow::createCentralWindow() {
-  m_centralWindow = new QTabWidget(this);
-  m_centralWindow->setTabsClosable(true);
-  m_centralWindow->setMovable(true);
-
-  connect(m_centralWindow, &QTabWidget::tabCloseRequested, [this](int tabIndex){
-    auto widget = this->m_centralWindow->widget(tabIndex);
-    this->m_centralWindow->removeTab(tabIndex);
-    if(widget) {
-      delete widget;
-    }
-  });
-
-  setCentralWidget(m_centralWindow);
+void MainWindow::addDefaultModelDesignWidget() {
+  QWidget* widget = new QWidget(this);
+  createDockWindow(widget, WidgetType::MODEL_DESIGN);
 }
 
 void MainWindow::createActions() {
@@ -213,18 +203,44 @@ void MainWindow::createActions() {
 //    connect(textEdit, &QPlainTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
 }
 
-void MainWindow::createDockWindow(QWidget* widget, const QString& windowTitle) {
-    QDockWidget *dock = new QDockWidget(windowTitle, this);
-    dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    dock->setWidget(widget);
-    addDockWidget(Qt::RightDockWidgetArea, dock);
+Qt::DockWidgetArea MainWindow::getDockAreaForWidgetType(WidgetType type) const {
+  Qt::DockWidgetArea area = Qt::NoDockWidgetArea;
+  switch(type) {
+    case WidgetType::MODEL_DESIGN: area = Qt::TopDockWidgetArea; break;
+    case WidgetType::MODEL_RESULT: area = Qt::BottomDockWidgetArea; break;
+    case WidgetType::PARAMS: area = Qt::LeftDockWidgetArea; break;
+  }
+
+  return area;
+}
+
+void MainWindow::createDockWindow(QWidget* widget, WidgetType type, const QString& windowTitle) {
+  auto dockPosition = getDockAreaForWidgetType(type);
+
+  QDockWidget *dock = new QDockWidget(windowTitle, this);
+  dock->setAllowedAreas(dockPosition);
+  dock->setWidget(widget);
+
+  bool tabified = false;
+  for(auto d : m_docksList) {
+    if(d->allowedAreas() & dockPosition) {
+      tabifyDockWidget(d, dock);
+      tabified = true;
+      break;
+    }
+  }
+
+  if(!tabified) {
+    addDockWidget(dockPosition, dock);
+  }
+
+  m_docksList.push_back(dock);
+
 //    m_viewMenu->addAction(dock->toggleViewAction());
 }
 
-void MainWindow::createTabWindow(QWidget* widget, const QString& tabTitle) {
-  auto index = m_centralWindow->count();
-  m_centralWindow->addTab(widget, tabTitle);
-  m_centralWindow->setCurrentIndex(index);
+void MainWindow::addModelResultWidget(QWidget* widget, const QString& title) {
+  createDockWindow(widget, WidgetType::MODEL_RESULT, title);
 }
 
 void MainWindow::createStatusBar() {
@@ -354,8 +370,8 @@ void MainWindow::openModelResults(const QString& filename) {
 void MainWindow::drawGraph() {
   m_graphWidget = new GraphWidget();
 
-  createTabWindow(m_graphWidget,
-                  QString::fromStdString(m_modelResult->getModelTitle()));
+  addModelResultWidget(m_graphWidget,
+                       QString::fromStdString(m_modelResult->getModelTitle()));
 
   std::vector<std::string> signalNames;
   if(m_graphData) {
