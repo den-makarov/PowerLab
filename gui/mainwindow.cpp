@@ -60,7 +60,6 @@ void MainWindow::newFile() {
 }
 
 void MainWindow::open() {
-//  if(maybeSave()) {
   auto dialogTitle = tr("Open file with modeling results");
   auto dialogFilter = tr("Modeling result files (*.esk *.dat)");
   QString filename = QFileDialog::getOpenFileName(this, dialogTitle, "", dialogFilter);
@@ -68,7 +67,6 @@ void MainWindow::open() {
   if(!filename.isEmpty()) {
     openModelResults(filename);
   }
-//  }
 }
 
 bool MainWindow::save() {
