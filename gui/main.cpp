@@ -1,7 +1,8 @@
 #include <iostream>
+
 #include <QApplication>
 
-#include "mainwindow.h"
+#include "mainwindow/mainwindow.h"
 #include "version.h"
 #include "logger.h"
 

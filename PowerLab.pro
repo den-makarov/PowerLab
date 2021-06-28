@@ -28,7 +28,13 @@ SOURCES += \
     backend/utils/string_utils.cpp \
     gui/main.cpp \
     gui/dialogs/metadatawindow.cpp \
-    gui/mainwindow.cpp \
+    gui/mainwindow/mainwindow.cpp \
+    gui/mainwindow/mainwindow_actions.cpp \
+    gui/mainwindow/mainwindow_controls.cpp \
+    gui/mainwindow/mainwindow_model_results.cpp \
+    gui/mainwindow/mainwindow_model_designs.cpp \
+    gui/mainwindow/mainwindow_parameters.cpp \
+    gui/mainwindow/mainwindow_component_library.cpp \
     gui/graphs/graphprocessor.cpp \
     gui/graphs/graphwidget.cpp \
     gui/graphs/plot.cpp
@@ -45,7 +51,7 @@ HEADERS += \
     backend/logger/gui_message.h \
     backend/version.h \
     backend/utils/string_utils.h \
-    gui/mainwindow.h \
+    gui/mainwindow/mainwindow.h \
     gui/dialogs/metadatawindow.h \
     gui/graphs/graphprocessor.h \
     gui/graphs/graphwidget.h \

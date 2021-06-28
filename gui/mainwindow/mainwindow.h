@@ -70,7 +70,6 @@ private:
 
   QString m_currentFile;
   GraphWidget* m_graphWidget = nullptr;
-  QMessageBox* m_metaDataWindow = nullptr;
   QAbstractItemModel* m_graphData = nullptr;
   QMenu* m_viewMenu;
 
