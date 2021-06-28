@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget* parent)
   createStatusBar();
   addDefaultModelDesignWidget();
   setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowTabbedDocks | QMainWindow::AllowNestedDocks);
+  setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
+  setCorner(Qt::BottomRightCorner, Qt::RightDockWidgetArea);
+
   readSettings();
 
   QGuiApplication::setFallbackSessionManagementEnabled(false);

@@ -38,6 +38,7 @@ public:
                               std::string units,
                               std::vector<double>&& dataPoints);
 
+  virtual QSize sizeHint() const override;
 public slots:
   void plot();
 

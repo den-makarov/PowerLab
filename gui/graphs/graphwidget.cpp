@@ -105,6 +105,11 @@ GraphWidget::GraphWidget(QWidget *parent, GraphProcessor* graph)
   }
 }
 
+QSize GraphWidget::sizeHint() const {
+  auto size = parentWidget()->size();
+  return size;
+}
+
 void GraphWidget::plot() {
   update();
 }

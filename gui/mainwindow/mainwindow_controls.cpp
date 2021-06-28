@@ -14,7 +14,8 @@ Qt::DockWidgetArea MainWindow::getDockAreaForWidgetType(WidgetType type) const {
   switch(type) {
     case WidgetType::MODEL_DESIGN: area = Qt::TopDockWidgetArea; break;
     case WidgetType::MODEL_RESULT: area = Qt::BottomDockWidgetArea; break;
-    case WidgetType::PARAMS: area = Qt::LeftDockWidgetArea; break;
+    case WidgetType::PARAMETERS: area = Qt::RightDockWidgetArea; break;
+    case WidgetType::LIBRARY: area = Qt::RightDockWidgetArea; break;
   }
 
   return area;

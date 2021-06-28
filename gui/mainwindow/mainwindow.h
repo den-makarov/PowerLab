@@ -48,11 +48,14 @@ private:
   enum class WidgetType {
     MODEL_DESIGN,
     MODEL_RESULT,
-    PARAMS
+    PARAMETERS,
+    LIBRARY
   };
 
   void createActions();
   void addDefaultModelDesignWidget();
+  void showLibrary();
+  void showParameters();
   void createDockWindow(QWidget* widget, WidgetType pos, const QString& windowTitle = "Empty");
   Qt::DockWidgetArea getDockAreaForWidgetType(WidgetType type) const;
   void addModelResultWidget(QWidget* widget, const QString& title = "Empty");

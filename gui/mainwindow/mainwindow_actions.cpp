@@ -76,13 +76,22 @@ void MainWindow::createActions() {
   editMenu->addAction(pasteAct);
   editToolBar->addAction(pasteAct);
 
-  menuBar()->addSeparator();
+  std::string debugText = "Icon theme name: " + QIcon::themeName().toStdString();
+  Logger::log(Logger::DefaultMessage::DEBUG_MSG, debugText);
+  debugText = "Theme search pathes: {";
+  for(auto & path : QIcon::themeSearchPaths()) {
+    debugText += path.toStdString();
+    debugText.push_back(',');
+  }
+  debugText.push_back('}');
+  Logger::log(Logger::DefaultMessage::DEBUG_MSG, debugText);
 
+  QToolBar* modelToolBar = addToolBar(tr("Model"));
   const QIcon addIcon = QIcon::fromTheme("edit-add", QIcon(":/images/add.png"));
   m_addGraphAction = new QAction(addIcon, tr("&Add"), this);
   m_addGraphAction->setShortcuts(QKeySequence::New);
   m_addGraphAction->setStatusTip(tr("Select signals to plot new graph"));
-  editToolBar->addAction(m_addGraphAction);
+  modelToolBar->addAction(m_addGraphAction);
   m_addGraphAction->setDisabled(true);
   connect(m_addGraphAction, &QAction::triggered, this, [this](){
     if(this->m_modelResult) {
@@ -90,12 +99,30 @@ void MainWindow::createActions() {
     }
   });
 
+  // @TODO: Find correct icon fallback path
+  const QIcon parametersIcon = QIcon::fromTheme("system-settings", QIcon(":/images/settings.png"));
+  QAction* showParams = new QAction(parametersIcon, tr("&Parameters"), this);
+  showParams->setShortcuts(QKeySequence::Preferences);
+  showParams->setStatusTip(tr("Show parameters to configure component, design or graph"));
+  modelToolBar->addAction(showParams);
+  connect(showParams, &QAction::triggered, this, [this](){
+    this->showParameters();
+  });
+
+  // @TODO: Find correct icon fallback path
+  const QIcon libraryIcon = QIcon::fromTheme("extensions", QIcon(":/images/extensions.png"));
+  QAction* showLib = new QAction(libraryIcon, tr("&Library"), this);
+  showLib->setShortcuts(QKeySequence::Backspace);
+  showLib->setStatusTip(tr("Show library to chose and add components to model"));
+  modelToolBar->addAction(showLib);
+
+  connect(showLib, &QAction::triggered, this, [this](){
+    this->showLibrary();
+  });
+
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
   QAction* aboutAct = helpMenu->addAction(tr("&About"), this, &MainWindow::about);
   aboutAct->setStatusTip(tr("Show the application's About box"));
-
-//  QAction* aboutQtAct = helpMenu->addAction(tr("About &Qt"), qApp, &QApplication::aboutQt);
-//  aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
 
   cutAct->setEnabled(false);
   copyAct->setEnabled(false);

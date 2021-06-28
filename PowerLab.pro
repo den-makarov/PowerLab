@@ -26,6 +26,7 @@ SOURCES += \
     backend/logger/gui_message.cpp \
     backend/logger/model_message.cpp \
     backend/utils/string_utils.cpp \
+    gui/library/librarywidget.cpp \
     gui/main.cpp \
     gui/dialogs/metadatawindow.cpp \
     gui/mainwindow/mainwindow.cpp \
@@ -37,7 +38,9 @@ SOURCES += \
     gui/mainwindow/mainwindow_component_library.cpp \
     gui/graphs/graphprocessor.cpp \
     gui/graphs/graphwidget.cpp \
-    gui/graphs/plot.cpp
+    gui/graphs/plot.cpp \
+    gui/model/modelwidget.cpp \
+    gui/parameters/parameterswidget.cpp
 
 HEADERS += \
     backend/modelresult/modelresultmeta.h \
@@ -51,11 +54,14 @@ HEADERS += \
     backend/logger/gui_message.h \
     backend/version.h \
     backend/utils/string_utils.h \
+    gui/library/librarywidget.h \
     gui/mainwindow/mainwindow.h \
     gui/dialogs/metadatawindow.h \
     gui/graphs/graphprocessor.h \
     gui/graphs/graphwidget.h \
-    gui/graphs/plot.h
+    gui/graphs/plot.h \
+    gui/model/modelwidget.h \
+    gui/parameters/parameterswidget.h
 
 TRANSLATIONS += \
     PowerLab_en_US.ts
