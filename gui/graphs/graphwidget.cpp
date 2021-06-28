@@ -94,20 +94,13 @@ GraphWidget::GraphWidget(QWidget *parent, GraphProcessor* graph)
   : QWidget(parent)
   , m_graphProcessor(graph)
 {
-  if(parent) {
-    auto geometry = parent->geometry();
-    geometry.adjust(0, 0, -10, -10);
-    setGeometry(geometry);
-  }
-
   if(!m_graphProcessor) {
     m_graphProcessor = std::make_unique<GraphProcessor>();
   }
 }
 
 QSize GraphWidget::sizeHint() const {
-  auto size = parentWidget()->size();
-  return size;
+  return QSize(PREFERRED_WIDGIT_WIDTH_HINT, PREFERRED_WIDGIT_HEIGHT_HINT);
 }
 
 void GraphWidget::plot() {
