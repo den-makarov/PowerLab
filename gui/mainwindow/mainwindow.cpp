@@ -2,6 +2,7 @@
 
 #include "mainwindow/mainwindow.h"
 
+namespace PowerLab {
 namespace Gui {
 
 MainWindow::MainWindow(QWidget* parent)
@@ -27,3 +28,4 @@ MainWindow::MainWindow(QWidget* parent)
 }
 
 } // namespace Gui
+} // namespace PowerLab

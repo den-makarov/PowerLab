@@ -9,6 +9,7 @@
 #include "string_utils.h"
 #include "logger.h"
 
+namespace PowerLab {
 namespace Model {
 
 template <typename T = double>
@@ -85,4 +86,6 @@ private:
 };
 
 } // namespace model
+} // namespace PowerLab
+
 #endif // MODELRESULTVALUE_H

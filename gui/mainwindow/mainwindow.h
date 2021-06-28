@@ -19,6 +19,7 @@ class QPlainTextEdit;
 class QSessionManager;
 QT_END_NAMESPACE
 
+namespace PowerLab {
 namespace Gui {
 
 class GraphWidget;
@@ -86,4 +87,6 @@ private:
 };
 
 } // namespace Gui
+} // namespace PowerLab
+
 #endif // MAINWINDOW_H

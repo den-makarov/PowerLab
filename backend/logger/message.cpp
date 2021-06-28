@@ -2,6 +2,7 @@
 
 #include "message.h"
 
+namespace PowerLab {
 namespace Logger {
 
 std::ostream& operator<<(std::ostream& out, const LogMessage::Tag& tag) {
@@ -70,3 +71,4 @@ std::string getMessagePhrase(DefaultMessage msg) {
 }
 
 } // namespace Logger
+} // namespace PowerLab

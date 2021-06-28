@@ -6,6 +6,7 @@
 #include "logger.h"
 #include "string_utils.h"
 
+namespace PowerLab {
 namespace Model {
 
 // Map for search token
@@ -214,3 +215,4 @@ std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Data& data) {
 }
 
 } // namespace Model
+} // namespace PowerLab

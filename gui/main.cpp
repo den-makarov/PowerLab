@@ -14,13 +14,14 @@ int main(int argc, char *argv[])
   QString appVersion = POWERLAB_APP_VERSION;
   QString appTitle = appName + " - " + appVersion;
 
-  Logger::LogProvider::instance().addStream(std::cout);
-  Logger::log(System::SystemMessage::DEBUG_APPLICATION_START, appTitle.toStdString());
+  PowerLab::Logger::LogProvider::instance().addStream(std::cout);
+  PowerLab::Logger::log(PowerLab::System::SystemMessage::DEBUG_APPLICATION_START,
+                        appTitle.toStdString());
 
   QCoreApplication::setApplicationVersion(appVersion);
   QCoreApplication::setApplicationName(appTitle);
 
-  Gui::MainWindow window;
+  PowerLab::Gui::MainWindow window;
   window.show();
   return app.exec();
 }

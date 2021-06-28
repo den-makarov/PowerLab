@@ -3,6 +3,7 @@
 
 #include <string>
 
+namespace PowerLab {
 namespace Gui {
 
 enum class GuiMessage {
@@ -28,5 +29,6 @@ enum class GuiMessage {
 std::string getMessagePhrase(GuiMessage msg);
 
 } // namespace Gui
+} // namespace PowerLab
 
 #endif // GUI_MESSAGE_H

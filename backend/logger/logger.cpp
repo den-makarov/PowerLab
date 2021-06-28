@@ -1,5 +1,6 @@
 #include "logger.h"
 
+namespace PowerLab {
 namespace Logger {
 
 void LogProvider::transmitMessage(const LogMessage& msg) {
@@ -71,3 +72,4 @@ LogProvider::PlacersFmt LogProvider::searchForPlacers(const std::string& format)
 }
 
 } // namespace Logger
+} // namespace PowerLab

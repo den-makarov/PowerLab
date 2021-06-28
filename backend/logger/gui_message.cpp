@@ -2,6 +2,7 @@
 
 #include "gui_message.h"
 
+namespace PowerLab {
 namespace Gui {
 
 std::string getMessagePhrase(GuiMessage msg) {
@@ -26,3 +27,4 @@ std::string getMessagePhrase(GuiMessage msg) {
 }
 
 } // namespace Gui
+} // namespace PowerLab

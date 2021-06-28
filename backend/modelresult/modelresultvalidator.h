@@ -5,6 +5,7 @@
 #include <fstream>
 #include <memory>
 
+namespace PowerLab {
 namespace Model {
 
 class ModelResultMeta;
@@ -26,5 +27,6 @@ private:
 };
 
 } // namespace Model
+} // namespace PowerLab
 
 #endif // MODELRESULTVALIDATOR_H

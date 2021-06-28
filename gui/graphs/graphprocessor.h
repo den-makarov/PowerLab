@@ -10,6 +10,7 @@
 class QPainter;
 class QPaintEvent;
 
+namespace PowerLab {
 namespace Gui {
 
 class GraphProcessor {
@@ -31,4 +32,6 @@ private:
 };
 
 } // namespace Gui
+} // namespace PowerLab
+
 #endif // GRAPHPROCESSOR_H

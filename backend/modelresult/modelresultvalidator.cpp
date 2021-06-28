@@ -2,6 +2,7 @@
 #include "modelresultmeta.h"
 #include "logger.h"
 
+namespace PowerLab {
 namespace Model {
 
 ModelResultValidator::ModelResultValidator()
@@ -82,5 +83,6 @@ bool ModelResultValidator::readSignalLines(std::ifstream& file, std::string& lin
 
   return result;
 }
+} // namespace PowerLab
 
 } // namespace Model

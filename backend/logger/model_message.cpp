@@ -2,6 +2,7 @@
 
 #include "model_message.h"
 
+namespace PowerLab {
 namespace Model {
 
 std::string getMessagePhrase(ModelMessage msg) {
@@ -41,3 +42,4 @@ std::string getMessagePhrase(ModelMessage msg) {
 }
 
 } // namespace Model
+} // namespace PowerLab

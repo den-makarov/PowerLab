@@ -9,6 +9,7 @@
 #include "graphs/graphwidget.h"
 #include "mainwindow/mainwindow.h"
 
+namespace PowerLab {
 namespace Gui {
 
 void MainWindow::addModelResultWidget(QWidget* widget, const QString& title) {
@@ -87,3 +88,4 @@ void MainWindow::drawGraph() {
 }
 
 } // namespace Gui
+} // namespace PowerLab

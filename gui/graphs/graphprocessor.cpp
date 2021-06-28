@@ -3,6 +3,7 @@
 #include "graphprocessor.h"
 #include "logger.h"
 
+namespace PowerLab {
 namespace Gui {
 
 GraphProcessor::GraphProcessor() {
@@ -49,3 +50,4 @@ void GraphProcessor::setPlotLimits(QRect plotLimits) {
 }
 
 } // namespace Gui
+} // namespace PowerLab

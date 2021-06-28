@@ -6,6 +6,7 @@
 #include "modelresultmeta.h"
 #include "modelresultvalues.h"
 
+namespace PowerLab {
 namespace Model {
 
 ModelResult::ModelResult()
@@ -155,3 +156,4 @@ void ModelResult::defaultMetaDataLoadSignal(bool parseResult, const std::string&
 }
 
 } // namespace Model
+} // namespace PowerLab

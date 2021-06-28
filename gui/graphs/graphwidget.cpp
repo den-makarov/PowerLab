@@ -84,6 +84,7 @@ static std::vector<QColor> defaultColorList = {
 
 } // namespace anonymous
 
+namespace PowerLab {
 namespace Gui {
 
 GraphWidget::~GraphWidget() {
@@ -222,3 +223,4 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 }
 
 } // namespace Gui
+} // namespace PowerLab

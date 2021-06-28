@@ -4,6 +4,7 @@
 
 #include "mainwindow/mainwindow.h"
 
+namespace PowerLab {
 namespace Gui {
 
 void MainWindow::createActions() {
@@ -131,3 +132,4 @@ void MainWindow::createActions() {
 }
 
 } // namespace Gui
+} // namespace PowerLab

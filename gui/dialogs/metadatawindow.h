@@ -6,10 +6,13 @@
 class QAbstractItemModel;
 class QListView;
 
+namespace PowerLab {
 namespace Model {
   class ModelResult;
 }
+}
 
+namespace PowerLab {
 namespace Gui {
 
 class MetaDataWindow : public QDialog {
@@ -32,5 +35,6 @@ private slots:
 };
 
 } // namespace Gui
+} // namespace PowerLab
 
 #endif // METADATAWINDOW_H

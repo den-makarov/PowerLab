@@ -3,6 +3,7 @@
 
 #include "plot.h"
 
+namespace PowerLab {
 namespace Gui {
 
 Plot::Plot(int width, int height)
@@ -230,3 +231,4 @@ void Plot::drawGridValue(QPainter& painter, double number, QRect textRect, TextA
 }
 
 } // namespace Gui
+} // namespace PowerLab

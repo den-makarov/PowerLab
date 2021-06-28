@@ -5,6 +5,7 @@
 #include <functional>
 #include <set>
 
+namespace PowerLab {
 namespace Logger {
 
 enum class DefaultMessage {
@@ -105,4 +106,6 @@ std::ostream& operator<<(std::ostream& out, const LogMessage& msg);
 std::string getMessagePhrase(DefaultMessage msg);
 
 } // namespace Logger
+} // namespace PowerLab
+
 #endif // MESSAGE_H

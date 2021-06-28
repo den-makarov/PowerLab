@@ -3,6 +3,7 @@
 
 #include "string_utils.h"
 
+namespace PowerLab {
 namespace Utilities {
 
 std::time_t dateFromString(const std::string& str, DateFormat format) {
@@ -60,3 +61,4 @@ std::vector<std::string> splitString(const std::string& str, char delim) {
 }
 
 } // namespace Utilities
+} // namespace PowerLab

@@ -9,6 +9,7 @@
 
 #include "modelresultmeta.h"
 
+namespace PowerLab {
 namespace Model {
 
 class ModelResultValidator;
@@ -60,4 +61,6 @@ private:
 };
 
 } // namespace model
+} // namespace PowerLab
+
 #endif // MODELRESULT_H

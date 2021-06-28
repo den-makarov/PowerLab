@@ -3,6 +3,7 @@
 
 #include <string>
 
+namespace PowerLab {
 namespace Model {
 
 enum class ModelMessage {
@@ -43,5 +44,6 @@ enum class ModelMessage {
 std::string getMessagePhrase(ModelMessage msg);
 
 } // namespace Model
+} // namespace PowerLab
 
 #endif // MODEL_MESSAGE_H

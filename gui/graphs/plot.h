@@ -10,6 +10,7 @@
 
 class QPainter;
 
+namespace PowerLab {
 namespace Gui {
 
 class Plot {
@@ -92,4 +93,6 @@ private:
 };
 
 } // namespace Gui
+} // namespace PowerLab
+
 #endif // PLOT_H

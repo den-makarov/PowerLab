@@ -13,6 +13,7 @@
 class QPainter;
 class QPaintEvent;
 
+namespace PowerLab {
 namespace Gui {
 
 class Plot;
@@ -61,4 +62,6 @@ private:
 };
 
 } // namespace Gui
+} // namespace PowerLab
+
 #endif // GRAPHWIDGET_H

@@ -1,6 +1,7 @@
 #include "mainwindow/mainwindow.h"
 #include "library/librarywidget.h"
 
+namespace PowerLab {
 namespace Gui {
 
 void MainWindow::showLibrary() {
@@ -9,3 +10,4 @@ void MainWindow::showLibrary() {
 }
 
 } // namespace Gui
+} // namespace PowerLab

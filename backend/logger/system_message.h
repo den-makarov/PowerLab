@@ -3,6 +3,7 @@
 
 #include <string>
 
+namespace PowerLab {
 namespace System {
 
 enum class SystemMessage {
@@ -23,5 +24,6 @@ enum class SystemMessage {
 std::string getMessagePhrase(SystemMessage msg);
 
 } // namespace System
+} // namespace PowerLab
 
 #endif // SYSTEM_MESSAGE_H

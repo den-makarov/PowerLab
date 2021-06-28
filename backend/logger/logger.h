@@ -17,6 +17,7 @@
 #include "model_message.h"
 #include "gui_message.h"
 
+namespace PowerLab {
 namespace Logger {
 
 class LogProvider {
@@ -157,4 +158,6 @@ void log(T msgType, Args... args) {
 }
 
 } // namespace Logger
+} // namespace PowerLab
+
 #endif // LOGGER_H

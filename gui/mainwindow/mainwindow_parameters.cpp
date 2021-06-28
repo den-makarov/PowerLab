@@ -1,6 +1,7 @@
 #include "mainwindow/mainwindow.h"
 #include "parameters/parameterswidget.h"
 
+namespace PowerLab {
 namespace Gui {
 
 void MainWindow::showParameters() {
@@ -9,3 +10,4 @@ void MainWindow::showParameters() {
 }
 
 } // namespace Gui
+} // namespace PowerLab

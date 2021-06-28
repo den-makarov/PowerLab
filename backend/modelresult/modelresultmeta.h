@@ -7,6 +7,7 @@
 
 #include "logger.h"
 
+namespace PowerLab {
 namespace Model {
 
 class ModelResultMeta {
@@ -87,5 +88,6 @@ std::ostream& operator<<(std::ostream& out, const ModelResultMeta::SignalDescrip
 std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Data& data);
 
 } // namespace Model
+} // namespace PowerLab
 
 #endif // MODELRESULTMETA_H

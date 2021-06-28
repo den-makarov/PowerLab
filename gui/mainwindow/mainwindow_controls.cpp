@@ -7,6 +7,7 @@
 
 #include "mainwindow/mainwindow.h"
 
+namespace PowerLab {
 namespace Gui {
 
 Qt::DockWidgetArea MainWindow::getDockAreaForWidgetType(WidgetType type) const {
@@ -195,3 +196,4 @@ void MainWindow::commitData(QSessionManager &manager) {
 }
 
 } // namespace Gui
+} // namespace PowerLab

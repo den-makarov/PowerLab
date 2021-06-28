@@ -3,6 +3,9 @@
 
 #include <QWidget>
 
+namespace PowerLab {
+namespace Gui {
+
 class LibraryWidget : public QWidget {
   Q_OBJECT
 public:
@@ -11,5 +14,8 @@ public:
 signals:
 
 };
+
+} // namespace Gui
+} // namespace PowerLab
 
 #endif // LIBRARYWIDGET_H

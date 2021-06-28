@@ -13,10 +13,10 @@
 #include "metadatawindow.h"
 #include "modelresult/modelresult.h"
 
+namespace PowerLab {
 namespace Gui {
 
-MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent)
-{
+MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent) {
   setWindowModality(Qt::ApplicationModal);
   setWindowTitle("Chose signals to plot");
 
@@ -130,3 +130,4 @@ void MetaDataWindow::removeSignalFromGraph() {
 }
 
 } // namespace Gui
+} // namespace PowerLab

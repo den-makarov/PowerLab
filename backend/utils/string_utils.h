@@ -5,6 +5,7 @@
 #include <string>
 #include <ctime>
 
+namespace PowerLab {
 namespace Utilities {
 
 enum class DateFormat {
@@ -16,4 +17,6 @@ std::string trimString(const std::string& str);
 std::vector<std::string> splitString(const std::string& str, char delim);
 
 } // namespace Utilities
+} // namespace PowerLab
+
 #endif // STRING_UTILS_H

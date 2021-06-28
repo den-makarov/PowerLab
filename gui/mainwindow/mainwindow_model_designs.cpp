@@ -1,6 +1,7 @@
 #include "mainwindow/mainwindow.h"
 #include "model/modelwidget.h"
 
+namespace PowerLab {
 namespace Gui {
 
 void MainWindow::addDefaultModelDesignWidget() {
@@ -11,3 +12,4 @@ void MainWindow::addDefaultModelDesignWidget() {
 }
 
 } // namespace Gui
+} // namespace PowerLab

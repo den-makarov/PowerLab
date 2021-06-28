@@ -2,6 +2,7 @@
 
 #include "system_message.h"
 
+namespace PowerLab {
 namespace System {
 
 std::string getMessagePhrase(SystemMessage msg) {
@@ -21,3 +22,4 @@ std::string getMessagePhrase(SystemMessage msg) {
 }
 
 } // namespace System
+} // namespace PowerLab
