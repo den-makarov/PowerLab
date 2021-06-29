@@ -16,23 +16,25 @@ void GraphProcessor::plot(QPainter *painter,
                           const std::vector<double>& yData,
                           const std::vector<double>& xData,
                           double normYFactor,
-                          double normXFactor) const {
+                          double normXFactor,
+                          double yBias,
+                          double xBias) const {
   if(yData.empty() || xData.empty() || xData.size() != yData.size()) {
     return;
   }
 
   painter->setPen(m_pen);
-  double yFactor = (m_plotLimits.height() - 1) / normYFactor;
-  double xFactor = (m_plotLimits.width() - 1) / normXFactor;
 
   int yOffset = (m_plotLimits.height() - 1) / 2 + m_plotLimits.top();
-  int xOffset = m_plotLimits.left();
+  int xOffset = (m_plotLimits.width() - 1) / 2 + m_plotLimits.left();
+  double yFactor = - (m_plotLimits.height() - 1) / normYFactor;
+  double xFactor = (m_plotLimits.width() - 1) / normXFactor;
 
-  QPointF point(xOffset + xFactor * xData[0], yOffset - yFactor * yData[0]);
+  QPointF point(xOffset - xFactor * (xData[0] - xBias), yOffset - yFactor * (yData[0] - yBias));
 
   for(size_t i = 0; i < yData.size(); i++) {
-    double y = yOffset - yFactor * yData[i];
-    double x = xOffset + xFactor * xData[i];
+    double y = yOffset - yFactor * (yData[i] - yBias);
+    double x = xOffset - xFactor * (xData[i] - xBias);
     QPointF nextPoint(x, y);
     if(nextPoint != point) {
       painter->drawLine(point, nextPoint);

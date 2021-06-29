@@ -2,6 +2,7 @@
 #include <QPen>
 
 #include "plot.h"
+#include "logger.h"
 
 namespace PowerLab {
 namespace Gui {
@@ -218,7 +219,7 @@ void Plot::drawGrid(QPainter& painter) const {
 }
 
 void Plot::drawGridValue(QPainter& painter, double number, QRect textRect, TextAlign align) const {
-  QString str = QString::number(number, 'g', 2);
+  QString str = QString::number(number, 'g', 3);
 
   auto textAlign = Qt::AlignLeft;
   if(align == TextAlign::CENTER) {
@@ -228,6 +229,28 @@ void Plot::drawGridValue(QPainter& painter, double number, QRect textRect, TextA
   }
 
   painter.drawText(textRect, textAlign, str);
+}
+
+void Plot::dump(std::ostream& out) const {
+  out << "Height: " << m_height << " Width: " << m_width;
+  out << "\nMargins {left, right, top, bottom} : {"
+      << m_margins.left << ", "
+      << m_margins.right << ", "
+      << m_margins.top << ", "
+      << m_margins.bottom << "}\n";
+  out << "Bounds {xMax, xMin, yMax, yMin} : {"
+      << m_bounds.xMax << ", "
+      << m_bounds.xMin << ", "
+      << m_bounds.yMax << ", "
+      << m_bounds.yMin << "}\n";
+  out << "Grid count: Y - " << m_gridYNumber << ", X - " << m_gridXNumber << "\n";
+  out << "xLabel: " << m_XLabel << "\n"
+      << "yLabel: " << m_YLabel;
+}
+
+std::ostream& operator<<(std::ostream& out, const Plot& plot) {
+  plot.dump(out);
+  return out;
 }
 
 } // namespace Gui

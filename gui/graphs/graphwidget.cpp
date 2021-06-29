@@ -142,8 +142,8 @@ void GraphWidget::configureHorizontalScale(Plot& plot) {
     plotBounds.xMax = g.maxValue + PLOT_HORIZONTAL_EXTENSION;
     plotBounds.xMin = g.maxValue - PLOT_HORIZONTAL_EXTENSION;
   } else {
-    plotBounds.xMin = g.minValue * PLOT_HORIZONTAL_EXTENSION;
-    plotBounds.xMax = g.maxValue * PLOT_HORIZONTAL_EXTENSION;
+    plotBounds.xMin = g.minValue - (g.maxValue - g.minValue) * PLOT_HORIZONTAL_EXTENSION;
+    plotBounds.xMax = g.maxValue + (g.maxValue - g.minValue) * PLOT_HORIZONTAL_EXTENSION;
   }
 }
 
@@ -169,11 +169,11 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
 
   auto& plotBounds = plot.getBounds();
   if(std::fabs(max - min) < std::numeric_limits<double>::epsilon()) {
-    plotBounds.yMax = max + PLOT_VERTICAL_EXTENSION;
-    plotBounds.yMin = max - PLOT_VERTICAL_EXTENSION;
+    plotBounds.yMax = max + max * PLOT_VERTICAL_EXTENSION;
+    plotBounds.yMin = max - max * PLOT_VERTICAL_EXTENSION;
   } else {
-    plotBounds.yMin = min * PLOT_VERTICAL_EXTENSION;
-    plotBounds.yMax = max * PLOT_VERTICAL_EXTENSION;
+    plotBounds.yMin = min - (max - min) * PLOT_VERTICAL_EXTENSION;
+    plotBounds.yMax = max + (max - min) * PLOT_VERTICAL_EXTENSION;
   }
 }
 
@@ -217,7 +217,9 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
                            graphData.points,
                            m_horizontalScale.points,
                            plot.getBounds().yMax - plot.getBounds().yMin,
-                           plot.getBounds().xMax - plot.getBounds().xMin);
+                           plot.getBounds().xMax - plot.getBounds().xMin,
+                           (plot.getBounds().yMax + plot.getBounds().yMin) / 2.0,
+                           (plot.getBounds().xMax + plot.getBounds().xMin) / 2.0);
   }
   painter.end();
 }

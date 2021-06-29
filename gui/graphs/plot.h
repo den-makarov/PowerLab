@@ -63,6 +63,8 @@ public:
 
   void update(QPainter* painter) const;
 private:
+  friend std::ostream& operator<<(std::ostream&, const Plot& plot);
+  void dump(std::ostream& out) const;
   void drawBorder(QPainter& painter) const;
 
   void drawGrid(QPainter& painter) const;
@@ -91,6 +93,8 @@ private:
   std::string m_YLabel = "";
   QColor m_bgcolor = Qt::white;
 };
+
+std::ostream& operator<<(std::ostream& out, const Plot& plot);
 
 } // namespace Gui
 } // namespace PowerLab

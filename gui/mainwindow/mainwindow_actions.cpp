@@ -77,16 +77,6 @@ void MainWindow::createActions() {
   editMenu->addAction(pasteAct);
   editToolBar->addAction(pasteAct);
 
-  std::string debugText = "Icon theme name: " + QIcon::themeName().toStdString();
-  Logger::log(Logger::DefaultMessage::DEBUG_MSG, debugText);
-  debugText = "Theme search pathes: {";
-  for(auto & path : QIcon::themeSearchPaths()) {
-    debugText += path.toStdString();
-    debugText.push_back(',');
-  }
-  debugText.push_back('}');
-  Logger::log(Logger::DefaultMessage::DEBUG_MSG, debugText);
-
   QToolBar* modelToolBar = addToolBar(tr("Model"));
   const QIcon addIcon = QIcon::fromTheme("edit-add", QIcon(":/images/add.png"));
   m_addGraphAction = new QAction(addIcon, tr("&Add"), this);

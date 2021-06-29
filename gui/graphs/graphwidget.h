@@ -54,8 +54,8 @@ private:
   GraphData m_horizontalScale;
   std::unique_ptr<GraphProcessor> m_graphProcessor;
 
-  constexpr static double PLOT_VERTICAL_EXTENSION = 1.2;
-  constexpr static double PLOT_HORIZONTAL_EXTENSION = 1.0;
+  constexpr static double PLOT_VERTICAL_EXTENSION = 0.1;
+  constexpr static double PLOT_HORIZONTAL_EXTENSION = 0.0;
 
   constexpr static int PREFERRED_WIDGIT_WIDTH_HINT = 500;
   constexpr static int PREFERRED_WIDGIT_HEIGHT_HINT = 300;

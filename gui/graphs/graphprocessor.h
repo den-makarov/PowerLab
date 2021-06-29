@@ -23,7 +23,9 @@ public:
             const std::vector<double>& yData,
             const std::vector<double>& xData,
             double normYFactor = 1.0,
-            double normXFactor = 1.0) const;
+            double normXFactor = 1.0,
+            double yBias = 0.0,
+            double xBias = 0.0) const;
 
 private:
   QRect m_plotLimits;
