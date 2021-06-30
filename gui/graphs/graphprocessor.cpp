@@ -25,16 +25,16 @@ void GraphProcessor::plot(QPainter *painter,
 
   painter->setPen(m_pen);
 
-  int yOffset = (m_plotLimits.height() - 1) / 2 + m_plotLimits.top();
-  int xOffset = (m_plotLimits.width() - 1) / 2 + m_plotLimits.left();
-  double yFactor = - (m_plotLimits.height() - 1) / normYFactor;
+  double yOffset = (m_plotLimits.height() - 1) / 2 + m_plotLimits.top();
+  double xOffset = (m_plotLimits.width() - 1) / 2 + m_plotLimits.left();
+  double yFactor = (m_plotLimits.height() - 1) / normYFactor;
   double xFactor = (m_plotLimits.width() - 1) / normXFactor;
 
-  QPointF point(xOffset - xFactor * (xData[0] - xBias), yOffset - yFactor * (yData[0] - yBias));
+  QPointF point(xOffset + xFactor * (xData[0] - xBias), yOffset - yFactor * (yData[0] - yBias));
 
   for(size_t i = 0; i < yData.size(); i++) {
     double y = yOffset - yFactor * (yData[i] - yBias);
-    double x = xOffset - xFactor * (xData[i] - xBias);
+    double x = xOffset + xFactor * (xData[i] - xBias);
     QPointF nextPoint(x, y);
     if(nextPoint != point) {
       painter->drawLine(point, nextPoint);
