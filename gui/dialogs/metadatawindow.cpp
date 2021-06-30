@@ -41,7 +41,19 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent) {
   QPushButton* ok = new QPushButton(this);
   ok->setText("&Ok");
   ok->setMaximumWidth(80);
+  ok->setEnabled(false);
+
   connect(ok, &QPushButton::pressed, this, &MetaDataWindow::accept);
+
+  connect(m_graphModel, &QAbstractItemModel::rowsInserted, [ok](const QModelIndex&, int, int){
+    ok->setEnabled(true);
+  });
+
+  connect(m_graphModel, &QAbstractItemModel::rowsRemoved, [ok, this](const QModelIndex&, int, int){
+    if(m_graphModel->rowCount() == 0) {
+      ok->setEnabled(false);
+    }
+  });
 
   QPushButton* cancel = new QPushButton(this);
   cancel->setText("&Cancel");
