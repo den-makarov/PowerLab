@@ -25,6 +25,9 @@ MainWindow::MainWindow(QWidget* parent)
 
   setCurrentFile(QString());
   setUnifiedTitleAndToolBarOnMac(true);
+
+  const QIcon appIcon = QIcon::fromTheme("usage-app", QIcon(":/images/app.png"));
+  setWindowIcon(appIcon);
 }
 
 } // namespace Gui
