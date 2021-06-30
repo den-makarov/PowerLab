@@ -15,6 +15,7 @@ std::string getMessagePhrase(GuiMessage msg) {
     {GuiMessage::DEBUG_ATTEMPT_ADD_ITEM_TWICE, "Attempt to add item that is already exists: %1%"},
     // Info messages
     // Warning messages
+    {GuiMessage::WARNING_SET_PLOT_GRID_LINES_ON_AUTO_GRID, "Attempt to overwrite number of grid lines when auto grid lines mode is enabled. New grid lines values are ignored"},
     // Error messages
     {GuiMessage::ERROR_SELECTION_INVALID, "Valid selection is expected"},
     {GuiMessage::ERROR_NO_META_DATA, "Meta data is expected"},

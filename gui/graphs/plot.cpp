@@ -11,7 +11,7 @@ Plot::Plot(int width, int height)
   : m_width(width)
   , m_height(height)
 {
-  //EMPTY
+  calculateGridLinesNumber();
 }
 
 int Plot::getWidth() const {
@@ -27,8 +27,12 @@ void Plot::setBorder(bool isBorder) {
 }
 
 void Plot::setMainGridLinesNumber(int xNumber, int yNumber) {
-  m_gridXNumber = xNumber;
-  m_gridYNumber = yNumber;
+  if(!m_autoGrid) {
+    m_gridXNumber = xNumber;
+    m_gridYNumber = yNumber;
+  } else {
+    Logger::log(GuiMessage::WARNING_SET_PLOT_GRID_LINES_ON_AUTO_GRID);
+  }
 }
 
 Plot::ValueBounds& Plot::getBounds() {
@@ -37,6 +41,10 @@ Plot::ValueBounds& Plot::getBounds() {
 
 const Plot::ValueBounds& Plot::getBounds() const {
   return m_bounds;
+}
+
+void Plot::setAutoGrid(bool enabled) {
+  m_autoGrid = enabled;
 }
 
 void Plot::setBounds(const ValueBounds& boundaries) {
@@ -144,6 +152,11 @@ void Plot::drawBorder(QPainter& painter) const {
                      m_width - (m_margins.right + m_margins.left),
                      m_height - (m_margins.top + m_margins.bottom));
   }
+}
+
+void Plot::calculateGridLinesNumber() {
+  m_gridXNumber = 7;
+  m_gridYNumber = 11;
 }
 
 void Plot::drawXGrid(QPainter& painter) const {

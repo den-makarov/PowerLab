@@ -58,6 +58,7 @@ public:
   void addXAxisLabel(const std::string& label);
   void addYAxisLabel(const std::string& label);
 
+  void setAutoGrid(bool enabled);
   void setMainGridLinesNumber(int xNumber, int yNumber);
   void setBorder(bool isBorder);
 
@@ -80,18 +81,24 @@ private:
                      QRect textRect,
                      TextAlign align = TextAlign::LEFT) const;
 
+  void calculateGridLinesNumber();
+
   const int m_width;
   const int m_height;
-  bool m_border = false;
+  bool m_border = true;
+  bool m_autoGrid = true;
   bool m_isXLog = false;
   bool m_isYLog = false;
   int m_gridXNumber = 0;
   int m_gridYNumber = 0;
-  ValueBounds m_bounds = {0.6, 0.0, 0.12, -0.12};
+  ValueBounds m_bounds = {1.0, -1.0, 1.0, -1.0};
   Margins m_margins = {0, 0, 0, 0};
   std::string m_XLabel = "";
   std::string m_YLabel = "";
   QColor m_bgcolor = Qt::white;
+
+  static constexpr int MIN_SPACE_BETWEEN_GRID_LINES_PXL = 20;
+  static constexpr int MAX_SPACE_BETWEEN_GRID_LINES_PXL = 50;
 };
 
 std::ostream& operator<<(std::ostream& out, const Plot& plot);

@@ -189,8 +189,6 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 
   Plot plot(event->rect().width(), event->rect().height());
   plot.setBackground(QColor(0xFF, 0xFF, 0xA0));
-  plot.setBorder(true);
-  plot.setMainGridLinesNumber(7, 11);
   auto& margins = plot.getMargins();
   margins.left = 40;
   margins.right = 20;
