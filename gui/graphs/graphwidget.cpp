@@ -137,7 +137,7 @@ void GraphWidget::configureHorizontalScale(Plot& plot) {
 
   g.maxValue = *std::max_element(g.points.begin(), g.points.end());
 
-  auto& plotBounds = plot.getBounds();
+  auto plotBounds = plot.getBounds();
   if(std::fabs(g.maxValue - g.minValue) < std::numeric_limits<double>::epsilon()) {
     plotBounds.xMax = g.maxValue + PLOT_HORIZONTAL_EXTENSION;
     plotBounds.xMin = g.maxValue - PLOT_HORIZONTAL_EXTENSION;
@@ -145,6 +145,7 @@ void GraphWidget::configureHorizontalScale(Plot& plot) {
     plotBounds.xMin = g.minValue - (g.maxValue - g.minValue) * PLOT_HORIZONTAL_EXTENSION;
     plotBounds.xMax = g.maxValue + (g.maxValue - g.minValue) * PLOT_HORIZONTAL_EXTENSION;
   }
+  plot.setBounds(plotBounds);
 }
 
 void GraphWidget::configureVerticalScale(Plot& plot) {
@@ -167,7 +168,7 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
     }
   }
 
-  auto& plotBounds = plot.getBounds();
+  auto plotBounds = plot.getBounds();
   if(std::fabs(max - min) < std::numeric_limits<double>::epsilon()) {
     plotBounds.yMax = max + max * PLOT_VERTICAL_EXTENSION;
     plotBounds.yMin = max - max * PLOT_VERTICAL_EXTENSION;
@@ -175,6 +176,7 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
     plotBounds.yMin = min - (max - min) * PLOT_VERTICAL_EXTENSION;
     plotBounds.yMax = max + (max - min) * PLOT_VERTICAL_EXTENSION;
   }
+  plot.setBounds(plotBounds);
 }
 
 void GraphWidget::paintEvent(QPaintEvent *event) {
@@ -189,11 +191,13 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 
   Plot plot(event->rect().width(), event->rect().height());
   plot.setBackground(QColor(0xFF, 0xFF, 0xA0));
-  auto& margins = plot.getMargins();
+
+  auto margins = plot.getMargins();
   margins.left = 40;
   margins.right = 20;
   margins.top = 20;
   margins.bottom = 20;
+  plot.setMargins(margins);
 
   m_graphProcessor->setPlotLimits(QRect(margins.left,
                                         margins.top,

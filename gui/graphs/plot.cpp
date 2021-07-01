@@ -11,7 +11,6 @@ Plot::Plot(int width, int height)
   : m_width(width)
   , m_height(height)
 {
-  calculateGridLinesNumber();
 }
 
 int Plot::getWidth() const {
@@ -35,11 +34,7 @@ void Plot::setMainGridLinesNumber(int xNumber, int yNumber) {
   }
 }
 
-Plot::ValueBounds& Plot::getBounds() {
-  return m_bounds;
-}
-
-const Plot::ValueBounds& Plot::getBounds() const {
+Plot::ValueBounds Plot::getBounds() const {
   return m_bounds;
 }
 
@@ -79,12 +74,13 @@ void Plot::addYAxisLabel(const std::string& label) {
   }
 }
 
-void Plot::update(QPainter* painter) const {
+void Plot::update(QPainter* painter) {
   if(painter == nullptr) {
     return;
   }
 
-  if(m_width <= 0 || m_height <= 0) {
+  if((m_width - (m_margins.right + m_margins.left)) <= 0
+  || (m_height - (m_margins.top + m_margins.bottom)) <= 0) {
     return;
   }
 
@@ -94,6 +90,7 @@ void Plot::update(QPainter* painter) const {
                     m_height - (m_margins.top + m_margins.bottom),
                     m_bgcolor);
 
+  calculateGridLinesNumber();
   drawBorder(*painter);
   drawGrid(*painter);
   drawAxisLabels(*painter);
@@ -134,11 +131,7 @@ void Plot::setMargins(const Margins& margins) {
   m_margins = margins;
 }
 
-Plot::Margins& Plot::getMargins() {
-  return m_margins;
-}
-
-const Plot::Margins& Plot::getMargins() const {
+Plot::Margins Plot::getMargins() const {
   return m_margins;
 }
 
@@ -155,8 +148,27 @@ void Plot::drawBorder(QPainter& painter) const {
 }
 
 void Plot::calculateGridLinesNumber() {
-  m_gridXNumber = 7;
-  m_gridYNumber = 11;
+  int plotWidth = m_width - (m_margins.right + m_margins.left);
+
+  if(plotWidth <= MIN_SPACE_BETWEEN_GRID_LINES_PXL) {
+    m_gridXNumber = 0;
+  } else {
+//    int minGridLinesNumber = plotWidth / MAX_SPACE_BETWEEN_GRID_LINES_PXL;
+//    int maxGridLinesNumber = plotWidth / MIN_SPACE_BETWEEN_GRID_LINES_PXL;
+
+    m_gridXNumber = 7;
+  }
+
+  int plotHeight = m_height - (m_margins.top + m_margins.bottom);
+
+  if(plotHeight <= MIN_SPACE_BETWEEN_GRID_LINES_PXL) {
+    m_gridYNumber = 0;
+  } else {
+//    int minGridLinesNumber = plotWidth / MAX_SPACE_BETWEEN_GRID_LINES_PXL;
+//    int maxGridLinesNumber = plotWidth / MIN_SPACE_BETWEEN_GRID_LINES_PXL;
+
+    m_gridYNumber = 11;
+  }
 }
 
 void Plot::drawXGrid(QPainter& painter) const {

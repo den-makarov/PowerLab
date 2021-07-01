@@ -41,16 +41,13 @@ public:
   int getHeight() const;
 
   void setBackground(QColor bgcolor);
-  const QColor& getBackground() const;
-  QColor& getBackground();
+  QColor getBackground() const;
 
   void setBounds(const ValueBounds& boundaries);
-  ValueBounds& getBounds();
-  const ValueBounds& getBounds() const;
+  ValueBounds getBounds() const;
 
   void setMargins(const Margins& boundaries);
-  Margins& getMargins();
-  const Margins& getMargins() const;
+  Margins getMargins() const;
 
   void setAxisXLog(bool isLog);
   void setAxisYLog(bool isLog);
@@ -62,7 +59,7 @@ public:
   void setMainGridLinesNumber(int xNumber, int yNumber);
   void setBorder(bool isBorder);
 
-  void update(QPainter* painter) const;
+  void update(QPainter* painter);
 private:
   friend std::ostream& operator<<(std::ostream&, const Plot& plot);
   void dump(std::ostream& out) const;
