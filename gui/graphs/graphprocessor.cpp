@@ -33,14 +33,29 @@ void GraphProcessor::plot(QPainter *painter,
   QPointF point(xOffset + xFactor * (xData[0] - xBias), yOffset - yFactor * (yData[0] - yBias));
 
   for(size_t i = 0; i < yData.size(); i++) {
-    double y = yOffset - yFactor * (yData[i] - yBias);
-    double x = xOffset + xFactor * (xData[i] - xBias);
+    double y = yOffset - 1.3 * yFactor * (yData[i] - yBias);
+    double x = xOffset + 1.1 * xFactor * (xData[i] - xBias);
     QPointF nextPoint(x, y);
-    if(nextPoint != point) {
+
+    if(!isPointInPlotLimits(nextPoint) || !isPointInPlotLimits(point)) {
+      point = nextPoint;
+    } else if(nextPoint != point) {
       painter->drawLine(point, nextPoint);
       point = nextPoint;
     }
   }
+}
+
+bool GraphProcessor::isPointInPlotLimits(const QPointF& point) const {
+  if(point.x() <= m_plotLimits.left() || m_plotLimits.right() <= point.x()) {
+    return false;
+  }
+
+  if(point.y() <= m_plotLimits.top() || m_plotLimits.bottom() <= point.y()) {
+    return false;
+  }
+
+  return true;
 }
 
 void GraphProcessor::setPenColor(QColor color) {
