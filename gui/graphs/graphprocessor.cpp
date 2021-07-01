@@ -47,7 +47,8 @@ void GraphProcessor::plot(QPainter *painter,
 }
 
 bool GraphProcessor::isPointInPlotLimits(const QPointF& point) const {
-  if(point.x() <= m_plotLimits.left() || m_plotLimits.right() <= point.x()) {
+  // Right bound is strict in order to eliminate graphical glitch
+  if(point.x() <= m_plotLimits.left() || m_plotLimits.right() < point.x()) {
     return false;
   }
 
