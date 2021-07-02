@@ -58,20 +58,12 @@ void Plot::setBackground(QColor bgcolor) {
   m_bgcolor = bgcolor;
 }
 
-void Plot::addXAxisLabel(const std::string& label) {
-  if(m_XLabel.empty()) {
-    m_XLabel = label;
-  } else {
-    m_XLabel += ", " + label;
-  }
+void Plot::addXAxisLabel(const std::string& label, QColor textColor) {
+  m_XLabels.emplace_back(label, textColor);
 }
 
-void Plot::addYAxisLabel(const std::string& label) {
-  if(m_YLabel.empty()) {
-    m_YLabel = label;
-  } else {
-    m_YLabel += ", " + label;
-  }
+void Plot::addYAxisLabel(const std::string& label, QColor textColor) {
+  m_YLabels.emplace_back(label, textColor);
 }
 
 void Plot::update(QPainter* painter) {
@@ -97,20 +89,44 @@ void Plot::update(QPainter* painter) {
 }
 
 void Plot::drawXAxisLabels(QPainter& painter) const {
-  if(!m_XLabel.empty()) {
+  if(!m_XLabels.empty()) {
+    QRect boundingRect;
     QRect rect(0,
                m_height - m_margins.bottom,
                m_width,
                painter.font().pixelSize() + 2);
-    painter.drawText(rect, Qt::AlignRight, QString(m_XLabel.c_str()));
+    for(auto i = m_XLabels.size(); i != 0; i--) {
+      auto& label = m_XLabels[i - 1];
+
+      auto pen = painter.pen();
+      pen.setColor(label.textColor);
+      painter.setPen(pen);
+
+      painter.drawText(rect, Qt::AlignRight, QString(label.text.c_str()), &boundingRect);
+      rect.setWidth(rect.width() - boundingRect.width() - painter.fontMetrics().averageCharWidth() * 2);
+    }
   }
 }
 
 void Plot::drawYAxisLabels(QPainter& painter) const {
-  if(!m_YLabel.empty()) {
-    painter.drawText(m_margins.left,
-                     m_margins.top - 4,
-                     QString(m_YLabel.c_str()));
+  if(!m_YLabels.empty()) {
+    QRect boundingRect;
+    QRect rect(m_margins.left,
+               0,
+               m_width,
+               painter.font().pixelSize() + 2);
+
+    for(auto& label : m_YLabels) {
+      auto pen = painter.pen();
+      pen.setColor(label.textColor);
+      painter.setPen(pen);
+
+      painter.drawText(rect,
+                       Qt::AlignLeft,
+                       QString(label.text.c_str()),
+                       &boundingRect);
+      rect.setLeft(rect.left() + boundingRect.width() + painter.fontMetrics().averageCharWidth() * 2);
+    }
   }
 }
 
@@ -206,9 +222,9 @@ void Plot::drawYGrid(QPainter& painter) const {
   if(m_gridYNumber > 0) {
     double distBetweenGridLines = (m_height - (m_margins.top + m_margins.bottom) - 1) * 1.0 / (m_gridYNumber + 1.0);
     double gridLineLabelStep = (m_bounds.yMax - m_bounds.yMin) / (m_gridYNumber + 1.0);
-    double gridLineLabel = m_bounds.yMax - gridLineLabelStep;
+    double gridLineLabel = m_bounds.yMax - gridLineLabelStep * 0.4;
 
-    double topLimit = distBetweenGridLines + m_margins.top;
+    double topLimit = distBetweenGridLines * 0.4 + m_margins.top;
     double bottomLimit = m_height - (m_margins.top + m_margins.bottom);
 
     for(double i = topLimit; i < bottomLimit; i += distBetweenGridLines) {
@@ -270,8 +286,16 @@ void Plot::dump(std::ostream& out) const {
       << m_bounds.yMax << ", "
       << m_bounds.yMin << "}\n";
   out << "Grid count: Y - " << m_gridYNumber << ", X - " << m_gridXNumber << "\n";
-  out << "xLabel: " << m_XLabel << "\n"
-      << "yLabel: " << m_YLabel;
+
+  out << "xLabel:";
+  for(auto& label : m_XLabels) {
+    out << " " << label.text;
+  }
+
+  out << " yLabel:";
+  for(auto& label : m_YLabels) {
+    out << " " << label.text;
+  }
 }
 
 std::ostream& operator<<(std::ostream& out, const Plot& plot) {

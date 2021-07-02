@@ -152,8 +152,12 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
   double min = std::numeric_limits<double>::max();
   double max = std::numeric_limits<double>::min();
 
+  size_t penColorId = 0;
   for(auto& graphData : m_graphs) {
-    plot.addYAxisLabel(graphData.name + " [" + graphData.units + "]");
+    auto color = defaultColorList[penColorId++];
+    penColorId %= defaultColorList.size();
+
+    plot.addYAxisLabel(graphData.name + " [" + graphData.units + "]", color);
 
     graphData.minValue = *std::min_element(graphData.points.begin(),
                                            graphData.points.end());

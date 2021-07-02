@@ -52,8 +52,8 @@ public:
   void setAxisXLog(bool isLog);
   void setAxisYLog(bool isLog);
 
-  void addXAxisLabel(const std::string& label);
-  void addYAxisLabel(const std::string& label);
+  void addXAxisLabel(const std::string& label, QColor textColor = Qt::black);
+  void addYAxisLabel(const std::string& label, QColor textColor = Qt::black);
 
   void setAutoGrid(bool enabled);
   void setMainGridLinesNumber(int xNumber, int yNumber);
@@ -61,6 +61,15 @@ public:
 
   void update(QPainter* painter);
 private:
+  struct AxisLabel {
+    AxisLabel(const std::string& label, QColor color)
+    : text(label)
+    , textColor(color)
+    {}
+    std::string text;
+    QColor textColor;
+  };
+
   friend std::ostream& operator<<(std::ostream&, const Plot& plot);
   void dump(std::ostream& out) const;
   void drawBorder(QPainter& painter) const;
@@ -90,8 +99,8 @@ private:
   int m_gridYNumber = 0;
   ValueBounds m_bounds = {1.0, -1.0, 1.0, -1.0};
   Margins m_margins = {0, 0, 0, 0};
-  std::string m_XLabel = "";
-  std::string m_YLabel = "";
+  std::vector<AxisLabel> m_XLabels;
+  std::vector<AxisLabel> m_YLabels;
   QColor m_bgcolor = Qt::white;
 
   static constexpr int MIN_SPACE_BETWEEN_GRID_LINES_PXL = 20;
