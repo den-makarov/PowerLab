@@ -17,9 +17,9 @@ struct ThreePhaseSignal {
   qreal a;
   qreal b;
   qreal c;
-  qreal phA;
-  qreal phB;
-  qreal phC;
+  qreal alpha;
+  qreal beta;
+  qreal gamma;
 };
 
 void paintDemoThreePhaseSignal(QPainter *painter, int bias = 0) {
@@ -36,26 +36,26 @@ void paintDemoThreePhaseSignal(QPainter *painter, int bias = 0) {
   qreal factor = static_cast<qreal>(height / 2) * 0.8;
 
   ThreePhaseSignal signal;
-  signal.phA = 2 * M_PI * bias / 5000;
-  signal.phB = 2 * M_PI * bias / 5000 - 2 * M_PI / 3;
-  signal.phC = 2 * M_PI * bias / 5000 + 2 * M_PI / 3;
+  signal.alpha = 2 * M_PI * bias / 5000;
+  signal.beta = 2 * M_PI * bias / 5000 - 2 * M_PI / 3;
+  signal.gamma = 2 * M_PI * bias / 5000 + 2 * M_PI / 3;
 
-  signal.a = factor * qSin(6 * M_PI * 0 / width + signal.phA);
-  signal.b = factor * qSin(6 * M_PI * 0 / width + signal.phB);
-  signal.c = factor * qSin(6 * M_PI * 0 / width + signal.phC);
+  signal.a = factor * qSin(6 * M_PI * 0 / width + signal.alpha);
+  signal.b = factor * qSin(6 * M_PI * 0 / width + signal.beta);
+  signal.c = factor * qSin(6 * M_PI * 0 / width + signal.gamma);
 
   QPointF prePointA(0, signal.a + height / 2);
   QPointF prePointB(0, signal.b + height / 2);
   QPointF prePointC(0, signal.c + height / 2);
 
   for(int j = 1; j < width; j++) {
-    signal.phA = 2 * M_PI * bias / 5000;
-    signal.phB = 2 * M_PI * bias / 5000 - 2 * M_PI / 3;
-    signal.phC = 2 * M_PI * bias / 5000 + 2 * M_PI / 3;
+    signal.alpha = 2 * M_PI * bias / 5000;
+    signal.beta = 2 * M_PI * bias / 5000 - 2 * M_PI / 3;
+    signal.gamma = 2 * M_PI * bias / 5000 + 2 * M_PI / 3;
 
-    signal.a = factor * qSin(6 * M_PI * j / width + signal.phA);
-    signal.b = factor * qSin(6 * M_PI * j / width + signal.phB);
-    signal.c = factor * qSin(6 * M_PI * j / width + signal.phC);
+    signal.a = factor * qSin(6 * M_PI * j / width + signal.alpha);
+    signal.b = factor * qSin(6 * M_PI * j / width + signal.beta);
+    signal.c = factor * qSin(6 * M_PI * j / width + signal.gamma);
 
     QPointF pointA(j, signal.a + height / 2);
     QPointF pointB(j, signal.b + height / 2);
