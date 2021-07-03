@@ -86,8 +86,8 @@ void Plot::update(QPainter* painter) {
                     m_bgcolor);
 
   calculateGridLinesNumber();
-  drawBorder(*painter);
   drawGrid(*painter);
+  drawBorder(*painter);
   drawAxisLabels(*painter);
 }
 
@@ -225,11 +225,14 @@ void Plot::drawXGrid(QPainter& painter) const {
   int cycleLimit = m_gridXNumber;
   while(left < right && cycleLimit >= 0) {
     auto xPos = static_cast<int>(left);
-    painter.drawLine(xPos, m_margins.top, xPos, m_height - m_margins.bottom);
 
-    xPos = static_cast<int>(left - gridLineDist / 2.0);
-    QRect textRect(xPos, yPos, static_cast<int>(gridLineDist), fontSize);
-    drawGridValue(painter, gridLineLabel, textRect, TextAlign::CENTER);
+    if(m_margins.left <= xPos && xPos < (m_width - 1) - m_margins.right) {
+      painter.drawLine(xPos, m_margins.top, xPos, m_height - m_margins.bottom);
+
+      xPos = static_cast<int>(left - gridLineDist / 2.0);
+      QRect textRect(xPos, yPos, static_cast<int>(gridLineDist), fontSize);
+      drawGridValue(painter, gridLineLabel, textRect, TextAlign::CENTER);
+    }
 
     left += gridLineDist;
     gridLineLabel += gridLineLabelStep;
@@ -243,25 +246,28 @@ void Plot::drawYGrid(QPainter& painter) const {
   }
 
   double factor = (m_height - (m_margins.top + m_margins.bottom) - 1) / (m_bounds.yMax - m_bounds.yMin);
-  double gridLineDist = factor * m_gridLabelsRect.height() / m_gridYNumber;
+  double gridLineDist = factor * std::abs(m_gridLabelsRect.height()) / m_gridYNumber;
 
-  double gridLineLabelStep = m_gridLabelsRect.height() / m_gridYNumber;
+  double gridLineLabelStep = std::abs(m_gridLabelsRect.height()) / m_gridYNumber;
   double gridLineLabel = m_gridLabelsRect.bottom();
 
-  double bottom = m_gridLabelsRect.bottom() * factor + m_height - m_margins.bottom;
-  double top = m_gridLabelsRect.top() * factor + m_margins.top;
+  double bottom = (m_bounds.yMin - m_gridLabelsRect.bottom()) * factor + m_height - m_margins.bottom;
+  double top = m_margins.top;
 
   auto fontSize = painter.fontMetrics().height();
 
   int cycleLimit = m_gridYNumber;
   while(bottom > top && cycleLimit >= 0) {
     auto yPos = static_cast<int>(bottom);
-    painter.drawLine(m_margins.left, yPos, m_width - m_margins.right, yPos);
 
-    QRect textRect(0, yPos - fontSize / 2, m_margins.left - 1, fontSize);
-    drawGridValue(painter, gridLineLabel, textRect, TextAlign::RIGHT);
+    if(m_margins.top < yPos && yPos < m_height - m_margins.bottom) {
+      painter.drawLine(m_margins.left, yPos, m_width - m_margins.right, yPos);
 
-    bottom += gridLineDist;
+      QRect textRect(0, yPos - fontSize / 2, m_margins.left - 1, fontSize);
+      drawGridValue(painter, gridLineLabel, textRect, TextAlign::RIGHT);
+    }
+
+    bottom -= gridLineDist;
     gridLineLabel += gridLineLabelStep;
     cycleLimit--;
   }
