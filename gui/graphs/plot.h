@@ -97,6 +97,7 @@ private:
   bool m_isYLog = false;
   int m_gridXNumber = 0;
   int m_gridYNumber = 0;
+  QRectF m_gridLabelsRect;
   ValueBounds m_bounds = {1.0, -1.0, 1.0, -1.0};
   Margins m_margins = {0, 0, 0, 0};
   std::vector<AxisLabel> m_XLabels;

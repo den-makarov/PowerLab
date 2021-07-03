@@ -4,6 +4,14 @@
 namespace PowerLab {
 namespace Utilities {
 
+struct RoundedSegments {
+  double from;
+  double to;
+  double step;
+};
+
+RoundedSegments findOptimalRoundedSegments(double from, double to, int minLimit, int maxLimit);
+
 } // namespace Utilities
 } // namespace PowerLab
 

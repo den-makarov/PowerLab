@@ -1,8 +1,11 @@
+#include <cmath>
+
 #include <QPainter>
 #include <QPen>
 
 #include "plot.h"
 #include "logger.h"
+#include "math_utils.h"
 
 namespace PowerLab {
 namespace Gui {
@@ -164,85 +167,103 @@ void Plot::drawBorder(QPainter& painter) const {
 }
 
 void Plot::calculateGridLinesNumber() {
-  int plotWidth = m_width - (m_margins.right + m_margins.left);
+  m_gridLabelsRect.setLeft(m_bounds.xMin);
+  m_gridLabelsRect.setTop(m_bounds.yMax);
+  m_gridLabelsRect.setRight(m_bounds.xMax);
+  m_gridLabelsRect.setBottom(m_bounds.yMin);
 
-  if(plotWidth <= MIN_SPACE_BETWEEN_GRID_LINES_PXL) {
-    m_gridXNumber = 0;
-  } else {
-//    int minGridLinesNumber = plotWidth / MAX_SPACE_BETWEEN_GRID_LINES_PXL;
-//    int maxGridLinesNumber = plotWidth / MIN_SPACE_BETWEEN_GRID_LINES_PXL;
+  m_gridXNumber = 0;
+  m_gridYNumber = 0;
 
-    m_gridXNumber = 7;
+  int plotWidth = m_width - (m_margins.right + m_margins.left); 
+  if(plotWidth > MIN_SPACE_BETWEEN_GRID_LINES_PXL) {
+    auto segments = Utilities::findOptimalRoundedSegments(m_bounds.xMin,
+                                                          m_bounds.xMax,
+                                                          plotWidth / MAX_SPACE_BETWEEN_GRID_LINES_PXL,
+                                                          plotWidth / MIN_SPACE_BETWEEN_GRID_LINES_PXL);
+
+    if(!(std::isnan(segments.from) || std::isnan(segments.to) || std::isnan(segments.step))) {
+      m_gridXNumber = static_cast<int>((segments.to - segments.from) / segments.step);
+      m_gridLabelsRect.setLeft(segments.from);
+      m_gridLabelsRect.setRight(segments.to);
+    }
   }
 
   int plotHeight = m_height - (m_margins.top + m_margins.bottom);
-
   if(plotHeight <= MIN_SPACE_BETWEEN_GRID_LINES_PXL) {
-    m_gridYNumber = 0;
   } else {
-//    int minGridLinesNumber = plotWidth / MAX_SPACE_BETWEEN_GRID_LINES_PXL;
-//    int maxGridLinesNumber = plotWidth / MIN_SPACE_BETWEEN_GRID_LINES_PXL;
+    auto segments = Utilities::findOptimalRoundedSegments(m_bounds.yMin,
+                                                          m_bounds.yMax,
+                                                          plotHeight / MAX_SPACE_BETWEEN_GRID_LINES_PXL,
+                                                          plotHeight / MIN_SPACE_BETWEEN_GRID_LINES_PXL);
 
-    m_gridYNumber = 11;
+    if(!(std::isnan(segments.from) || std::isnan(segments.to) || std::isnan(segments.step))) {
+      m_gridYNumber = static_cast<int>((segments.to - segments.from) / segments.step);
+      m_gridLabelsRect.setBottom(segments.from);
+      m_gridLabelsRect.setTop(segments.to);
+    }
   }
 }
 
 void Plot::drawXGrid(QPainter& painter) const {
-  if(m_gridXNumber > 0) {
-    double distBetweenGridLines = (m_width - (m_margins.left + m_margins.right) - 1) * 1.0 / (m_gridXNumber + 1.0);
-    double gridLineLabelStep = (m_bounds.xMax - m_bounds.xMin) / (m_gridXNumber + 1.0);
-    double gridLineLabel = m_bounds.xMin + gridLineLabelStep;
+  if(m_gridXNumber <= 0) {
+    return;
+  }
 
-    double leftLimit = distBetweenGridLines + m_margins.left;
-    double rightLimit = m_width - (m_margins.left + m_margins.right);
+  double factor = (m_width - (m_margins.left + m_margins.right) - 1) / (m_bounds.xMax - m_bounds.xMin);
+  double gridLineDist = factor * m_gridLabelsRect.width() / (m_gridXNumber);
 
-    for(double i = leftLimit; i < rightLimit; i += distBetweenGridLines) {
-      auto x = static_cast<int>(i);
-      painter.drawLine(x, m_margins.bottom, x, m_height - m_margins.top);
+  double gridLineLabelStep = m_gridLabelsRect.width() / (m_gridXNumber);
+  double gridLineLabel = m_gridLabelsRect.left();
 
-      auto gridLabelYOffset = m_height - m_margins.top;
-      auto gridLabelXOffset = x - static_cast<int>(distBetweenGridLines / 2.0);
+  double left = m_gridLabelsRect.left() * factor + m_margins.left;
+  double right = m_gridLabelsRect.right() * factor + m_margins.left;
 
-      if(m_border) {
-        gridLabelYOffset += 2;
-      }
+  auto fontSize = painter.fontMetrics().height();
+  auto yPos = m_height - m_margins.bottom + fontSize / 2;
 
-      QRect textRect(gridLabelXOffset,
-                     gridLabelYOffset,
-                     static_cast<int>(distBetweenGridLines),
-                     painter.font().pixelSize());
+  int cycleLimit = m_gridXNumber;
+  while(left < right && cycleLimit >= 0) {
+    auto xPos = static_cast<int>(left);
+    painter.drawLine(xPos, m_margins.top, xPos, m_height - m_margins.bottom);
 
-      drawGridValue(painter, gridLineLabel, textRect, TextAlign::CENTER);
-      gridLineLabel += gridLineLabelStep;
-    }
+    xPos = static_cast<int>(left - gridLineDist / 2.0);
+    QRect textRect(xPos, yPos, static_cast<int>(gridLineDist), fontSize);
+    drawGridValue(painter, gridLineLabel, textRect, TextAlign::CENTER);
+
+    left += gridLineDist;
+    gridLineLabel += gridLineLabelStep;
+    cycleLimit--;
   }
 }
 
 void Plot::drawYGrid(QPainter& painter) const {
-  if(m_gridYNumber > 0) {
-    double distBetweenGridLines = (m_height - (m_margins.top + m_margins.bottom) - 1) * 1.0 / (m_gridYNumber + 1.0);
-    double gridLineLabelStep = (m_bounds.yMax - m_bounds.yMin) / (m_gridYNumber + 1.0);
-    double gridLineLabel = m_bounds.yMax - gridLineLabelStep * 0.4;
+  if(m_gridYNumber <= 0) {
+    return;
+  }
 
-    double topLimit = distBetweenGridLines * 0.4 + m_margins.top;
-    double bottomLimit = m_height - (m_margins.top + m_margins.bottom);
+  double factor = (m_height - (m_margins.top + m_margins.bottom) - 1) / (m_bounds.yMax - m_bounds.yMin);
+  double gridLineDist = factor * m_gridLabelsRect.height() / m_gridYNumber;
 
-    for(double i = topLimit; i < bottomLimit; i += distBetweenGridLines) {
-      auto y = static_cast<int>(i);
-      painter.drawLine(m_margins.left, y, m_width - m_margins.right, y);
+  double gridLineLabelStep = m_gridLabelsRect.height() / m_gridYNumber;
+  double gridLineLabel = m_gridLabelsRect.bottom();
 
-      auto gridLabelYOffset = y;
-      auto gridLabelXOffset = 0;
+  double bottom = m_gridLabelsRect.bottom() * factor + m_height - m_margins.bottom;
+  double top = m_gridLabelsRect.top() * factor + m_margins.top;
 
-      QRect textRect(gridLabelXOffset,
-                     gridLabelYOffset - painter.font().pixelSize() / 2,
-                     m_margins.left - 1,
-                     painter.font().pixelSize());
+  auto fontSize = painter.fontMetrics().height();
 
-      drawGridValue(painter, gridLineLabel, textRect, TextAlign::RIGHT);
+  int cycleLimit = m_gridYNumber;
+  while(bottom > top && cycleLimit >= 0) {
+    auto yPos = static_cast<int>(bottom);
+    painter.drawLine(m_margins.left, yPos, m_width - m_margins.right, yPos);
 
-      gridLineLabel -= gridLineLabelStep;
-    }
+    QRect textRect(0, yPos - fontSize / 2, m_margins.left - 1, fontSize);
+    drawGridValue(painter, gridLineLabel, textRect, TextAlign::RIGHT);
+
+    bottom += gridLineDist;
+    gridLineLabel += gridLineLabelStep;
+    cycleLimit--;
   }
 }
 

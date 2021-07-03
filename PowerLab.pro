@@ -26,6 +26,7 @@ SOURCES += \
     backend/logger/gui_message.cpp \
     backend/logger/model_message.cpp \
     backend/utils/string_utils.cpp \
+    backend/utils/math_utils.cpp \
     gui/library/librarywidget.cpp \
     gui/main.cpp \
     gui/dialogs/metadatawindow.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
     backend/logger/gui_message.h \
     backend/version.h \
     backend/utils/string_utils.h \
+    backend/utils/math_utils.h \
     gui/library/librarywidget.h \
     gui/mainwindow/mainwindow.h \
     gui/dialogs/metadatawindow.h \
