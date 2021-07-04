@@ -197,10 +197,10 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
   plot.setBackground(QColor(0xFF, 0xFF, 0xA0));
 
   auto margins = plot.getMargins();
-  margins.left = 40;
+  margins.left = 60;
   margins.right = 20;
   margins.top = 20;
-  margins.bottom = 20;
+  margins.bottom = 25;
   plot.setMargins(margins);
 
   m_graphProcessor->setPlotLimits(QRect(margins.left,

@@ -104,8 +104,8 @@ private:
   std::vector<AxisLabel> m_YLabels;
   QColor m_bgcolor = Qt::white;
 
-  static constexpr int MIN_SPACE_BETWEEN_GRID_LINES_PXL = 20;
-  static constexpr int MAX_SPACE_BETWEEN_GRID_LINES_PXL = 50;
+  static constexpr int MIN_SPACE_BETWEEN_X_GRID_LINES_PXL = 100;
+  static constexpr int MIN_SPACE_BETWEEN_Y_GRID_LINES_PXL = 20;
 };
 
 std::ostream& operator<<(std::ostream& out, const Plot& plot);

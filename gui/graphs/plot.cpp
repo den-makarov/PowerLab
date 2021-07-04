@@ -80,7 +80,7 @@ void Plot::update(QPainter* painter) {
   }
 
   painter->fillRect(m_margins.left,
-                    m_margins.bottom,
+                    m_margins.top,
                     m_width - (m_margins.right + m_margins.left),
                     m_height - (m_margins.top + m_margins.bottom),
                     m_bgcolor);
@@ -160,7 +160,7 @@ void Plot::drawBorder(QPainter& painter) const {
     pen.setWidth(1);
     painter.setPen(pen);
     painter.drawRect(m_margins.left,
-                     m_margins.bottom,
+                     m_margins.top,
                      m_width - (m_margins.right + m_margins.left),
                      m_height - (m_margins.top + m_margins.bottom));
   }
@@ -176,11 +176,10 @@ void Plot::calculateGridLinesNumber() {
   m_gridYNumber = 0;
 
   int plotWidth = m_width - (m_margins.right + m_margins.left); 
-  if(plotWidth > MIN_SPACE_BETWEEN_GRID_LINES_PXL) {
+  if(plotWidth > MIN_SPACE_BETWEEN_X_GRID_LINES_PXL) {
     auto segments = Utilities::findOptimalRoundedSegments(m_bounds.xMin,
                                                           m_bounds.xMax,
-                                                          plotWidth / MAX_SPACE_BETWEEN_GRID_LINES_PXL,
-                                                          plotWidth / MIN_SPACE_BETWEEN_GRID_LINES_PXL);
+                                                          plotWidth / MIN_SPACE_BETWEEN_X_GRID_LINES_PXL);
 
     if(!(std::isnan(segments.from) || std::isnan(segments.to) || std::isnan(segments.step))) {
       m_gridXNumber = static_cast<int>((segments.to - segments.from) / segments.step);
@@ -190,12 +189,11 @@ void Plot::calculateGridLinesNumber() {
   }
 
   int plotHeight = m_height - (m_margins.top + m_margins.bottom);
-  if(plotHeight <= MIN_SPACE_BETWEEN_GRID_LINES_PXL) {
+  if(plotHeight <= MIN_SPACE_BETWEEN_Y_GRID_LINES_PXL) {
   } else {
     auto segments = Utilities::findOptimalRoundedSegments(m_bounds.yMin,
                                                           m_bounds.yMax,
-                                                          plotHeight / MAX_SPACE_BETWEEN_GRID_LINES_PXL,
-                                                          plotHeight / MIN_SPACE_BETWEEN_GRID_LINES_PXL);
+                                                          plotHeight / MIN_SPACE_BETWEEN_Y_GRID_LINES_PXL);
 
     if(!(std::isnan(segments.from) || std::isnan(segments.to) || std::isnan(segments.step))) {
       m_gridYNumber = static_cast<int>((segments.to - segments.from) / segments.step);
@@ -293,7 +291,7 @@ void Plot::drawGridValue(QPainter& painter, double number, QRect textRect, TextA
   if(std::abs(number) <= 10 * std::numeric_limits<double>::epsilon()) {
     str = "0";
   } else {
-    str = QString::number(number, 'g', 3);
+    str = QString::number(number, 'g', 5);
   }
 
   auto textAlign = Qt::AlignLeft;
