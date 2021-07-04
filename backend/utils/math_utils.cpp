@@ -13,9 +13,9 @@ RoundedSegments findOptimalRoundedSegments(double from, double to, int minLimit,
   }
 
   RoundedSegments segments = {0, 0, 0};
-  segments.from = -1;
+  segments.from = -10;
   segments.to = 10;
-  segments.step = 0.001;
+  segments.step = 0.2;
 
   return segments;
 }

@@ -288,7 +288,13 @@ void Plot::drawGrid(QPainter& painter) const {
 }
 
 void Plot::drawGridValue(QPainter& painter, double number, QRect textRect, TextAlign align) const {
-  QString str = QString::number(number, 'g', 3);
+  QString str;
+
+  if(std::abs(number) <= 10 * std::numeric_limits<double>::epsilon()) {
+    str = "0";
+  } else {
+    str = QString::number(number, 'g', 3);
+  }
 
   auto textAlign = Qt::AlignLeft;
   if(align == TextAlign::CENTER) {
