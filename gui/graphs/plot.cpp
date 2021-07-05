@@ -182,7 +182,7 @@ void Plot::calculateGridLinesNumber() {
                                                           plotWidth / MIN_SPACE_BETWEEN_X_GRID_LINES_PXL);
 
     if(!(std::isnan(segments.from) || std::isnan(segments.to) || std::isnan(segments.step))) {
-      m_gridXNumber = static_cast<int>((segments.to - segments.from) / segments.step);
+      m_gridXNumber = static_cast<int>(std::round((segments.to - segments.from) / segments.step));
       m_gridLabelsRect.setLeft(segments.from);
       m_gridLabelsRect.setRight(segments.to);
     }
@@ -196,7 +196,7 @@ void Plot::calculateGridLinesNumber() {
                                                           plotHeight / MIN_SPACE_BETWEEN_Y_GRID_LINES_PXL);
 
     if(!(std::isnan(segments.from) || std::isnan(segments.to) || std::isnan(segments.step))) {
-      m_gridYNumber = static_cast<int>((segments.to - segments.from) / segments.step);
+      m_gridYNumber = static_cast<int>(std::round((segments.to - segments.from) / segments.step));
       m_gridLabelsRect.setBottom(segments.from);
       m_gridLabelsRect.setTop(segments.to);
     }

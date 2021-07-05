@@ -41,7 +41,8 @@ RoundedSegments findOptimalRoundedSegments(double from, double to, int maxStepNu
 
   int fromDiv = static_cast<int>(from / minStep);
   segments.from = fromDiv * minStep;
-  segments.to = maxStepNumber * minStep + segments.from;
+  int toDiv = static_cast<int>(to / minStep);
+  segments.to = toDiv * minStep;
   segments.step = minStep;
 
   return segments;
