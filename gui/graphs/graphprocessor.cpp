@@ -12,6 +12,21 @@ GraphProcessor::GraphProcessor() {
   m_pen.setWidth(1);
 }
 
+void GraphProcessor::plot(QPainter *painter, GraphPoints points, QRectF graphValueLimits) const {
+  if(!painter) {
+    return;
+  }
+
+  plot(painter,
+       points.y,
+       points.x,
+       graphValueLimits.height(),
+       graphValueLimits.width(),
+       (graphValueLimits.top() + graphValueLimits.bottom()) / 2.0,
+       (graphValueLimits.left() + graphValueLimits.right()) / 2.0);
+
+}
+
 void GraphProcessor::plot(QPainter *painter,
                           const std::vector<double>& yData,
                           const std::vector<double>& xData,
@@ -19,7 +34,7 @@ void GraphProcessor::plot(QPainter *painter,
                           double normXFactor,
                           double yBias,
                           double xBias) const {
-  if(yData.empty() || xData.empty() || xData.size() != yData.size()) {
+  if(!painter || yData.empty() || xData.empty() || xData.size() != yData.size()) {
     return;
   }
 

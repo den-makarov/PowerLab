@@ -183,6 +183,17 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
   plot.setBounds(plotBounds);
 }
 
+void GraphWidget::setupDefaultPlotMargins(Plot& plot) const {
+  auto margins = plot.getMargins();
+
+  margins.left = 60;
+  margins.right = 20;
+  margins.top = 20;
+  margins.bottom = 25;
+
+  plot.setMargins(margins);
+}
+
 void GraphWidget::paintEvent(QPaintEvent *event) {
   if(m_graphs.size() < 1) {
     Logger::log(GuiMessage::ERROR_NO_DATA_TO_PLOT);
@@ -195,18 +206,8 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 
   Plot plot(event->rect().width(), event->rect().height());
   plot.setBackground(QColor(0xFF, 0xFF, 0xA0));
-
-  auto margins = plot.getMargins();
-  margins.left = 60;
-  margins.right = 20;
-  margins.top = 20;
-  margins.bottom = 25;
-  plot.setMargins(margins);
-
-  m_graphProcessor->setPlotLimits(QRect(margins.left,
-                                        margins.top,
-                                        plot.getWidth() - (margins.right + margins.left),
-                                        plot.getHeight() - (margins.bottom + margins.top)));
+  setupDefaultPlotMargins(plot);
+  m_graphProcessor->setPlotLimits(plot.getMarginsRect());
 
   configureHorizontalScale(plot);
   configureVerticalScale(plot);
@@ -219,13 +220,9 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     m_graphProcessor->setPenColor(defaultColorList[penColorId++]);
     penColorId %= defaultColorList.size();
 
-    m_graphProcessor->plot(&painter,
-                           graphData.points,
-                           m_horizontalScale.points,
-                           plot.getBounds().yMax - plot.getBounds().yMin,
-                           plot.getBounds().xMax - plot.getBounds().xMin,
-                           (plot.getBounds().yMax + plot.getBounds().yMin) / 2.0,
-                           (plot.getBounds().xMax + plot.getBounds().xMin) / 2.0);
+    GraphProcessor::GraphPoints points{m_horizontalScale.points, graphData.points};
+    m_graphProcessor->plot(&painter, points, plot.getBoundsRect());
+
   }
   painter.end();
 }

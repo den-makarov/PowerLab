@@ -49,6 +49,7 @@ protected:
 private:
   void configureHorizontalScale(Plot& plot);
   void configureVerticalScale(Plot& plot);
+  void setupDefaultPlotMargins(Plot& plot) const;
 
   std::vector<GraphData> m_graphs;
   GraphData m_horizontalScale;

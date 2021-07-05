@@ -37,6 +37,13 @@ void Plot::setMainGridLinesNumber(int xNumber, int yNumber) {
   }
 }
 
+QRectF Plot::getBoundsRect() const {
+  return QRectF(m_bounds.xMin,
+                m_bounds.yMin,
+                m_bounds.xMax - m_bounds.xMin,
+                m_bounds.yMax - m_bounds.yMin);
+}
+
 Plot::ValueBounds Plot::getBounds() const {
   return m_bounds;
 }
@@ -152,6 +159,13 @@ void Plot::setMargins(const Margins& margins) {
 
 Plot::Margins Plot::getMargins() const {
   return m_margins;
+}
+
+QRect Plot::getMarginsRect() const {
+  return QRect(m_margins.left,
+               m_margins.top,
+               m_width - (m_margins.right + m_margins.left),
+               m_height - (m_margins.bottom + m_margins.top));
 }
 
 void Plot::drawBorder(QPainter& painter) const {

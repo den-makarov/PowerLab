@@ -15,10 +15,18 @@ namespace Gui {
 
 class GraphProcessor {
 public:
+  struct GraphPoints {
+    const std::vector<double>& x;
+    const std::vector<double>& y;
+  };
+
   GraphProcessor();
 
   void setPenColor(QColor color);
   void setPlotLimits(QRect plotLimits);
+
+  void plot(QPainter *painter, GraphPoints points, QRectF graphValueLimits) const;
+
   void plot(QPainter *painter,
             const std::vector<double>& yData,
             const std::vector<double>& xData,

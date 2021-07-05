@@ -45,9 +45,11 @@ public:
 
   void setBounds(const ValueBounds& boundaries);
   ValueBounds getBounds() const;
+  QRectF getBoundsRect() const;
 
   void setMargins(const Margins& boundaries);
   Margins getMargins() const;
+  QRect getMarginsRect() const;
 
   void setAxisXLog(bool isLog);
   void setAxisYLog(bool isLog);
