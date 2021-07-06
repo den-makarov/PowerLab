@@ -246,6 +246,7 @@ void GraphWidget::mousePressEvent(QMouseEvent *event) {
     origin = event->globalPos();
     if(!rubberBand) {
       rubberBand = new QRubberBand(QRubberBand::Rectangle);
+      rubberBand->setWindowOpacity(0.5);
     }
     rubberBand->setGeometry(QRect(origin, QSize()));
     rubberBand->show();
