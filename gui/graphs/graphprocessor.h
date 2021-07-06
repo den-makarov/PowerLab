@@ -39,7 +39,6 @@ private:
   bool isPointInPlotLimits(const QPointF& point) const;
 
   QRect m_plotLimits;
-  QBrush m_background;
   QPen m_pen;
 };
 

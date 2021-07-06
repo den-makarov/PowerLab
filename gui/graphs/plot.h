@@ -35,10 +35,13 @@ public:
     int bottom;
   };
 
-  Plot(int width, int height);
+  Plot(int width = 0, int height = 0);
 
+  void setWidth(int width);
   int getWidth() const;
+  void setHeight(int height);
   int getHeight() const;
+  void setArea(int width, int height);
 
   void setBackground(QColor bgcolor);
   QColor getBackground() const;
@@ -55,7 +58,10 @@ public:
   void setAxisYLog(bool isLog);
 
   void addXAxisLabel(const std::string& label, QColor textColor = Qt::black);
+  void clearXAxisLabels();
+
   void addYAxisLabel(const std::string& label, QColor textColor = Qt::black);
+  void clearYAxisLabels();
 
   void setAutoGrid(bool enabled);
   void setMainGridLinesNumber(int xNumber, int yNumber);
@@ -91,8 +97,8 @@ private:
 
   void calculateGridLinesNumber();
 
-  const int m_width;
-  const int m_height;
+  int m_width;
+  int m_height;
   bool m_border = true;
   bool m_autoGrid = true;
   bool m_isXLog = false;

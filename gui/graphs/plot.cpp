@@ -20,8 +20,21 @@ int Plot::getWidth() const {
   return m_width;
 }
 
+void Plot::setWidth(int width) {
+  m_width = width;
+}
+
 int Plot::getHeight() const {
   return m_height;
+}
+
+void Plot::setHeight(int height) {
+  m_height = height;
+}
+
+void Plot::setArea(int width, int height) {
+  setWidth(width);
+  setHeight(height);
 }
 
 void Plot::setBorder(bool isBorder) {
@@ -68,8 +81,16 @@ void Plot::setBackground(QColor bgcolor) {
   m_bgcolor = bgcolor;
 }
 
+void Plot::clearXAxisLabels() {
+  m_XLabels.clear();
+}
+
 void Plot::addXAxisLabel(const std::string& label, QColor textColor) {
   m_XLabels.emplace_back(label, textColor);
+}
+
+void Plot::clearYAxisLabels() {
+  m_YLabels.clear();
 }
 
 void Plot::addYAxisLabel(const std::string& label, QColor textColor) {

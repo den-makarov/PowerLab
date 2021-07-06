@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QtMath>
+#include <QRubberBand>
 
 #include "graphwidget.h"
 #include "graphprocessor.h"
@@ -91,12 +92,17 @@ GraphWidget::~GraphWidget() {
   Logger::log(Logger::DefaultMessage::DEBUG_MSG, "Graph widget destructor");
 }
 
-GraphWidget::GraphWidget(QWidget *parent, GraphProcessor* graph)
+GraphWidget::GraphWidget(QWidget *parent, GraphProcessor* graph, Plot* plot)
   : QWidget(parent)
   , m_graphProcessor(graph)
+  , m_plot(plot)
 {
   if(!m_graphProcessor) {
     m_graphProcessor = std::make_unique<GraphProcessor>();
+  }
+
+  if(!m_plot) {
+    m_plot = std::make_unique<Plot>();
   }
 }
 
@@ -117,6 +123,7 @@ void GraphWidget::addGraphData(std::string name,
 
   if(!contains) {
     m_graphs.push_back({name, units, std::move(dataPoints), 0.0, 0.0});
+    configureVerticalScale();
   } else {
     Logger::log(GuiMessage::ERROR_ATTEMPT_PLOT_SAME_SIGNAL, name);
   }
@@ -126,18 +133,20 @@ void GraphWidget::addHorizontalScaleData(std::string name,
                                          std::string units,
                                          std::vector<double>&& dataPoints) {
   m_horizontalScale = {name, units, std::move(dataPoints)};
+  configureHorizontalScale();
 }
 
-void GraphWidget::configureHorizontalScale(Plot& plot) {
+void GraphWidget::configureHorizontalScale() {
   auto& g = m_horizontalScale;
 
-  plot.addXAxisLabel(g.name + " [" + g.units + "]");
+  m_plot->clearXAxisLabels();
+  m_plot->addXAxisLabel(g.name + " [" + g.units + "]");
 
   g.minValue = *std::min_element(g.points.begin(), g.points.end());
 
   g.maxValue = *std::max_element(g.points.begin(), g.points.end());
 
-  auto plotBounds = plot.getBounds();
+  auto plotBounds = m_plot->getBounds();
   if(std::fabs(g.maxValue - g.minValue) < std::numeric_limits<double>::epsilon()) {
     plotBounds.xMax = g.maxValue + PLOT_HORIZONTAL_EXTENSION;
     plotBounds.xMin = g.maxValue - PLOT_HORIZONTAL_EXTENSION;
@@ -145,19 +154,21 @@ void GraphWidget::configureHorizontalScale(Plot& plot) {
     plotBounds.xMin = g.minValue - (g.maxValue - g.minValue) * PLOT_HORIZONTAL_EXTENSION;
     plotBounds.xMax = g.maxValue + (g.maxValue - g.minValue) * PLOT_HORIZONTAL_EXTENSION;
   }
-  plot.setBounds(plotBounds);
+  m_plot->setBounds(plotBounds);
 }
 
-void GraphWidget::configureVerticalScale(Plot& plot) {
+void GraphWidget::configureVerticalScale() {
   double min = std::numeric_limits<double>::max();
   double max = std::numeric_limits<double>::min();
+
+  m_plot->clearYAxisLabels();
 
   size_t penColorId = 0;
   for(auto& graphData : m_graphs) {
     auto color = defaultColorList[penColorId++];
     penColorId %= defaultColorList.size();
 
-    plot.addYAxisLabel(graphData.name + " [" + graphData.units + "]", color);
+    m_plot->addYAxisLabel(graphData.name + " [" + graphData.units + "]", color);
 
     graphData.minValue = *std::min_element(graphData.points.begin(),
                                            graphData.points.end());
@@ -172,7 +183,7 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
     }
   }
 
-  auto plotBounds = plot.getBounds();
+  auto plotBounds = m_plot->getBounds();
   if(std::fabs(max - min) < std::numeric_limits<double>::epsilon()) {
     plotBounds.yMax = max + max * PLOT_VERTICAL_EXTENSION;
     plotBounds.yMin = max - max * PLOT_VERTICAL_EXTENSION;
@@ -180,18 +191,19 @@ void GraphWidget::configureVerticalScale(Plot& plot) {
     plotBounds.yMin = min - (max - min) * PLOT_VERTICAL_EXTENSION;
     plotBounds.yMax = max + (max - min) * PLOT_VERTICAL_EXTENSION;
   }
-  plot.setBounds(plotBounds);
+
+  m_plot->setBounds(plotBounds);
 }
 
-void GraphWidget::setupDefaultPlotMargins(Plot& plot) const {
-  auto margins = plot.getMargins();
+void GraphWidget::setupDefaultPlotMargins() const {
+  auto margins = m_plot->getMargins();
 
   margins.left = 60;
   margins.right = 20;
   margins.top = 20;
   margins.bottom = 25;
 
-  plot.setMargins(margins);
+  m_plot->setMargins(margins);
 }
 
 void GraphWidget::paintEvent(QPaintEvent *event) {
@@ -204,15 +216,12 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
   painter.begin(this);
   painter.setRenderHint(QPainter::Antialiasing);
 
-  Plot plot(event->rect().width(), event->rect().height());
-  plot.setBackground(QColor(0xFF, 0xFF, 0xA0));
-  setupDefaultPlotMargins(plot);
-  m_graphProcessor->setPlotLimits(plot.getMarginsRect());
+  m_plot->setArea(event->rect().width(), event->rect().height());
+  m_plot->setBackground(QColor(0xFF, 0xFF, 0xA0));
+  setupDefaultPlotMargins();
+  m_graphProcessor->setPlotLimits(m_plot->getMarginsRect());
 
-  configureHorizontalScale(plot);
-  configureVerticalScale(plot);
-
-  plot.update(&painter);
+  m_plot->update(&painter);
 
 //  paintDemoThreePhaseSignal(&painter, 0);
   size_t penColorId = 0;
@@ -221,10 +230,39 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     penColorId %= defaultColorList.size();
 
     GraphProcessor::GraphPoints points{m_horizontalScale.points, graphData.points};
-    m_graphProcessor->plot(&painter, points, plot.getBoundsRect());
+    m_graphProcessor->plot(&painter, points, m_plot->getBoundsRect());
 
   }
   painter.end();
+}
+
+void GraphWidget::mousePressEvent(QMouseEvent *event) {
+  std::ostringstream msg;
+  msg << "Mouse clicked at: {" << event->x() << ", " << event->y() << "}";
+  msg << " Button: " << event->button() << std::endl;
+  Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
+
+  if(event->button() == Qt::LeftButton) {
+    origin = event->globalPos();
+    if(!rubberBand) {
+      rubberBand = new QRubberBand(QRubberBand::Rectangle);
+    }
+    rubberBand->setGeometry(QRect(origin, QSize()));
+    rubberBand->show();
+  }
+}
+
+void GraphWidget::mouseMoveEvent(QMouseEvent *event) {
+  rubberBand->setGeometry(QRect(origin, event->globalPos()).normalized());
+}
+
+void GraphWidget::mouseReleaseEvent(QMouseEvent *event) {
+  rubberBand->hide();
+
+  std::ostringstream msg;
+  msg << "Mouse released at: {" << event->x() << ", " << event->y() << "}";
+  msg << " Button: " << event->button() << std::endl;
+  Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
 }
 
 } // namespace Gui

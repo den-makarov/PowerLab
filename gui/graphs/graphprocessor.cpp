@@ -6,9 +6,9 @@
 namespace PowerLab {
 namespace Gui {
 
-GraphProcessor::GraphProcessor() {
-  m_background = QBrush(QColor(0xA4, 0xA4, 0xA4));
-  m_pen = QPen(Qt::red);
+GraphProcessor::GraphProcessor()
+  : m_pen(Qt::red)
+{
   m_pen.setWidth(1);
 }
 
