@@ -236,13 +236,31 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
   painter.end();
 }
 
-void GraphWidget::mousePressEvent(QMouseEvent *event) {
-  std::ostringstream msg;
-  msg << "Mouse clicked at: {" << event->x() << ", " << event->y() << "}";
-  msg << " Button: " << event->button() << std::endl;
-  Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
+bool GraphWidget::checkIfPointInGraphLimits(QPoint point) const {
+  auto plotArea = m_plot->getMarginsRect();
+  if(point.x() < plotArea.left() || plotArea.right() < point.x()) {
+    std::ostringstream msg;
+    msg << "Out of X: " << point.x()
+        << " Limits: {" << plotArea.left()
+        << ", " << plotArea.right() << "}";
+    Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
+    return false;
+  }
 
-  if(event->button() == Qt::LeftButton) {
+  if(point.y() < plotArea.top() || plotArea.bottom() < point.y()) {
+    std::ostringstream msg;
+    msg << "Out of Y: " << point.y()
+        << " Limits: {" << plotArea.top()
+        << ", " << plotArea.bottom() << "}";
+    Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
+    return false;
+  }
+
+  return true;
+}
+
+void GraphWidget::mousePressEvent(QMouseEvent *event) {
+  if(event->button() == Qt::LeftButton && checkIfPointInGraphLimits(event->pos())) {
     origin = event->globalPos();
     if(!rubberBand) {
       rubberBand = new QRubberBand(QRubberBand::Rectangle);
@@ -254,16 +272,17 @@ void GraphWidget::mousePressEvent(QMouseEvent *event) {
 }
 
 void GraphWidget::mouseMoveEvent(QMouseEvent *event) {
-  rubberBand->setGeometry(QRect(origin, event->globalPos()).normalized());
+  if(rubberBand && checkIfPointInGraphLimits(event->pos())) {
+    rubberBand->setGeometry(QRect(origin, event->globalPos()).normalized());
+  }
 }
 
 void GraphWidget::mouseReleaseEvent(QMouseEvent *event) {
-  rubberBand->hide();
+  if(rubberBand) {
+    rubberBand->hide();
+  }
 
-  std::ostringstream msg;
-  msg << "Mouse released at: {" << event->x() << ", " << event->y() << "}";
-  msg << " Button: " << event->button() << std::endl;
-  Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
+  event->ignore();
 }
 
 } // namespace Gui

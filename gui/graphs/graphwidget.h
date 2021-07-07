@@ -54,6 +54,8 @@ private:
   void configureVerticalScale();
   void setupDefaultPlotMargins() const;
 
+  bool checkIfPointInGraphLimits(QPoint point) const;
+
   std::vector<GraphData> m_graphs;
   GraphData m_horizontalScale;
   std::unique_ptr<GraphProcessor> m_graphProcessor;
