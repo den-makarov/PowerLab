@@ -17,22 +17,32 @@ void ZoomSelectionRectArea::hide() {
   QRubberBand::hide();
 }
 
-QRect ZoomSelectionRectArea::getArea() const {
-  return geometry().normalized();
+QRect ZoomSelectionRectArea::getGlobalArea() const {
+  return geometry();
 }
 
-void ZoomSelectionRectArea::setAreaOrigin(QPoint origin) {
-  m_origin = origin;
-  setGeometry(QRect(m_origin, QSize()));
+QRect ZoomSelectionRectArea::getLocalArea() const {
+  QPoint origin(m_localOrigin);
+  if(geometry().x() < m_globalOrigin.x()) {
+    origin.setX(origin.x() - geometry().width() + 1);
+  }
+
+  if(geometry().y() < m_globalOrigin.y()) {
+    origin.setY(origin.y() - geometry().height() + 1);
+  }
+
+  QRect shiftedArea(origin, geometry().size());
+  return shiftedArea;
+}
+
+void ZoomSelectionRectArea::setAreaOrigin(QPoint globalPos, QPoint localPos) {
+  m_globalOrigin = globalPos;
+  m_localOrigin = localPos;
+  setGeometry(QRect(m_globalOrigin, QSize()));
 }
 
 void ZoomSelectionRectArea::updateArea(QPoint point) {
-  setGeometry(QRect(m_origin, point).normalized());
-}
-
-QRect ZoomSelectionRectArea::getAreaNormalized(QPoint shiftPoint) const {
-  QRect shiftedArea(shiftPoint, geometry().size());
-  return shiftedArea.normalized();
+  setGeometry(QRect(m_globalOrigin, point).normalized());
 }
 
 } // namespace Gui

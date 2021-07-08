@@ -12,13 +12,14 @@ public:
 
   void show();
   void hide();
-  QRect getArea() const;
-  QRect getAreaNormalized(QPoint shiftPoint) const;
-  void setAreaOrigin(QPoint origin);
+  QRect getGlobalArea() const;
+  QRect getLocalArea() const;
+  void setAreaOrigin(QPoint globalPos, QPoint localPos = QPoint(0, 0));
   void updateArea(QPoint point);
 
 private:
-  QPoint m_origin;
+  QPoint m_globalOrigin;
+  QPoint m_localOrigin;
 };
 
 } // namespace Gui

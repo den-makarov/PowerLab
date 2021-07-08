@@ -63,14 +63,13 @@ private:
   GraphData m_horizontalScale;
   std::unique_ptr<GraphProcessor> m_graphProcessor;
   std::unique_ptr<Plot> m_plot;
+  std::unique_ptr<ZoomSelectionRectArea> m_zoomArea = nullptr;
 
   constexpr static double PLOT_VERTICAL_EXTENSION = 0.1;
   constexpr static double PLOT_HORIZONTAL_EXTENSION = 0.0;
 
   constexpr static int PREFERRED_WIDGIT_WIDTH_HINT = 500;
   constexpr static int PREFERRED_WIDGIT_HEIGHT_HINT = 300;
-
-  std::unique_ptr<ZoomSelectionRectArea> zoomArea = nullptr;
 };
 
 } // namespace Gui

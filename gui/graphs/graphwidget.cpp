@@ -214,7 +214,12 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
   painter.begin(this);
   painter.setRenderHint(QPainter::Antialiasing);
 
-  m_plot->setArea(event->rect().width(), event->rect().height());
+  if(event) {
+    m_plot->setArea(event->rect().width(), event->rect().height());
+  } else {
+    m_plot->setArea(width(), height());
+  }
+
   m_plot->setBackground(QColor(0xFF, 0xFF, 0xA0));
   setupDefaultPlotMargins();
   m_graphProcessor->setPlotLimits(m_plot->getMarginsRect());
@@ -249,37 +254,65 @@ bool GraphWidget::checkIfPointInGraphLimits(QPoint point) const {
 
 void GraphWidget::mousePressEvent(QMouseEvent *event) {
   if(event->button() == Qt::LeftButton && checkIfPointInGraphLimits(event->pos())) {
-    if(!zoomArea) {
-      zoomArea = std::make_unique<ZoomSelectionRectArea>();
+    if(!m_zoomArea) {
+      m_zoomArea = std::make_unique<ZoomSelectionRectArea>();
     }
-    zoomArea->setAreaOrigin(event->globalPos());
-    zoomArea->show();
+    m_zoomArea->setAreaOrigin(event->globalPos(), event->pos());
+    m_zoomArea->show();
   }
 }
 
 void GraphWidget::mouseMoveEvent(QMouseEvent *event) {
-  if(zoomArea && checkIfPointInGraphLimits(event->pos())) {
-    zoomArea->updateArea(event->globalPos());
+  if(m_zoomArea && checkIfPointInGraphLimits(event->pos())) {
+    m_zoomArea->updateArea(event->globalPos());
   }
 }
 
 void GraphWidget::mouseReleaseEvent(QMouseEvent *event) {
-  if(zoomArea) {
-    zoomArea->hide();
-    calcValuesBoundFromZoomArea(zoomArea->getAreaNormalized(event->pos()));
+  if(m_zoomArea) {
+    m_zoomArea->hide();
+    auto zoomBounds = calcValuesBoundFromZoomArea(m_zoomArea->getLocalArea());
+    m_plot->setBounds({zoomBounds.right(),
+                       zoomBounds.left(),
+                       zoomBounds.top(),
+                       zoomBounds.bottom()});
+    this->repaint();
   }
   event->ignore();
 }
 
 QRectF GraphWidget::calcValuesBoundFromZoomArea(QRect zoomArea) const {
+  QRectF zoomBounds = m_plot->getBoundsRect();
+  QRect margins = m_plot->getMarginsRect();
+  zoomArea.translate(-margins.left(), -margins.top());
+
+{
   std::ostringstream msg;
   msg << "Zoom area: {" << zoomArea.left()
       << ", " << zoomArea.top()
       << ", " << zoomArea.right()
       << ", " << zoomArea.bottom() << "}";
   Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
+}
+  zoomBounds.translate(zoomArea.left() * zoomBounds.width() / margins.width(),
+                       -zoomArea.top() * zoomBounds.height() / margins.height());
 
-  return QRectF(QPointF(0.0, 0.0), QPointF(1.0, 1.0));
+  zoomBounds.setWidth(zoomArea.width() * zoomBounds.width() / margins.width());
+
+  // Top and bottom points should be mirrored
+  auto top = zoomBounds.bottom();
+  zoomBounds.setHeight( - zoomArea.height() * zoomBounds.height() / margins.height());
+  zoomBounds.moveTop(top);
+
+{
+  std::ostringstream msg;
+  msg << "Zoom area: {" << zoomBounds.left()
+      << ", " << zoomBounds.top()
+      << ", " << zoomBounds.right()
+      << ", " << zoomBounds.bottom() << "}";
+  Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
+}
+  return zoomBounds;
 }
 
 } // namespace Gui
