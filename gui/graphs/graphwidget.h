@@ -10,13 +10,15 @@
 
 #include "graphprocessor.h"
 #include "plot.h"
+#include "zoomselectionrectarea.h"
 
 class QPainter;
 class QPaintEvent;
-class QRubberBand;
 
 namespace PowerLab {
 namespace Gui {
+
+class ZoomSelectionRectArea;
 
 class GraphWidget : public QWidget {
 Q_OBJECT
@@ -55,6 +57,7 @@ private:
   void setupDefaultPlotMargins() const;
 
   bool checkIfPointInGraphLimits(QPoint point) const;
+  QRectF calcValuesBoundFromZoomArea(QRect zoomArea) const;
 
   std::vector<GraphData> m_graphs;
   GraphData m_horizontalScale;
@@ -67,8 +70,7 @@ private:
   constexpr static int PREFERRED_WIDGIT_WIDTH_HINT = 500;
   constexpr static int PREFERRED_WIDGIT_HEIGHT_HINT = 300;
 
-  QPoint origin = {0, 0};
-  QRubberBand* rubberBand = nullptr;
+  std::unique_ptr<ZoomSelectionRectArea> zoomArea = nullptr;
 };
 
 } // namespace Gui

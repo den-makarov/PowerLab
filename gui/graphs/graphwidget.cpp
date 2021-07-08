@@ -8,9 +8,7 @@
 #include <QRubberBand>
 
 #include "graphwidget.h"
-#include "graphprocessor.h"
 #include "logger.h"
-#include "plot.h"
 
 namespace {
 
@@ -239,20 +237,10 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 bool GraphWidget::checkIfPointInGraphLimits(QPoint point) const {
   auto plotArea = m_plot->getMarginsRect();
   if(point.x() < plotArea.left() || plotArea.right() < point.x()) {
-    std::ostringstream msg;
-    msg << "Out of X: " << point.x()
-        << " Limits: {" << plotArea.left()
-        << ", " << plotArea.right() << "}";
-    Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
     return false;
   }
 
   if(point.y() < plotArea.top() || plotArea.bottom() < point.y()) {
-    std::ostringstream msg;
-    msg << "Out of Y: " << point.y()
-        << " Limits: {" << plotArea.top()
-        << ", " << plotArea.bottom() << "}";
-    Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
     return false;
   }
 
@@ -261,28 +249,37 @@ bool GraphWidget::checkIfPointInGraphLimits(QPoint point) const {
 
 void GraphWidget::mousePressEvent(QMouseEvent *event) {
   if(event->button() == Qt::LeftButton && checkIfPointInGraphLimits(event->pos())) {
-    origin = event->globalPos();
-    if(!rubberBand) {
-      rubberBand = new QRubberBand(QRubberBand::Rectangle);
-      rubberBand->setWindowOpacity(0.5);
+    if(!zoomArea) {
+      zoomArea = std::make_unique<ZoomSelectionRectArea>();
     }
-    rubberBand->setGeometry(QRect(origin, QSize()));
-    rubberBand->show();
+    zoomArea->setAreaOrigin(event->globalPos());
+    zoomArea->show();
   }
 }
 
 void GraphWidget::mouseMoveEvent(QMouseEvent *event) {
-  if(rubberBand && checkIfPointInGraphLimits(event->pos())) {
-    rubberBand->setGeometry(QRect(origin, event->globalPos()).normalized());
+  if(zoomArea && checkIfPointInGraphLimits(event->pos())) {
+    zoomArea->updateArea(event->globalPos());
   }
 }
 
 void GraphWidget::mouseReleaseEvent(QMouseEvent *event) {
-  if(rubberBand) {
-    rubberBand->hide();
+  if(zoomArea) {
+    zoomArea->hide();
+    calcValuesBoundFromZoomArea(zoomArea->getAreaNormalized(event->pos()));
   }
-
   event->ignore();
+}
+
+QRectF GraphWidget::calcValuesBoundFromZoomArea(QRect zoomArea) const {
+  std::ostringstream msg;
+  msg << "Zoom area: {" << zoomArea.left()
+      << ", " << zoomArea.top()
+      << ", " << zoomArea.right()
+      << ", " << zoomArea.bottom() << "}";
+  Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
+
+  return QRectF(QPointF(0.0, 0.0), QPointF(1.0, 1.0));
 }
 
 } // namespace Gui

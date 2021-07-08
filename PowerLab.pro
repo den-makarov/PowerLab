@@ -40,6 +40,7 @@ SOURCES += \
     gui/graphs/graphprocessor.cpp \
     gui/graphs/graphwidget.cpp \
     gui/graphs/plot.cpp \
+    gui/graphs/zoomselectionrectarea.cpp \
     gui/model/modelwidget.cpp \
     gui/parameters/parameterswidget.cpp
 
@@ -62,6 +63,7 @@ HEADERS += \
     gui/graphs/graphprocessor.h \
     gui/graphs/graphwidget.h \
     gui/graphs/plot.h \
+    gui/graphs/zoomselectionrectarea.h \
     gui/model/modelwidget.h \
     gui/parameters/parameterswidget.h
 
