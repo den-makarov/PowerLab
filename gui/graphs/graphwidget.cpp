@@ -286,14 +286,6 @@ QRectF GraphWidget::calcValuesBoundFromZoomArea(QRect zoomArea) const {
   QRect margins = m_plot->getMarginsRect();
   zoomArea.translate(-margins.left(), -margins.top());
 
-{
-  std::ostringstream msg;
-  msg << "Zoom area: {" << zoomArea.left()
-      << ", " << zoomArea.top()
-      << ", " << zoomArea.right()
-      << ", " << zoomArea.bottom() << "}";
-  Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
-}
   zoomBounds.translate(zoomArea.left() * zoomBounds.width() / margins.width(),
                        -zoomArea.top() * zoomBounds.height() / margins.height());
 
@@ -304,14 +296,6 @@ QRectF GraphWidget::calcValuesBoundFromZoomArea(QRect zoomArea) const {
   zoomBounds.setHeight( - zoomArea.height() * zoomBounds.height() / margins.height());
   zoomBounds.moveTop(top);
 
-{
-  std::ostringstream msg;
-  msg << "Zoom area: {" << zoomBounds.left()
-      << ", " << zoomBounds.top()
-      << ", " << zoomBounds.right()
-      << ", " << zoomBounds.bottom() << "}";
-  Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
-}
   return zoomBounds;
 }
 
