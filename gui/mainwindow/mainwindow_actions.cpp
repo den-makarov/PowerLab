@@ -91,7 +91,7 @@ void MainWindow::createActions() {
   });
 
   // @TODO: Find correct icon fallback path
-  const QIcon parametersIcon = QIcon::fromTheme("system-settings", QIcon(":/images/settings.png"));
+  const QIcon parametersIcon = QIcon::fromTheme("document-properties", QIcon(":/images/settings.png"));
   QAction* showParams = new QAction(parametersIcon, tr("&Parameters"), this);
   showParams->setShortcuts(QKeySequence::Preferences);
   showParams->setStatusTip(tr("Show parameters to configure component, design or graph"));
@@ -108,8 +108,36 @@ void MainWindow::createActions() {
   modelToolBar->addAction(showLib);
 
   connect(showLib, &QAction::triggered, this, [this](){
-    resetGraphWidgetToDefaultView();
-//    this->showLibrary();
+    this->showLibrary();
+  });
+
+  const QIcon zoomInIcon = QIcon::fromTheme("zoom-in", QIcon(":/images/zoom-in.png"));
+  QAction* zoomIn = new QAction(zoomInIcon, tr("Zoom in"), this);
+  zoomIn->setShortcuts(QKeySequence::ZoomIn);
+  zoomIn->setStatusTip(tr("Zoom in"));
+  modelToolBar->addAction(zoomIn);
+
+  connect(zoomIn, &QAction::triggered, this, [this](){
+    this->zoomInHandler();
+  });
+
+  const QIcon zoomResetIcon = QIcon::fromTheme("zoom-original", QIcon(":/images/zoom-original.png"));
+  QAction* zoomReset = new QAction(zoomResetIcon, tr("Zoom reset"), this);
+  zoomReset->setStatusTip(tr("Zoom out"));
+  modelToolBar->addAction(zoomReset);
+
+  connect(zoomReset, &QAction::triggered, this, [this](){
+    this->zoomResetHandler();
+  });
+
+  const QIcon zoomOutIcon = QIcon::fromTheme("zoom-out", QIcon(":/images/zoom-out.png"));
+  QAction* zoomOut = new QAction(zoomOutIcon, tr("Zoom out"), this);
+  zoomOut->setShortcuts(QKeySequence::ZoomOut);
+  zoomOut->setStatusTip(tr("Zoom out"));
+  modelToolBar->addAction(zoomOut);
+
+  connect(zoomOut, &QAction::triggered, this, [this](){
+    this->zoomOutHandler();
   });
 
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));

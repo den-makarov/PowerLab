@@ -47,6 +47,19 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 }
 
+
+void MainWindow::zoomInHandler() {
+
+}
+
+void MainWindow::zoomOutHandler() {
+
+}
+
+void MainWindow::zoomResetHandler() {
+  resetGraphWidgetToDefaultView();
+}
+
 void MainWindow::newFile() {
   if(maybeSave()) {
     setCurrentFile(QString());

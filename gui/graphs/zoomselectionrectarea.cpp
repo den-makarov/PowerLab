@@ -32,6 +32,15 @@ QRect ZoomSelectionRectArea::getLocalArea() const {
   }
 
   QRect shiftedArea(origin, geometry().size());
+
+  if(shiftedArea.width() == 0) {
+    shiftedArea.setWidth(1);
+  }
+
+  if(shiftedArea.height() == 0) {
+    shiftedArea.setHeight(1);
+  }
+
   return shiftedArea;
 }
 

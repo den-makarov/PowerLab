@@ -69,6 +69,10 @@ private:
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
 
+  void zoomInHandler();
+  void zoomOutHandler();
+  void zoomResetHandler();
+
   void showMetaData(bool parsingResult, const std::string& msg = "");
 
   std::unique_ptr<Model::ModelResult> m_modelResult;
