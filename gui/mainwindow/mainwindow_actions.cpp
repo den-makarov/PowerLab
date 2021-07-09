@@ -108,7 +108,8 @@ void MainWindow::createActions() {
   modelToolBar->addAction(showLib);
 
   connect(showLib, &QAction::triggered, this, [this](){
-    this->showLibrary();
+    resetGraphWidgetToDefaultView();
+//    this->showLibrary();
   });
 
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));

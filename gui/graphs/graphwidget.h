@@ -42,6 +42,8 @@ public:
                               std::string units,
                               std::vector<double>&& dataPoints);
 
+  void resetDefaultView();
+
   virtual QSize sizeHint() const override;
 public slots:
   void plot();
@@ -59,6 +61,8 @@ private:
   void calcMinMaxGraphValues(GraphData& graph);
   void updateHorizontalLabels();
   void updateVerticalLabels();
+  void resetGraphVerticalScale();
+  void resetGraphHorizontalScale();
 
   void setupDefaultPlotMargins() const;
 

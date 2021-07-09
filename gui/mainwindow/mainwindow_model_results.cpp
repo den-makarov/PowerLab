@@ -12,6 +12,14 @@
 namespace PowerLab {
 namespace Gui {
 
+void MainWindow::resetGraphWidgetToDefaultView() {
+  for(auto widget : m_graphWidgetSet) {
+    if(widget->isActiveWindow()) {
+      widget->resetDefaultView();
+    }
+  }
+}
+
 void MainWindow::addModelResultWidget(QWidget* widget, const QString& title) {
   createDockWindow(widget, WidgetType::MODEL_RESULT, title);
 }
@@ -50,9 +58,10 @@ void MainWindow::openModelResults(const QString& filename) {
 }
 
 void MainWindow::drawGraph() {
-  m_graphWidget = new GraphWidget();
+  GraphWidget* graphWidget = new GraphWidget();
+  m_graphWidgetSet.push_back(graphWidget);
 
-  addModelResultWidget(m_graphWidget,
+  addModelResultWidget(graphWidget,
                        QString::fromStdString(m_modelResult->getModelTitle()));
 
   std::vector<std::string> signalNames;
@@ -76,15 +85,15 @@ void MainWindow::drawGraph() {
   std::string refSigName = m_modelResult->getReferenceSignalName();
   auto unit = m_modelResult->getSignalUnitsSISymbol(refSigName);
   auto&& signalData = m_modelResult->getSignalDataPoints(refSigName);
-  m_graphWidget->addHorizontalScaleData(refSigName, unit, std::move(signalData));
+  graphWidget->addHorizontalScaleData(refSigName, unit, std::move(signalData));
 
   for(auto& item : signalNames) {
     unit = m_modelResult->getSignalUnitsSISymbol(item);
     signalData = m_modelResult->getSignalDataPoints(item);
-    m_graphWidget->addGraphData(item, unit, std::move(signalData));
+    graphWidget->addGraphData(item, unit, std::move(signalData));
   }
 
-  m_graphWidget->plot();
+  graphWidget->plot();
 }
 
 } // namespace Gui

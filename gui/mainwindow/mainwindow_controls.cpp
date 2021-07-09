@@ -30,21 +30,11 @@ void MainWindow::createDockWindow(QWidget* widget, WidgetType type, const QStrin
   dock->setWidget(widget);
 
   bool tabified = false;
-//  for(auto d : m_docksList) {
-//    if(d->allowedAreas() & dockPosition) {
-//      tabifyDockWidget(d, dock);
-//      tabified = true;
-
-//      break;
-//    }
-//  }
-
   if(!tabified) {
     addDockWidget(dockPosition, dock);
   }
 
   m_docksList.push_back(dock);
-
 //    m_viewMenu->addAction(dock->toggleViewAction());
 }
 

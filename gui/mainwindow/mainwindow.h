@@ -60,6 +60,7 @@ private:
   void createDockWindow(QWidget* widget, WidgetType pos, const QString& windowTitle = "Empty");
   Qt::DockWidgetArea getDockAreaForWidgetType(WidgetType type) const;
   void addModelResultWidget(QWidget* widget, const QString& title = "Empty");
+  void resetGraphWidgetToDefaultView();
   void createStatusBar();
   void readSettings();
   void writeSettings();
@@ -73,7 +74,7 @@ private:
   std::unique_ptr<Model::ModelResult> m_modelResult;
 
   QString m_currentFile;
-  GraphWidget* m_graphWidget = nullptr;
+  std::vector<GraphWidget*> m_graphWidgetSet;
   QAbstractItemModel* m_graphData = nullptr;
   QMenu* m_viewMenu;
 

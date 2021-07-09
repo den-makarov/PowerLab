@@ -124,11 +124,7 @@ void GraphWidget::addGraphData(std::string name,
     m_graphs.back().color = defaultColorList[(m_graphs.size() - 1) % defaultColorList.size()];
 
     calcMinMaxGraphValues(m_graphs.back());
-    double min = std::numeric_limits<double>::max();
-    double max = std::numeric_limits<double>::min();
-    estimateVerticalMinMaxValue(min, max);
-    updateVerticalScale(min, max, PLOT_VERTICAL_EXTENSION);
-
+    resetGraphVerticalScale();
     updateVerticalLabels();
   } else {
     Logger::log(GuiMessage::ERROR_ATTEMPT_PLOT_SAME_SIGNAL, name);
@@ -147,9 +143,7 @@ void GraphWidget::addHorizontalScaleData(std::string name,
                                          std::vector<double>&& dataPoints) {
   m_horizontalScale = {name, units, std::move(dataPoints)};
   calcMinMaxGraphValues(m_horizontalScale);
-  updateHorizontalScale(m_horizontalScale.minValue,
-                        m_horizontalScale.maxValue,
-                        PLOT_HORIZONTAL_EXTENSION);
+  resetGraphHorizontalScale();
   updateHorizontalLabels();
 }
 
@@ -304,6 +298,25 @@ QRectF GraphWidget::calcValuesBoundFromZoomArea(QRect zoomArea) const {
   zoomBounds.moveTop(top);
 
   return zoomBounds;
+}
+
+void GraphWidget::resetGraphVerticalScale() {
+  double min = std::numeric_limits<double>::max();
+  double max = std::numeric_limits<double>::min();
+  estimateVerticalMinMaxValue(min, max);
+  updateVerticalScale(min, max, PLOT_VERTICAL_EXTENSION);
+}
+
+void GraphWidget::resetGraphHorizontalScale() {
+  double min = m_horizontalScale.minValue;
+  double max = m_horizontalScale.maxValue;
+  updateHorizontalScale(min, max, PLOT_HORIZONTAL_EXTENSION);
+}
+
+void GraphWidget::resetDefaultView() {
+  resetGraphVerticalScale();
+  resetGraphHorizontalScale();
+  this->repaint();
 }
 
 } // namespace Gui
