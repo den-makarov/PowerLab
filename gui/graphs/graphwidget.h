@@ -29,6 +29,7 @@ public:
     std::vector<double> points;
     double minValue = 0.0;
     double maxValue = 0.0;
+    QColor color = Qt::black;
   };
 
   GraphWidget(QWidget *parent = nullptr, GraphProcessor* graph = nullptr, Plot* plot = nullptr);
@@ -52,8 +53,13 @@ protected:
   void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
-  void configureHorizontalScale();
-  void configureVerticalScale();
+  void updateHorizontalScale(double min, double max, double reserveAreaFactor);
+  void updateVerticalScale(double min, double max, double reserveAreaFactor);
+  void estimateVerticalMinMaxValue(double& min, double& max) const;
+  void calcMinMaxGraphValues(GraphData& graph);
+  void updateHorizontalLabels();
+  void updateVerticalLabels();
+
   void setupDefaultPlotMargins() const;
 
   bool checkIfPointInGraphLimits(QPoint point) const;

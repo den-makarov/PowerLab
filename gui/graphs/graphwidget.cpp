@@ -121,73 +121,86 @@ void GraphWidget::addGraphData(std::string name,
 
   if(!contains) {
     m_graphs.push_back({name, units, std::move(dataPoints), 0.0, 0.0});
-    configureVerticalScale();
+    m_graphs.back().color = defaultColorList[(m_graphs.size() - 1) % defaultColorList.size()];
+
+    calcMinMaxGraphValues(m_graphs.back());
+    double min = std::numeric_limits<double>::max();
+    double max = std::numeric_limits<double>::min();
+    estimateVerticalMinMaxValue(min, max);
+    updateVerticalScale(min, max, PLOT_VERTICAL_EXTENSION);
+
+    updateVerticalLabels();
   } else {
     Logger::log(GuiMessage::ERROR_ATTEMPT_PLOT_SAME_SIGNAL, name);
   }
+}
+
+void GraphWidget::calcMinMaxGraphValues(GraphData& graph) {
+  graph.minValue = *std::min_element(graph.points.begin(),
+                                     graph.points.end());
+  graph.maxValue = *std::max_element(graph.points.begin(),
+                                     graph.points.end());
 }
 
 void GraphWidget::addHorizontalScaleData(std::string name,
                                          std::string units,
                                          std::vector<double>&& dataPoints) {
   m_horizontalScale = {name, units, std::move(dataPoints)};
-  configureHorizontalScale();
+  calcMinMaxGraphValues(m_horizontalScale);
+  updateHorizontalScale(m_horizontalScale.minValue,
+                        m_horizontalScale.maxValue,
+                        PLOT_HORIZONTAL_EXTENSION);
+  updateHorizontalLabels();
 }
 
-void GraphWidget::configureHorizontalScale() {
-  auto& g = m_horizontalScale;
-
+void GraphWidget::updateHorizontalLabels() {
   m_plot->clearXAxisLabels();
-  m_plot->addXAxisLabel(g.name + " [" + g.units + "]");
+  m_plot->addXAxisLabel(m_horizontalScale.name + " [" + m_horizontalScale.units + "]");
+}
 
-  g.minValue = *std::min_element(g.points.begin(), g.points.end());
+void GraphWidget::updateVerticalLabels() {
+  m_plot->clearYAxisLabels();
 
-  g.maxValue = *std::max_element(g.points.begin(), g.points.end());
-
-  auto plotBounds = m_plot->getBounds();
-  if(std::fabs(g.maxValue - g.minValue) < std::numeric_limits<double>::epsilon()) {
-    plotBounds.xMax = g.maxValue + PLOT_HORIZONTAL_EXTENSION;
-    plotBounds.xMin = g.maxValue - PLOT_HORIZONTAL_EXTENSION;
-  } else {
-    plotBounds.xMin = g.minValue - (g.maxValue - g.minValue) * PLOT_HORIZONTAL_EXTENSION;
-    plotBounds.xMax = g.maxValue + (g.maxValue - g.minValue) * PLOT_HORIZONTAL_EXTENSION;
+  for(auto& graphData : m_graphs) {
+    m_plot->addYAxisLabel(graphData.name + " [" + graphData.units + "]", graphData.color);
   }
+}
+
+void GraphWidget::updateHorizontalScale(double min, double max, double reserveAreaFactor) {
+  auto plotBounds = m_plot->getBounds();
+
+  if(std::fabs(max - min) < std::numeric_limits<double>::epsilon()) {
+    plotBounds.xMax = max + reserveAreaFactor;
+    plotBounds.xMin = min - reserveAreaFactor;
+  } else {
+    plotBounds.xMin = min - (max - min) * reserveAreaFactor;
+    plotBounds.xMax = max + (max - min) * reserveAreaFactor;
+  }
+
   m_plot->setBounds(plotBounds);
 }
 
-void GraphWidget::configureVerticalScale() {
-  double min = std::numeric_limits<double>::max();
-  double max = std::numeric_limits<double>::min();
-
-  m_plot->clearYAxisLabels();
-
-  size_t penColorId = 0;
+void GraphWidget::estimateVerticalMinMaxValue(double& min, double& max) const {
   for(auto& graphData : m_graphs) {
-    auto color = defaultColorList[penColorId++];
-    penColorId %= defaultColorList.size();
-
-    m_plot->addYAxisLabel(graphData.name + " [" + graphData.units + "]", color);
-
-    graphData.minValue = *std::min_element(graphData.points.begin(),
-                                           graphData.points.end());
     if(min > graphData.minValue) {
       min = graphData.minValue;
     }
 
-    graphData.maxValue = *std::max_element(graphData.points.begin(),
-                                           graphData.points.end());
     if(max < graphData.maxValue) {
       max = graphData.maxValue;
     }
   }
+}
 
+void GraphWidget::updateVerticalScale(double min, double max, double reserveAreaFactor) {
   auto plotBounds = m_plot->getBounds();
+
   if(std::fabs(max - min) < std::numeric_limits<double>::epsilon()) {
-    plotBounds.yMax = max + max * PLOT_VERTICAL_EXTENSION;
-    plotBounds.yMin = max - max * PLOT_VERTICAL_EXTENSION;
+    plotBounds.yMax = max + max * reserveAreaFactor;
+    plotBounds.yMin = max - max * reserveAreaFactor;
   } else {
-    plotBounds.yMin = min - (max - min) * PLOT_VERTICAL_EXTENSION;
-    plotBounds.yMax = max + (max - min) * PLOT_VERTICAL_EXTENSION;
+    plotBounds.yMin = min - (max - min) * reserveAreaFactor;
+    plotBounds.yMax = max + (max - min) * reserveAreaFactor;
   }
 
   m_plot->setBounds(plotBounds);
@@ -227,29 +240,12 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
   m_plot->update(&painter);
 
 //  paintDemoThreePhaseSignal(&painter, 0);
-  size_t penColorId = 0;
   for(auto& graphData : m_graphs) {
-    m_graphProcessor->setPenColor(defaultColorList[penColorId++]);
-    penColorId %= defaultColorList.size();
-
+    m_graphProcessor->setPenColor(graphData.color);
     GraphProcessor::GraphPoints points{m_horizontalScale.points, graphData.points};
     m_graphProcessor->plot(&painter, points, m_plot->getBoundsRect());
-
   }
   painter.end();
-}
-
-bool GraphWidget::checkIfPointInGraphLimits(QPoint point) const {
-  auto plotArea = m_plot->getMarginsRect();
-  if(point.x() < plotArea.left() || plotArea.right() < point.x()) {
-    return false;
-  }
-
-  if(point.y() < plotArea.top() || plotArea.bottom() < point.y()) {
-    return false;
-  }
-
-  return true;
 }
 
 void GraphWidget::mousePressEvent(QMouseEvent *event) {
@@ -279,6 +275,19 @@ void GraphWidget::mouseReleaseEvent(QMouseEvent *event) {
     this->repaint();
   }
   event->ignore();
+}
+
+bool GraphWidget::checkIfPointInGraphLimits(QPoint point) const {
+  auto plotArea = m_plot->getMarginsRect();
+  if(point.x() < plotArea.left() || plotArea.right() < point.x()) {
+    return false;
+  }
+
+  if(point.y() < plotArea.top() || plotArea.bottom() < point.y()) {
+    return false;
+  }
+
+  return true;
 }
 
 QRectF GraphWidget::calcValuesBoundFromZoomArea(QRect zoomArea) const {
