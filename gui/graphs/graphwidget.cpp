@@ -268,10 +268,8 @@ void GraphWidget::mouseReleaseEvent(QMouseEvent *event) {
   if(m_zoomArea) {
     m_zoomArea->hide();
     auto zoomBounds = calcValuesBoundFromZoomArea(m_zoomArea->getLocalArea());
-    m_plot->setBounds({zoomBounds.right(),
-                       zoomBounds.left(),
-                       zoomBounds.top(),
-                       zoomBounds.bottom()});
+    updateVerticalScale(zoomBounds.bottom(), zoomBounds.top(), 0.01);
+    updateHorizontalScale(zoomBounds.left(), zoomBounds.right(), 0.01);
     this->repaint();
   }
   event->ignore();
