@@ -249,7 +249,7 @@ void Plot::drawXGrid(QPainter& painter) const {
   double gridLineLabelStep = m_gridLabelsRect.width() / (m_gridXNumber);
   double gridLineLabel = m_gridLabelsRect.left();
 
-  double left = m_gridLabelsRect.left() * factor + m_margins.left;
+  double left = (m_gridLabelsRect.left() - m_bounds.xMin) * factor + m_margins.left;
   double right = m_gridLabelsRect.right() * factor + m_margins.left;
 
   auto fontSize = painter.fontMetrics().height();
