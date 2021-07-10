@@ -29,6 +29,10 @@ void MainWindow::createZoomActions() {
     this->zoomEnableHandler(checked);
   });
 
+  connect(this, &MainWindow::newGraphWidget, [zoomEnabled](QWidget*){
+    zoomEnabled->setChecked(false);
+  });
+
   const QIcon zoomInIcon = QIcon::fromTheme("zoom-in", QIcon(":/images/zoom-in.png"));
   QAction* zoomIn = new QAction(zoomInIcon, tr("Zoom in"), this);
   zoomIn->setShortcuts(QKeySequence::ZoomIn);
@@ -60,7 +64,7 @@ void MainWindow::createZoomActions() {
 
   // @TODO: It shouldn't be triggered by any file opened.
   // Consider to use signal when model design or graph widget is active
-  connect(this, &MainWindow::fileOpened, [zoomToolBar](QString){
+  connect(this, &MainWindow::newGraphWidget, [zoomToolBar](QWidget*){
     zoomToolBar->setEnabled(true);
   });
 

@@ -33,6 +33,7 @@ public:
 
 signals:
   void fileOpened(QString filename);
+  void newGraphWidget(QWidget* widget);
 
 protected:
   void closeEvent(QCloseEvent *event) override;

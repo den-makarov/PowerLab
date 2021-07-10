@@ -13,9 +13,10 @@ namespace PowerLab {
 namespace Gui {
 
 void MainWindow::resetGraphWidgetToDefaultView() {
-  for(auto widget : m_graphWidgetSet) {
-    if(widget->isActiveWindow()) {
-      widget->resetDefaultView();
+  auto focusedWidget = focusWidget();
+  for(auto graph : m_graphWidgetSet) {
+    if(graph == focusedWidget) {
+      graph->resetDefaultView();
     }
   }
 }
@@ -64,11 +65,15 @@ void MainWindow::openModelResults(const QString& filename) {
 }
 
 void MainWindow::drawGraph() {
+  static int idx = 0;
   GraphWidget* graphWidget = new GraphWidget();
   m_graphWidgetSet.push_back(graphWidget);
-
+  auto title = QString::fromStdString(m_modelResult->getModelTitle()) + QString(" %1").arg(idx++);
+  graphWidget->setObjectName(title);
   addModelResultWidget(graphWidget,
-                       QString::fromStdString(m_modelResult->getModelTitle()));
+                       title);
+
+  emit newGraphWidget(graphWidget);
 
   std::vector<std::string> signalNames;
   if(m_graphData) {

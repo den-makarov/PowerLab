@@ -102,6 +102,8 @@ GraphWidget::GraphWidget(QWidget *parent, GraphProcessor* graph, Plot* plot)
   if(!m_plot) {
     m_plot = std::make_unique<Plot>();
   }
+
+  setFocusPolicy(Qt::StrongFocus);
 }
 
 QSize GraphWidget::sizeHint() const {

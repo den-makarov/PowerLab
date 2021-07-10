@@ -61,9 +61,13 @@ void MainWindow::zoomOutHandler() {
 
 void MainWindow::zoomResetHandler() {
   resetGraphWidgetToDefaultView();
-  auto w = qApp->focusWidget();
+
+  auto w = focusWidget();
   if(w) {
+    QString className = w->metaObject()->className();
     std::string msg = "Focus on widget: " + w->objectName().toStdString();
+    msg += " Class name: ";
+    msg += className.toStdString();
     Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg);
   }
 }
