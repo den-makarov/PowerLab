@@ -15,6 +15,7 @@ std::string getMessagePhrase(SystemMessage msg) {
     // Debug messagess
     // Info messages
     // Warning messages
+    {SystemMessage::WARNING_ATTEMPT_OPEN_UNKNOWN_FILE_FORMAT, "Attempt to open file with unsupported format. Filename: %1%"},
     // Error messages
   };
 

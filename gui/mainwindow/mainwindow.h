@@ -30,8 +30,11 @@ public:
   MainWindow(QWidget *parent = nullptr);
 
   void loadFile(const QString &fileName);
-
   void openModelResults(const QString& filename);
+
+signals:
+  void fileOpened(QString filename);
+
 protected:
   void closeEvent(QCloseEvent *event) override;
 
@@ -54,28 +57,38 @@ private:
   };
 
   void createActions();
-  void addDefaultModelDesignWidget();
-  void showLibrary();
-  void showParameters();
-  void createDockWindow(QWidget* widget, WidgetType pos, const QString& windowTitle = "Empty");
-  Qt::DockWidgetArea getDockAreaForWidgetType(WidgetType type) const;
-  void addModelResultWidget(QWidget* widget, const QString& title = "Empty");
-  void resetGraphWidgetToDefaultView();
-  void setGraphWidgetZoom(bool enable);
+  void createZoomActions();
+  void createEditActions();
+  void createFileActions();
+  void createHelpActions();
+  void createGraphActions();
   void createStatusBar();
+
   void readSettings();
   void writeSettings();
+
   bool maybeSave();
   bool saveFile(const QString &fileName);
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
+
+  void showLibrary();
+  void showParameters();
+  void showMetaData(bool parsingResult, const std::string& msg = "");
+
+  void createDockWindow(QWidget* widget, WidgetType pos, const QString& windowTitle = "Empty");
+  Qt::DockWidgetArea getDockAreaForWidgetType(WidgetType type) const;
+
+  void addModelResultWidget(QWidget* widget, const QString& title = "Empty");
+  void addDefaultModelDesignWidget();
 
   void zoomEnableHandler(bool enable);
   void zoomInHandler();
   void zoomOutHandler();
   void zoomResetHandler();
 
-  void showMetaData(bool parsingResult, const std::string& msg = "");
+  void resetGraphWidgetToDefaultView();
+  void setGraphWidgetZoom(bool enable);
 
   std::unique_ptr<Model::ModelResult> m_modelResult;
 

@@ -74,8 +74,11 @@ void MainWindow::open() {
   auto dialogFilter = tr("Model design or results (*.pmd *.pmr)");
   QString filename = QFileDialog::getOpenFileName(this, dialogTitle, "", dialogFilter);
 
-  if(!filename.isEmpty()) {
+  if(!filename.isEmpty() && filename.right(4) == QString(".pmr")) {
     openModelResults(filename);
+    emit fileOpened(filename);
+  } else {
+    Logger::log(System::SystemMessage::WARNING_ATTEMPT_OPEN_UNKNOWN_FILE_FORMAT, filename.toStdString());
   }
 }
 
