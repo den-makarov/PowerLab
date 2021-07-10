@@ -258,15 +258,14 @@ void GraphWidget::mouseMoveEvent(QMouseEvent *event) {
   }
 }
 
-void GraphWidget::mouseReleaseEvent(QMouseEvent *event) {
-  if(m_zoomArea) {
+void GraphWidget::mouseReleaseEvent(QMouseEvent*) {
+  if(m_zoomArea && m_zoomArea->isActive()) {
     m_zoomArea->hide();
     auto zoomBounds = calcValuesBoundFromZoomArea(m_zoomArea->getLocalArea());
     updateVerticalScale(zoomBounds.bottom(), zoomBounds.top(), 0.01);
     updateHorizontalScale(zoomBounds.left(), zoomBounds.right(), 0.01);
     this->repaint();
   }
-  event->ignore();
 }
 
 bool GraphWidget::checkIfPointInGraphLimits(QPoint point) const {

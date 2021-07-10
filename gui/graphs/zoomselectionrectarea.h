@@ -11,6 +11,7 @@ public:
   ZoomSelectionRectArea();
 
   void show();
+  bool isActive() const;
   void hide();
   QRect getGlobalArea() const;
   QRect getLocalArea() const;

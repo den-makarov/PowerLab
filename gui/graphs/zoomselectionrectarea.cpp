@@ -13,6 +13,10 @@ void ZoomSelectionRectArea::show() {
   QRubberBand::show();
 }
 
+bool ZoomSelectionRectArea::isActive() const {
+  return QRubberBand::isVisible();
+}
+
 void ZoomSelectionRectArea::hide() {
   QRubberBand::hide();
 }

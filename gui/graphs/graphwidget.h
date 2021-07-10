@@ -51,7 +51,7 @@ public slots:
 protected:
   void paintEvent(QPaintEvent *event) override;
   void mousePressEvent(QMouseEvent *event) override;
-  void mouseReleaseEvent(QMouseEvent *event) override;
+  void mouseReleaseEvent(QMouseEvent*) override;
   void mouseMoveEvent(QMouseEvent *event) override;
 
 private:
