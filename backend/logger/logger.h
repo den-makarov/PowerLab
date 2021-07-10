@@ -20,6 +20,25 @@
 namespace PowerLab {
 namespace Logger {
 
+class LogStreamHunter {
+public:
+  using UserCallBack = std::function<void(std::string)>;
+  explicit LogStreamHunter(UserCallBack cb)
+    : m_userCB(cb)
+  {}
+
+  void operator<<(const LogMessage& msg) {
+    std::ostringstream out;
+    out << msg;
+
+    if(m_userCB) {
+      m_userCB(out.str());
+    }
+  }
+private:
+  std::function<void(std::string)> m_userCB;
+};
+
 class LogProvider {
 public:
   using LogStreamId = int64_t;
@@ -42,6 +61,7 @@ public:
   void transmitMessage(const LogMessage& msg);
 
   LogStreamId addStream(std::ostream& stream);
+  void addStreamHunter(LogStreamHunter hunter);
   void removeStream(LogStreamId id);
 
   void addFilterToStream(LogStreamId id, LogMessageFilter filter);
@@ -135,6 +155,7 @@ private:
 
   std::map<LogStreamId, std::reference_wrapper<std::ostream>> m_logStreams;
   std::map<LogStreamId, LogMessageFilter> m_filters;
+  std::vector<LogStreamHunter> m_userHunters;
 };
 
 template<typename T>

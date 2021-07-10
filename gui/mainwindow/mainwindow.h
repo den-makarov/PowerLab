@@ -12,8 +12,6 @@
 QT_BEGIN_NAMESPACE
 class QAction;
 class QMenu;
-class QTabWidget;
-class QMessageBox;
 class QAbstractItemModel;
 class QPlainTextEdit;
 class QSessionManager;
@@ -31,6 +29,7 @@ public:
 
   void loadFile(const QString &fileName);
   void openModelResults(const QString& filename);
+  void debugMsg(std::string str);
 
 signals:
   void fileOpened(QString filename);
@@ -101,6 +100,8 @@ private:
 
   QAction* m_addGraphAction = nullptr;
   std::vector<QDockWidget*> m_docksList;
+
+  QPlainTextEdit* m_logOutput = nullptr;
 
   constexpr static size_t MIN_WINDOW_WIDTH = 400;
   constexpr static size_t MIN_WINDOW_HEIGHT = 200;

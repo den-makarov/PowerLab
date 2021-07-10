@@ -20,7 +20,7 @@ void MainWindow::createZoomActions() {
   QToolBar* zoomToolBar = addToolBar(tr("Zoom"));
 
   const QIcon zoomEnabledIcon = QIcon::fromTheme("search-symbolic", QIcon(":/images/zoom-enabled.png"));
-  QAction* zoomEnabled = new QAction(zoomEnabledIcon, tr("Zoom enable"), this);
+  QAction* zoomEnabled = new QAction(zoomEnabledIcon, tr("Zoom"), this);
   zoomEnabled->setCheckable(true);
   zoomEnabled->setStatusTip(tr("Zoom enable/disable"));
   zoomToolBar->addAction(zoomEnabled);
@@ -32,7 +32,7 @@ void MainWindow::createZoomActions() {
   const QIcon zoomInIcon = QIcon::fromTheme("zoom-in", QIcon(":/images/zoom-in.png"));
   QAction* zoomIn = new QAction(zoomInIcon, tr("Zoom in"), this);
   zoomIn->setShortcuts(QKeySequence::ZoomIn);
-  zoomIn->setStatusTip(tr("Zoom in"));
+  zoomIn->setStatusTip(zoomIn->text());
   zoomToolBar->addAction(zoomIn);
 
   connect(zoomIn, &QAction::triggered, this, [this](){
@@ -41,7 +41,7 @@ void MainWindow::createZoomActions() {
 
   const QIcon zoomResetIcon = QIcon::fromTheme("zoom-original", QIcon(":/images/zoom-original.png"));
   QAction* zoomReset = new QAction(zoomResetIcon, tr("Zoom reset"), this);
-  zoomReset->setStatusTip(tr("Zoom out"));
+  zoomReset->setStatusTip(zoomReset->text());
   zoomToolBar->addAction(zoomReset);
 
   connect(zoomReset, &QAction::triggered, this, [this](){
@@ -51,7 +51,7 @@ void MainWindow::createZoomActions() {
   const QIcon zoomOutIcon = QIcon::fromTheme("zoom-out", QIcon(":/images/zoom-out.png"));
   QAction* zoomOut = new QAction(zoomOutIcon, tr("Zoom out"), this);
   zoomOut->setShortcuts(QKeySequence::ZoomOut);
-  zoomOut->setStatusTip(tr("Zoom out"));
+  zoomOut->setStatusTip(zoomOut->text());
   zoomToolBar->addAction(zoomOut);
 
   connect(zoomOut, &QAction::triggered, this, [this](){

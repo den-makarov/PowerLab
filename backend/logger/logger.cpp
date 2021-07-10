@@ -15,6 +15,10 @@ void LogProvider::transmitMessage(const LogMessage& msg) {
       stream << msg;
     }
   }
+
+  for(auto& hunter : m_userHunters) {
+    hunter << msg;
+  }
 }
 
 LogProvider::LogStreamId LogProvider::addStream(std::ostream& stream) {
@@ -69,6 +73,10 @@ LogProvider::PlacersFmt LogProvider::searchForPlacers(const std::string& format)
   }
 
   return placers;
+}
+
+void LogProvider::addStreamHunter(LogStreamHunter hunter) {
+  m_userHunters.emplace_back(hunter);
 }
 
 } // namespace Logger

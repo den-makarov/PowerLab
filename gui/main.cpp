@@ -22,6 +22,14 @@ int main(int argc, char *argv[])
   QCoreApplication::setApplicationName(appTitle);
 
   PowerLab::Gui::MainWindow window;
+
+  auto msgHunter = [&window](std::string msg){
+    window.debugMsg(msg);
+  };
+
+  PowerLab::Logger::LogStreamHunter streamHunter(msgHunter);
+  PowerLab::Logger::LogProvider::instance().addStreamHunter(streamHunter);
+
   window.show();
   return app.exec();
 }
