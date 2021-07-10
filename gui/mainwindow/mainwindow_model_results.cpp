@@ -20,6 +20,12 @@ void MainWindow::resetGraphWidgetToDefaultView() {
   }
 }
 
+void MainWindow::setGraphWidgetZoom(bool enable) {
+  for(auto widget : m_graphWidgetSet) {
+    widget->setZoomEnabled(enable);
+  }
+}
+
 void MainWindow::addModelResultWidget(QWidget* widget, const QString& title) {
   createDockWindow(widget, WidgetType::MODEL_RESULT, title);
 }

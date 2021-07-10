@@ -243,28 +243,20 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 }
 
 void GraphWidget::mousePressEvent(QMouseEvent *event) {
-  if(event->button() == Qt::LeftButton && checkIfPointInGraphLimits(event->pos())) {
-    if(!m_zoomArea) {
-      m_zoomArea = std::make_unique<ZoomSelectionRectArea>();
-    }
-    m_zoomArea->setAreaOrigin(event->globalPos(), event->pos());
-    m_zoomArea->show();
+  if(m_zoomEnabled && event->button() == Qt::LeftButton) {
+    zoomBegin(event->globalPos(), event->pos());
   }
 }
 
 void GraphWidget::mouseMoveEvent(QMouseEvent *event) {
-  if(m_zoomArea && checkIfPointInGraphLimits(event->pos())) {
-    m_zoomArea->updateArea(event->globalPos());
+  if(m_zoomEnabled) {
+    zoomUpdate(event->globalPos(), event->pos());
   }
 }
 
 void GraphWidget::mouseReleaseEvent(QMouseEvent*) {
-  if(m_zoomArea && m_zoomArea->isActive()) {
-    m_zoomArea->hide();
-    auto zoomBounds = calcValuesBoundFromZoomArea(m_zoomArea->getLocalArea());
-    updateVerticalScale(zoomBounds.bottom(), zoomBounds.top(), 0.01);
-    updateHorizontalScale(zoomBounds.left(), zoomBounds.right(), 0.01);
-    this->repaint();
+  if(m_zoomEnabled) {
+    zoomFinish();
   }
 }
 
@@ -316,6 +308,36 @@ void GraphWidget::resetDefaultView() {
   resetGraphVerticalScale();
   resetGraphHorizontalScale();
   this->repaint();
+}
+
+void GraphWidget::zoomFinish() {
+  if(m_zoomArea && m_zoomArea->isActive()) {
+    m_zoomArea->hide();
+    auto zoomBounds = calcValuesBoundFromZoomArea(m_zoomArea->getLocalArea());
+    updateVerticalScale(zoomBounds.bottom(), zoomBounds.top(), 0.01);
+    updateHorizontalScale(zoomBounds.left(), zoomBounds.right(), 0.01);
+    this->repaint();
+  }
+}
+
+void GraphWidget::zoomUpdate(QPoint global, QPoint local) {
+  if(m_zoomArea && checkIfPointInGraphLimits(local)) {
+    m_zoomArea->updateArea(global);
+  }
+}
+
+void GraphWidget::zoomBegin(QPoint global, QPoint local) {
+  if(checkIfPointInGraphLimits(local)) {
+    if(!m_zoomArea) {
+      m_zoomArea = std::make_unique<ZoomSelectionRectArea>();
+    }
+    m_zoomArea->setAreaOrigin(global, local);
+    m_zoomArea->show();
+  }
+}
+
+void GraphWidget::setZoomEnabled(bool enabled) {
+  m_zoomEnabled = enabled;
 }
 
 } // namespace Gui

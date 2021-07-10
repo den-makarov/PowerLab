@@ -47,6 +47,9 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   }
 }
 
+void MainWindow::zoomEnableHandler(bool enable) {
+  setGraphWidgetZoom(enable);
+}
 
 void MainWindow::zoomInHandler() {
 

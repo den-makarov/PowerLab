@@ -47,6 +47,7 @@ public:
   virtual QSize sizeHint() const override;
 public slots:
   void plot();
+  void setZoomEnabled(bool enable);
 
 protected:
   void paintEvent(QPaintEvent *event) override;
@@ -66,6 +67,9 @@ private:
 
   void setupDefaultPlotMargins() const;
 
+  void zoomFinish();
+  void zoomUpdate(QPoint global, QPoint local);
+  void zoomBegin(QPoint global, QPoint local);
   bool checkIfPointInGraphLimits(QPoint point) const;
   QRectF calcValuesBoundFromZoomArea(QRect zoomArea) const;
 
@@ -74,6 +78,7 @@ private:
   std::unique_ptr<GraphProcessor> m_graphProcessor;
   std::unique_ptr<Plot> m_plot;
   std::unique_ptr<ZoomSelectionRectArea> m_zoomArea = nullptr;
+  bool m_zoomEnabled = false;
 
   constexpr static double PLOT_VERTICAL_EXTENSION = 0.1;
   constexpr static double PLOT_HORIZONTAL_EXTENSION = 0.0;

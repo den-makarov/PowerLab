@@ -111,6 +111,16 @@ void MainWindow::createActions() {
     this->showLibrary();
   });
 
+  const QIcon zoomEnabledIcon = QIcon::fromTheme("search-symbolic", QIcon(":/images/zoom-enabled.png"));
+  QAction* zoomEnabled = new QAction(zoomEnabledIcon, tr("Zoom enable"), this);
+  zoomEnabled->setCheckable(true);
+  zoomEnabled->setStatusTip(tr("Zoom enable/disable"));
+  modelToolBar->addAction(zoomEnabled);
+
+  connect(zoomEnabled, &QAction::toggled, this, [this](bool checked){
+    this->zoomEnableHandler(checked);
+  });
+
   const QIcon zoomInIcon = QIcon::fromTheme("zoom-in", QIcon(":/images/zoom-in.png"));
   QAction* zoomIn = new QAction(zoomInIcon, tr("Zoom in"), this);
   zoomIn->setShortcuts(QKeySequence::ZoomIn);

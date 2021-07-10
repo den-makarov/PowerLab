@@ -61,6 +61,7 @@ private:
   Qt::DockWidgetArea getDockAreaForWidgetType(WidgetType type) const;
   void addModelResultWidget(QWidget* widget, const QString& title = "Empty");
   void resetGraphWidgetToDefaultView();
+  void setGraphWidgetZoom(bool enable);
   void createStatusBar();
   void readSettings();
   void writeSettings();
@@ -69,6 +70,7 @@ private:
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
 
+  void zoomEnableHandler(bool enable);
   void zoomInHandler();
   void zoomOutHandler();
   void zoomResetHandler();
