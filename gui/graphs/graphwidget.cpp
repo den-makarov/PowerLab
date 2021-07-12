@@ -10,6 +10,16 @@
 #include "graphwidget.h"
 #include "logger.h"
 
+std::ostream& operator<<(std::ostream& out, QRectF rect) {
+  out << "RectF: {" << rect.left()
+      << ", " << rect.top()
+      << ", " << rect.width()
+      << ", " << rect.height()
+      << "} Bottom right point {" << rect.right()
+      << ", " << rect.bottom() << "}";
+  return out;
+}
+
 namespace {
 
 struct ThreePhaseSignal {
@@ -275,6 +285,17 @@ bool GraphWidget::checkIfPointInGraphLimits(QPoint point) const {
   return true;
 }
 
+QRectF GraphWidget::zoomValueBoundsByFactor(double factor) const {
+  auto zoomBounds = m_plot->getMarginsRect();
+  double heightHalf = zoomBounds.height() / 2.0;
+  double heightMiddle = heightHalf + zoomBounds.top();
+
+  zoomBounds.setTop(static_cast<int>(heightMiddle - heightHalf / factor));
+  zoomBounds.setBottom(static_cast<int>(heightMiddle + heightHalf / factor));
+
+  return calcValuesBoundFromZoomArea(zoomBounds);
+}
+
 QRectF GraphWidget::calcValuesBoundFromZoomArea(QRect zoomArea) const {
   QRectF zoomBounds = m_plot->getBoundsRect();
   QRect margins = m_plot->getMarginsRect();
@@ -315,9 +336,22 @@ void GraphWidget::resetDefaultView() {
 void GraphWidget::zoomFinish() {
   if(m_zoomArea && m_zoomArea->isActive()) {
     m_zoomArea->hide();
-    auto zoomBounds = calcValuesBoundFromZoomArea(m_zoomArea->getLocalArea());
-    updateVerticalScale(zoomBounds.bottom(), zoomBounds.top(), 0.01);
-    updateHorizontalScale(zoomBounds.left(), zoomBounds.right(), 0.01);
+
+    auto area = m_zoomArea->getLocalArea();
+    QRectF zoomBounds;
+
+    if(area.width() < 3 && area.height() < 3) {
+      zoomBounds = zoomValueBoundsByFactor(ZOOM_DEFAULT_FACTOR);
+    } else {
+      zoomBounds = calcValuesBoundFromZoomArea(area);
+    }
+
+    std::ostringstream msg;
+    msg << "Zoomed area: " << zoomBounds;
+    Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
+
+    updateVerticalScale(zoomBounds.bottom(), zoomBounds.top(), 0.0);
+    updateHorizontalScale(zoomBounds.left(), zoomBounds.right(), 0.0);
     this->repaint();
   }
 }

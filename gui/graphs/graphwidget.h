@@ -72,6 +72,7 @@ private:
   void zoomBegin(QPoint global, QPoint local);
   bool checkIfPointInGraphLimits(QPoint point) const;
   QRectF calcValuesBoundFromZoomArea(QRect zoomArea) const;
+  QRectF zoomValueBoundsByFactor(double factor) const;
 
   std::vector<GraphData> m_graphs;
   GraphData m_horizontalScale;
@@ -85,6 +86,8 @@ private:
 
   constexpr static int PREFERRED_WIDGIT_WIDTH_HINT = 500;
   constexpr static int PREFERRED_WIDGIT_HEIGHT_HINT = 300;
+
+  constexpr static double ZOOM_DEFAULT_FACTOR = 2.0;
 };
 
 } // namespace Gui

@@ -28,23 +28,14 @@ QRect ZoomSelectionRectArea::getGlobalArea() const {
 QRect ZoomSelectionRectArea::getLocalArea() const {
   QPoint origin(m_localOrigin);
   if(geometry().x() < m_globalOrigin.x()) {
-    origin.setX(origin.x() - geometry().width() + 1);
+    origin.setX(origin.x() - geometry().width());
   }
 
   if(geometry().y() < m_globalOrigin.y()) {
-    origin.setY(origin.y() - geometry().height() + 1);
+    origin.setY(origin.y() - geometry().height());
   }
 
   QRect shiftedArea(origin, geometry().size());
-
-  if(shiftedArea.width() == 0) {
-    shiftedArea.setWidth(1);
-  }
-
-  if(shiftedArea.height() == 0) {
-    shiftedArea.setHeight(1);
-  }
-
   return shiftedArea;
 }
 
