@@ -12,11 +12,21 @@
 namespace PowerLab {
 namespace Gui {
 
-void MainWindow::resetGraphWidgetToDefaultView() {
+void MainWindow::graphWidgetZoom(ZoomKind zoom) {
   auto focusedWidget = focusWidget();
   for(auto graph : m_graphWidgetSet) {
     if(graph == focusedWidget) {
-      graph->resetDefaultView();
+      switch(zoom) {
+      case ZoomKind::ZOOM_IN:
+        graph->zoomGraph(GraphWidget::ZOOM_DEFAULT_FACTOR);
+        break;
+      case ZoomKind::ZOOM_OUT:
+        graph->zoomGraph(1 / GraphWidget::ZOOM_DEFAULT_FACTOR);
+        break;
+      case ZoomKind::ZOOM_RESET:
+        graph->resetDefaultView();
+        break;
+      }
     }
   }
 }

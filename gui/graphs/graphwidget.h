@@ -23,6 +23,8 @@ class ZoomSelectionRectArea;
 class GraphWidget : public QWidget {
 Q_OBJECT
 public:
+  constexpr static double ZOOM_DEFAULT_FACTOR = 2.0;
+
   struct GraphData {
     std::string name;
     std::string units;
@@ -43,6 +45,7 @@ public:
                               std::vector<double>&& dataPoints);
 
   void resetDefaultView();
+  void zoomGraph(double factor);
 
   virtual QSize sizeHint() const override;
 public slots:
@@ -86,8 +89,6 @@ private:
 
   constexpr static int PREFERRED_WIDGIT_WIDTH_HINT = 500;
   constexpr static int PREFERRED_WIDGIT_HEIGHT_HINT = 300;
-
-  constexpr static double ZOOM_DEFAULT_FACTOR = 2.0;
 };
 
 } // namespace Gui

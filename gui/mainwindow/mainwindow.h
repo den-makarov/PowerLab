@@ -82,13 +82,19 @@ private:
   void addModelResultWidget(QWidget* widget, const QString& title = "Empty");
   void addDefaultModelDesignWidget();
 
+  enum class ZoomKind {
+    ZOOM_IN,
+    ZOOM_OUT,
+    ZOOM_RESET
+  };
+
   void zoomEnableHandler(bool enable);
   void zoomInHandler();
   void zoomOutHandler();
   void zoomResetHandler();
 
-  void resetGraphWidgetToDefaultView();
   void setGraphWidgetZoom(bool enable);
+  void graphWidgetZoom(ZoomKind zoom);
 
   std::unique_ptr<Model::ModelResult> m_modelResult;
 

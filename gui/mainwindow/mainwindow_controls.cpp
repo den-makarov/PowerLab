@@ -52,24 +52,15 @@ void MainWindow::zoomEnableHandler(bool enable) {
 }
 
 void MainWindow::zoomInHandler() {
-
+  graphWidgetZoom(ZoomKind::ZOOM_IN);
 }
 
 void MainWindow::zoomOutHandler() {
-
+  graphWidgetZoom(ZoomKind::ZOOM_OUT);
 }
 
 void MainWindow::zoomResetHandler() {
-  resetGraphWidgetToDefaultView();
-
-  auto w = focusWidget();
-  if(w) {
-    QString className = w->metaObject()->className();
-    std::string msg = "Focus on widget: " + w->objectName().toStdString();
-    msg += " Class name: ";
-    msg += className.toStdString();
-    Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg);
-  }
+  graphWidgetZoom(ZoomKind::ZOOM_RESET);
 }
 
 void MainWindow::newFile() {

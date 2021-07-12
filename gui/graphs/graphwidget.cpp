@@ -285,6 +285,13 @@ bool GraphWidget::checkIfPointInGraphLimits(QPoint point) const {
   return true;
 }
 
+void GraphWidget::zoomGraph(double factor) {
+  QRectF zoomBounds = zoomValueBoundsByFactor(factor);
+  updateVerticalScale(zoomBounds.bottom(), zoomBounds.top(), 0.0);
+  updateHorizontalScale(zoomBounds.left(), zoomBounds.right(), 0.0);
+  this->repaint();
+}
+
 QRectF GraphWidget::zoomValueBoundsByFactor(double factor) const {
   auto zoomBounds = m_plot->getMarginsRect();
   double heightHalf = zoomBounds.height() / 2.0;
