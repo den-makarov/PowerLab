@@ -1,12 +1,12 @@
 #include "mainwindow/mainwindow.h"
-#include "parameters/parameterswidget.h"
+#include "parameters/graphparameterswidget.h"
 
 namespace PowerLab {
 namespace Gui {
 
 void MainWindow::showParameters() {
-  auto widget = new ParametersWidget(this);
-  createDockWindow(widget, WidgetType::PARAMETERS, "Parameters");
+  auto widget = new GraphParametersWidget(this, m_graphWidgetSet);
+  createDockWindow(widget, WidgetType::PARAMETERS, "Graph Parameters");
 }
 
 } // namespace Gui
