@@ -19,21 +19,22 @@ GraphParametersWidget::GraphParametersWidget(QWidget *parent, std::vector<GraphW
 
 void GraphParametersWidget::updateGraphList(std::vector<GraphWidget*> graphs) {
   m_graphs = graphs;
+  updateView();
   emit graphListUpdated();
 }
 
-void GraphParametersWidget::updateView() {
+void GraphParametersWidget::createGraphListSelector() {
   QGroupBox* graphWidgetsGroup = new QGroupBox(tr("Graph selector"));
 
   QVBoxLayout *graphWidgetLayout = new QVBoxLayout;
-  QComboBox* graphWidgetList = new QComboBox;
+  m_graphWidgetList = new QComboBox;
   for(size_t idx = 0; idx < m_graphs.size(); idx++) {
     auto graph = m_graphs[idx];
-    graphWidgetList->addItem(graph->objectName(), QVariant::fromValue(idx));
+    m_graphWidgetList->addItem(graph->objectName(), QVariant::fromValue(idx));
   }
 
   graphWidgetLayout->setAlignment(Qt::AlignTop);
-  graphWidgetLayout->addWidget(graphWidgetList);
+  graphWidgetLayout->addWidget(m_graphWidgetList);
   graphWidgetsGroup->setLayout(graphWidgetLayout);
 
   QGridLayout* grid = new QGridLayout;
@@ -41,10 +42,22 @@ void GraphParametersWidget::updateView() {
   grid->addWidget(graphWidgetsGroup, 0, 0);
 
   setLayout(grid);
+}
+
+void GraphParametersWidget::updateView() {
+  if(!m_graphWidgetList) {
+    createGraphListSelector();
+  } else {
+    m_graphWidgetList->clear();
+    for(size_t idx = 0; idx < m_graphs.size(); idx++) {
+      auto graph = m_graphs[idx];
+      m_graphWidgetList->addItem(graph->objectName(), QVariant::fromValue(idx));
+    }
+  }
 
   auto focusedGraphIdx = findFocusedGraphIdx();
   if(focusedGraphIdx != NO_GRAPH_FOCUSED) {
-    graphWidgetList->setCurrentIndex(focusedGraphIdx);
+    m_graphWidgetList->setCurrentIndex(focusedGraphIdx);
     updateGraphParamsView(m_graphs[static_cast<size_t>(focusedGraphIdx)]);
   }
 }
@@ -53,14 +66,11 @@ int GraphParametersWidget::findFocusedGraphIdx() const {
   int focusedGraphIdx = NO_GRAPH_FOCUSED;
 
   if(m_graphs.size() != 0) {
-    GraphWidget* selectedWidget = m_graphs.front();
-
     focusedGraphIdx = 0;
     auto focusedWidget = qApp->focusWidget();
 
     for(auto graph : m_graphs) {
       if(graph == focusedWidget) {
-        selectedWidget = graph;
         break;
       }
       focusedGraphIdx++;

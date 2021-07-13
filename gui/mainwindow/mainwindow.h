@@ -21,6 +21,7 @@ namespace PowerLab {
 namespace Gui {
 
 class GraphWidget;
+class GraphParametersWidget;
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -107,6 +108,8 @@ private:
 
   QAction* m_addGraphAction = nullptr;
   std::vector<QDockWidget*> m_docksList;
+
+  GraphParametersWidget* m_graphParameters = nullptr;
 
   QPlainTextEdit* m_logOutput = nullptr;
 

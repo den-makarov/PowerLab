@@ -5,8 +5,13 @@ namespace PowerLab {
 namespace Gui {
 
 void MainWindow::showParameters() {
-  auto widget = new GraphParametersWidget(this, m_graphWidgetSet);
-  createDockWindow(widget, WidgetType::PARAMETERS, "Graph Parameters");
+  if(!m_graphParameters) {
+    m_graphParameters = new GraphParametersWidget(this, m_graphWidgetSet);
+    createDockWindow(m_graphParameters, WidgetType::PARAMETERS, "Graph Parameters");
+  } else {
+    // @TODO: show graphParamsDock
+    m_graphParameters->updateGraphList(m_graphWidgetSet);
+  }
 }
 
 } // namespace Gui

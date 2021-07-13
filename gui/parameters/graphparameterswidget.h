@@ -3,6 +3,8 @@
 
 #include "parameterswidget.h"
 
+class QComboBox;
+
 namespace PowerLab {
 namespace Gui {
 
@@ -20,9 +22,11 @@ signals:
 private:
   void updateGraphParamsView(GraphWidget* graph);
   void updateView();
+  void createGraphListSelector();
   int findFocusedGraphIdx() const;
 
   std::vector<GraphWidget*> m_graphs;
+  QComboBox* m_graphWidgetList = nullptr;
 
   constexpr static int NO_GRAPH_FOCUSED = -1;
 };
