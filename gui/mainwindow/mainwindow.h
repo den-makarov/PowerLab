@@ -22,6 +22,7 @@ namespace Gui {
 
 class GraphWidget;
 class GraphParametersWidget;
+class LibraryWidget;
 
 class MainWindow : public QMainWindow {
 Q_OBJECT
@@ -64,6 +65,8 @@ private:
   void createViewActions();
   void createHelpActions();
   void createGraphActions();
+  void createModelActions();
+  void createControlsActions();
   void createStatusBar();
 
   void readSettings();
@@ -76,12 +79,14 @@ private:
 
   bool createParametersWidgets();
   void showParameters();
+  bool createLibraryWidgets();
   void showLibrary();
-  void showMetaData(bool parsingResult, const std::string& msg = "");
+
 
   QDockWidget* createDockWindow(QWidget* widget, WidgetType pos, const QString& windowTitle = "Empty");
   Qt::DockWidgetArea getDockAreaForWidgetType(WidgetType type) const;
 
+  void showMetaData(bool parsingResult, const std::string& msg = "");
   void addModelResultWidget(QWidget* widget, const QString& title = "Empty");
   void addDefaultModelDesignWidget();
 
@@ -112,6 +117,7 @@ private:
   std::vector<QDockWidget*> m_docksList;
 
   GraphParametersWidget* m_graphParameters = nullptr;
+  LibraryWidget* m_library = nullptr;
 
   QPlainTextEdit* m_logOutput = nullptr;
 

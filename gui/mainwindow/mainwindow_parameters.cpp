@@ -1,5 +1,4 @@
 #include <QDockWidget>
-#include <QMenu>
 
 #include "mainwindow/mainwindow.h"
 #include "parameters/graphparameterswidget.h"

@@ -13,7 +13,9 @@ void MainWindow::createActions() {
   createEditActions();
   createViewActions();
   createHelpActions();
+  createControlsActions();
   createGraphActions();
+  createModelActions();
   createZoomActions();
 }
 
@@ -150,11 +152,47 @@ void MainWindow::createFileActions() {
   exitAct->setStatusTip(tr("Exit the application"));
 }
 
+void MainWindow::createModelActions() {
+//  QToolBar* modelToolBar = addToolBar(tr("Model"));
+}
+
+void MainWindow::createControlsActions() {
+  QToolBar* controlsToolBar = addToolBar(tr("Params"));
+
+  if(createLibraryWidgets()) {
+    const QIcon libraryIcon = QIcon::fromTheme("extensions", QIcon(":/images/extensions.png"));
+    QAction* showLib = new QAction(libraryIcon, tr("Library"), this);
+    showLib->setShortcuts(QKeySequence::Backspace);
+    showLib->setCheckable(true);
+    showLib->setStatusTip(tr("Show library to chose and add components to model"));
+    controlsToolBar->addAction(showLib);
+    m_viewMenu->addAction(showLib);
+
+    connect(showLib, &QAction::triggered, this, [this](){
+      this->showLibrary();
+    });
+  }
+
+  if(createParametersWidgets()) {
+    const QIcon parametersIcon = QIcon::fromTheme("document-properties", QIcon(":/images/settings.png"));
+    QAction* showParams = new QAction(parametersIcon, tr("Parameters"), this);
+    showParams->setShortcuts(QKeySequence::Preferences);
+    showParams->setCheckable(true);
+    showParams->setStatusTip(tr("Show parameters to configure component, design or graph"));
+    controlsToolBar->addAction(showParams);
+    m_viewMenu->addAction(showParams);
+
+    connect(showParams, &QAction::triggered, this, [this](){
+      this->showParameters();
+    });
+  }
+}
+
 void MainWindow::createGraphActions() {
   QToolBar* graphToolBar = addToolBar(tr("Graph"));
 
   const QIcon addIcon = QIcon::fromTheme("edit-add", QIcon(":/images/add.png"));
-  m_addGraphAction = new QAction(addIcon, tr("Add"), this);
+  m_addGraphAction = new QAction(addIcon, tr("Add plot"), this);
   m_addGraphAction->setStatusTip(tr("Select signals to plot new graph"));
   m_addGraphAction->setDisabled(true);
   graphToolBar->addAction(m_addGraphAction);
@@ -163,31 +201,6 @@ void MainWindow::createGraphActions() {
     if(this->m_modelResult) {
       this->showMetaData(true, "");
     }
-  });
-
-  if(createParametersWidgets()) {
-    const QIcon parametersIcon = QIcon::fromTheme("document-properties", QIcon(":/images/settings.png"));
-    QAction* showParams = new QAction(parametersIcon, tr("Parameters"), this);
-    showParams->setShortcuts(QKeySequence::Preferences);
-    showParams->setCheckable(true);
-    showParams->setStatusTip(tr("Show parameters to configure component, design or graph"));
-    graphToolBar->addAction(showParams);
-    m_viewMenu->addAction(showParams);
-
-    connect(showParams, &QAction::triggered, this, [this](){
-      this->showParameters();
-    });
-  }
-
-  // @TODO: Find correct icon fallback path
-  const QIcon libraryIcon = QIcon::fromTheme("extensions", QIcon(":/images/extensions.png"));
-  QAction* showLib = new QAction(libraryIcon, tr("Library"), this);
-  showLib->setShortcuts(QKeySequence::Backspace);
-  showLib->setStatusTip(tr("Show library to chose and add components to model"));
-  graphToolBar->addAction(showLib);
-
-  connect(showLib, &QAction::triggered, this, [this](){
-    this->showLibrary();
   });
 }
 
