@@ -4,7 +4,6 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QtWidgets>
-#include <QMenu>
 
 #include "mainwindow/mainwindow.h"
 
@@ -23,15 +22,15 @@ Qt::DockWidgetArea MainWindow::getDockAreaForWidgetType(WidgetType type) const {
   return area;
 }
 
-void MainWindow::createDockWindow(QWidget* widget, WidgetType type, const QString& windowTitle) {
+QDockWidget* MainWindow::createDockWindow(QWidget* widget, WidgetType type, const QString& windowTitle) {
   auto dockPosition = getDockAreaForWidgetType(type);
 
-  QDockWidget *dock = new QDockWidget(windowTitle, this);
+  QDockWidget* dock = new QDockWidget(windowTitle, this);
   dock->setAllowedAreas(dockPosition);
   dock->setWidget(widget);
 
   if(type == WidgetType::PARAMETERS || type == WidgetType::LIBRARY) {
-    m_viewMenu->addAction(dock->toggleViewAction());
+    dock->setHidden(true);
   }
 
   bool tabified = false;
@@ -40,7 +39,8 @@ void MainWindow::createDockWindow(QWidget* widget, WidgetType type, const QStrin
   }
 
   m_docksList.push_back(dock);
-//    m_viewMenu->addAction(dock->toggleViewAction());
+
+  return dock;
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {

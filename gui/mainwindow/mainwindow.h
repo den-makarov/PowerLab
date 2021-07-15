@@ -74,11 +74,12 @@ private:
   void setCurrentFile(const QString &fileName);
   QString strippedName(const QString &fullFileName);
 
-  void showLibrary();
+  bool createParametersWidgets();
   void showParameters();
+  void showLibrary();
   void showMetaData(bool parsingResult, const std::string& msg = "");
 
-  void createDockWindow(QWidget* widget, WidgetType pos, const QString& windowTitle = "Empty");
+  QDockWidget* createDockWindow(QWidget* widget, WidgetType pos, const QString& windowTitle = "Empty");
   Qt::DockWidgetArea getDockAreaForWidgetType(WidgetType type) const;
 
   void addModelResultWidget(QWidget* widget, const QString& title = "Empty");

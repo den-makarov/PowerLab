@@ -165,16 +165,19 @@ void MainWindow::createGraphActions() {
     }
   });
 
-  // @TODO: Find correct icon fallback path
-  const QIcon parametersIcon = QIcon::fromTheme("document-properties", QIcon(":/images/settings.png"));
-  QAction* showParams = new QAction(parametersIcon, tr("Parameters"), this);
-  showParams->setShortcuts(QKeySequence::Preferences);
-  showParams->setStatusTip(tr("Show parameters to configure component, design or graph"));
-  graphToolBar->addAction(showParams);
+  if(createParametersWidgets()) {
+    const QIcon parametersIcon = QIcon::fromTheme("document-properties", QIcon(":/images/settings.png"));
+    QAction* showParams = new QAction(parametersIcon, tr("Parameters"), this);
+    showParams->setShortcuts(QKeySequence::Preferences);
+    showParams->setCheckable(true);
+    showParams->setStatusTip(tr("Show parameters to configure component, design or graph"));
+    graphToolBar->addAction(showParams);
+    m_viewMenu->addAction(showParams);
 
-  connect(showParams, &QAction::triggered, this, [this](){
-    this->showParameters();
-  });
+    connect(showParams, &QAction::triggered, this, [this](){
+      this->showParameters();
+    });
+  }
 
   // @TODO: Find correct icon fallback path
   const QIcon libraryIcon = QIcon::fromTheme("extensions", QIcon(":/images/extensions.png"));
