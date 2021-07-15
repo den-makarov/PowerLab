@@ -11,6 +11,7 @@ void MainWindow::createActions() {
   // @NOTE: Order is matter
   createFileActions();
   createEditActions();
+  createViewActions();
   createHelpActions();
   createGraphActions();
   createZoomActions();
@@ -185,6 +186,11 @@ void MainWindow::createGraphActions() {
   connect(showLib, &QAction::triggered, this, [this](){
     this->showLibrary();
   });
+}
+
+void MainWindow::createViewActions() {
+  m_viewMenu = menuBar()->addMenu(tr("&View"));
+  menuBar()->addSeparator();
 }
 
 void MainWindow::createHelpActions() {

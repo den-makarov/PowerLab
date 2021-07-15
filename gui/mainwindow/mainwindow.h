@@ -61,6 +61,7 @@ private:
   void createZoomActions();
   void createEditActions();
   void createFileActions();
+  void createViewActions();
   void createHelpActions();
   void createGraphActions();
   void createStatusBar();
@@ -97,16 +98,16 @@ private:
   void setGraphWidgetZoom(bool enable);
   void graphWidgetZoom(ZoomKind zoom);
 
-  std::unique_ptr<Model::ModelResult> m_modelResult;
-
-  QString m_currentFile;
   std::vector<GraphWidget*> m_graphWidgetSet;
   QAbstractItemModel* m_graphData = nullptr;
-  QMenu* m_viewMenu;
-
+  std::unique_ptr<Model::ModelResult> m_modelResult;
   Model::ModelResult::MetaDataLoadCB m_metaDataLoadedCB;
 
+  QMenu* m_viewMenu;
   QAction* m_addGraphAction = nullptr;
+
+  QString m_currentFile;
+
   std::vector<QDockWidget*> m_docksList;
 
   GraphParametersWidget* m_graphParameters = nullptr;

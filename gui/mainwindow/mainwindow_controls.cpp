@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QtWidgets>
+#include <QMenu>
 
 #include "mainwindow/mainwindow.h"
 
@@ -28,6 +29,10 @@ void MainWindow::createDockWindow(QWidget* widget, WidgetType type, const QStrin
   QDockWidget *dock = new QDockWidget(windowTitle, this);
   dock->setAllowedAreas(dockPosition);
   dock->setWidget(widget);
+
+  if(type == WidgetType::PARAMETERS || type == WidgetType::LIBRARY) {
+    m_viewMenu->addAction(dock->toggleViewAction());
+  }
 
   bool tabified = false;
   if(!tabified) {
