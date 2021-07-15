@@ -11,8 +11,11 @@ class ParametersWidget : public QWidget {
 public:
   explicit ParametersWidget(QWidget *parent = nullptr);
 
-signals:
+  QSize sizeHint() const;
 
+private:
+  constexpr static int PREFERRED_WIDGIT_WIDTH_HINT = 200;
+  constexpr static int PREFERRED_WIDGIT_HEIGHT_HINT = 1000;
 };
 
 } // namespace Gui
