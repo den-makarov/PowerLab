@@ -22,6 +22,7 @@ std::string getMessagePhrase(GuiMessage msg) {
     {GuiMessage::ERROR_ATTEMPT_PLOT_SAME_SIGNAL, "Attempt to add signal to graph that already has signal with similar name %1%"},
     {GuiMessage::ERROR_NO_DATA_TO_PLOT, "No data to plot graphs"},
     {GuiMessage::ERROR_NO_SELECTED_SIGNALS_TO_PLOT, "No signals were selected to plot"},
+    {GuiMessage::ERROR_INVALID_NUMBER_OF_GRID_LINES, "Number %1% of grid lines isn't supported. Chose from range (%2%, %3%)"},
   };
 
   return msgPhrases.at(msg);

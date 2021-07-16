@@ -47,6 +47,12 @@ public:
   void resetDefaultView();
   void zoomGraph(double factor);
 
+  const Plot& getPlot() const;
+  Plot& getPlot();
+
+  const GraphProcessor& getGraphProcessor() const;
+  GraphProcessor& getGraphProcessor();
+
   virtual QSize sizeHint() const override;
 public slots:
   void plot();

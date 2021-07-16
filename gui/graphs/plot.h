@@ -46,6 +46,9 @@ public:
   void setBackground(QColor bgcolor);
   QColor getBackground() const;
 
+  void setGridColor(QColor bgcolor);
+  QColor getGridColor() const;
+
   void setBounds(const ValueBounds& boundaries);
   ValueBounds getBounds() const;
   QRectF getBoundsRect() const;
@@ -64,7 +67,16 @@ public:
   void clearYAxisLabels();
 
   void setAutoGrid(bool enabled);
-  void setMainGridLinesNumber(int xNumber, int yNumber);
+  bool isAutoGrid() const;
+
+  void setMainGridLinesXNumber(int xNumber);
+  void setMainGridLinesYNumber(int yNumber);
+  int getMainGridLinesXNumber() const;
+  int getMainGridLinesYNumber() const;
+
+  ValueBounds getGridLabelsBounds() const;
+  void setGridLabelsBounds(ValueBounds gridLabels);
+
   void setBorder(bool isBorder);
 
   void update(QPainter* painter);
@@ -111,6 +123,7 @@ private:
   std::vector<AxisLabel> m_XLabels;
   std::vector<AxisLabel> m_YLabels;
   QColor m_bgcolor = Qt::white;
+  QColor m_gridColor = {0xB0, 0xB0, 0xB0};
 
   static constexpr int MIN_SPACE_BETWEEN_X_GRID_LINES_PXL = 100;
   static constexpr int MIN_SPACE_BETWEEN_Y_GRID_LINES_PXL = 20;

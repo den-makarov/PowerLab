@@ -41,9 +41,24 @@ void Plot::setBorder(bool isBorder) {
   m_border = isBorder;
 }
 
-void Plot::setMainGridLinesNumber(int xNumber, int yNumber) {
+int Plot::getMainGridLinesXNumber() const {
+  return m_autoGrid ? -1 : m_gridXNumber;
+}
+
+int Plot::getMainGridLinesYNumber() const {
+  return m_autoGrid ? -1 : m_gridYNumber;
+}
+
+void Plot::setMainGridLinesXNumber(int xNumber) {
   if(!m_autoGrid) {
     m_gridXNumber = xNumber;
+  } else {
+    Logger::log(GuiMessage::WARNING_SET_PLOT_GRID_LINES_ON_AUTO_GRID);
+  }
+}
+
+void Plot::setMainGridLinesYNumber(int yNumber) {
+  if(!m_autoGrid) {
     m_gridYNumber = yNumber;
   } else {
     Logger::log(GuiMessage::WARNING_SET_PLOT_GRID_LINES_ON_AUTO_GRID);
@@ -61,6 +76,10 @@ Plot::ValueBounds Plot::getBounds() const {
   return m_bounds;
 }
 
+bool Plot::isAutoGrid() const {
+  return m_autoGrid;
+}
+
 void Plot::setAutoGrid(bool enabled) {
   m_autoGrid = enabled;
 }
@@ -75,6 +94,14 @@ void Plot::setAxisXLog(bool isLog) {
 
 void Plot::setAxisYLog(bool isLog) {
   m_isYLog = isLog;
+}
+
+void Plot::setGridColor(QColor color) {
+  m_gridColor = color;
+}
+
+QColor Plot::getGridColor() const {
+  return m_gridColor;
 }
 
 void Plot::setBackground(QColor bgcolor) {
@@ -97,6 +124,20 @@ void Plot::addYAxisLabel(const std::string& label, QColor textColor) {
   m_YLabels.emplace_back(label, textColor);
 }
 
+Plot::ValueBounds Plot::getGridLabelsBounds() const {
+  ValueBounds bounds;
+  bounds.xMin = m_gridLabelsRect.left();
+  bounds.xMax = m_gridLabelsRect.right();
+  bounds.yMin = m_gridLabelsRect.bottom();
+  bounds.yMax = m_gridLabelsRect.top();
+  return bounds;
+}
+
+void Plot::setGridLabelsBounds(ValueBounds gridLabels) {
+  m_gridLabelsRect.setBottomLeft({gridLabels.xMin, gridLabels.yMin});
+  m_gridLabelsRect.setTopRight({gridLabels.xMax, gridLabels.yMax});
+}
+
 void Plot::update(QPainter* painter) {
   if(painter == nullptr) {
     return;
@@ -113,7 +154,10 @@ void Plot::update(QPainter* painter) {
                     m_height - (m_margins.top + m_margins.bottom),
                     m_bgcolor);
 
-  calculateGridLinesNumber();
+  if(m_autoGrid) {
+    calculateGridLinesNumber();
+  }
+
   drawGrid(*painter);
   drawBorder(*painter);
   drawAxisLabels(*painter);
@@ -307,7 +351,7 @@ void Plot::drawYGrid(QPainter& painter) const {
 }
 
 void Plot::drawGrid(QPainter& painter) const {
-  QPen pen({0xB0, 0xB0, 0xB0});
+  QPen pen(m_gridColor);
   pen.setWidth(1);
   pen.setStyle(Qt::DashDotLine);
   painter.setPen(pen);

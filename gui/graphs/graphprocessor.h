@@ -23,6 +23,7 @@ public:
   GraphProcessor();
 
   void setPenColor(QColor color);
+  void setPenWidth(int width);
   void setPlotLimits(QRect plotLimits);
 
   void plot(QPainter *painter, GraphPoints points, QRectF graphValueLimits) const;

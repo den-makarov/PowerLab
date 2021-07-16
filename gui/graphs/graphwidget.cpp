@@ -116,6 +116,22 @@ GraphWidget::GraphWidget(QWidget *parent, GraphProcessor* graph, Plot* plot)
   setFocusPolicy(Qt::StrongFocus);
 }
 
+const Plot& GraphWidget::getPlot() const {
+  return *m_plot;
+}
+
+Plot& GraphWidget::getPlot() {
+  return *m_plot;
+}
+
+const GraphProcessor& GraphWidget::getGraphProcessor() const {
+  return *m_graphProcessor;
+}
+
+GraphProcessor& GraphWidget::getGraphProcessor() {
+  return *m_graphProcessor;
+}
+
 QSize GraphWidget::sizeHint() const {
   return QSize(PREFERRED_WIDGIT_WIDTH_HINT, PREFERRED_WIDGIT_HEIGHT_HINT);
 }

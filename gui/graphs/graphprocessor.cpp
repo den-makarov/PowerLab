@@ -78,6 +78,10 @@ void GraphProcessor::setPenColor(QColor color) {
   m_pen.setColor(color);
 }
 
+void GraphProcessor::setPenWidth(int width) {
+  m_pen.setWidth(width);
+}
+
 void GraphProcessor::setPlotLimits(QRect plotLimits) {
   m_plotLimits = plotLimits;
 }
