@@ -11,7 +11,7 @@ namespace Gui {
 class GraphWidget;
 
 class GraphParametersModel final {
-  Q_OBJECT
+//  Q_OBJECT
 public:
   using GraphDataIdx = size_t;
 
@@ -45,26 +45,27 @@ public:
   GraphDataIdx getGraphNumber() const;
 
   QColor getGraphColor(GraphDataIdx idx) const;
-  void setGraphColor(GraphDataIdx idx, QColor);
+  void setGraphColor(GraphDataIdx idx, QColor color);
 
   int getLineWidth(GraphDataIdx idx) const;
-  void setLineWidth(GraphDataIdx idx, int);
+  bool setLineWidth(GraphDataIdx idx, int);
 
   std::string getGraphName(GraphDataIdx idx) const;
-  void setGraphName(GraphDataIdx idx, std::string) const;
+  void setGraphName(GraphDataIdx idx, std::string name) const;
 
   std::string getGraphUnits(GraphDataIdx idx) const;
-  void setGraphUnits(GraphDataIdx idx, std::string) const;
+  void setGraphUnits(GraphDataIdx idx, std::string units) const;
 
-  std::string getReferenceName(GraphDataIdx idx) const;
-  void setReferencehName(GraphDataIdx idx, std::string) const;
+  std::string getReferenceName() const;
+  void setReferencehName(std::string name);
 
-  std::string getReferenceUnits(GraphDataIdx idx) const;
-  void setReferenceUnits(GraphDataIdx idx, std::string) const;
+  std::string getReferenceUnits() const;
+  void setReferenceUnits(std::string units);
 
 private:
   GraphWidget& m_graph;
 
+  constexpr static int MAX_GRAPH_LINE_WIDTH = 10;
   constexpr static int MAX_GRID_LINES_NUMBER = 50;
 };
 

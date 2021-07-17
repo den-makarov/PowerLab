@@ -32,6 +32,7 @@ public:
     double minValue = 0.0;
     double maxValue = 0.0;
     QColor color = Qt::black;
+    int width = 1;
   };
 
   GraphWidget(QWidget *parent = nullptr, GraphProcessor* graph = nullptr, Plot* plot = nullptr);
@@ -46,6 +47,12 @@ public:
 
   void resetDefaultView();
   void zoomGraph(double factor);
+
+  size_t getGraphCount() const;
+  const GraphData* getGraphData(size_t idx) const;
+  GraphData* getGraphData(size_t idx);
+  const GraphData& getGraphReferenceData() const;
+  GraphData& getGraphReferenceData();
 
   const Plot& getPlot() const;
   Plot& getPlot();

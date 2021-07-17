@@ -124,6 +124,36 @@ Plot& GraphWidget::getPlot() {
   return *m_plot;
 }
 
+size_t GraphWidget::getGraphCount() const {
+  return m_graphs.size();
+}
+
+const GraphWidget::GraphData* GraphWidget::getGraphData(size_t idx) const {
+  if(idx >= m_graphs.size()) {
+    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_INDEX, idx);
+    return nullptr;
+  } else {
+    return &m_graphs.at(idx);
+  }
+}
+
+GraphWidget::GraphData* GraphWidget::getGraphData(size_t idx) {
+  if(idx >= m_graphs.size()) {
+    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_INDEX, idx);
+    return nullptr;
+  } else {
+    return &m_graphs.at(idx);
+  }
+}
+
+const GraphWidget::GraphData& GraphWidget::getGraphReferenceData() const {
+  return m_horizontalScale;
+}
+
+GraphWidget::GraphData& GraphWidget::getGraphReferenceData() {
+  return m_horizontalScale;
+}
+
 const GraphProcessor& GraphWidget::getGraphProcessor() const {
   return *m_graphProcessor;
 }

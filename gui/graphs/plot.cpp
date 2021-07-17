@@ -108,6 +108,10 @@ void Plot::setBackground(QColor bgcolor) {
   m_bgcolor = bgcolor;
 }
 
+QColor Plot::getBackground() const {
+  return m_bgcolor;
+}
+
 void Plot::clearXAxisLabels() {
   m_XLabels.clear();
 }

@@ -92,55 +92,79 @@ void GraphParametersModel::setGridLinesEnd(GridSide side, double end) {
 }
 
 GraphParametersModel::GraphDataIdx GraphParametersModel::getGraphNumber() const {
-
+  return m_graph.getGraphCount();
 }
 
 QColor GraphParametersModel::getGraphColor(GraphDataIdx idx) const {
-
+  auto graphData = m_graph.getGraphData(idx);
+  return graphData != nullptr ? graphData->color : Qt::black;
 }
 
-void GraphParametersModel::setGraphColor(GraphDataIdx idx, QColor) {
-
+void GraphParametersModel::setGraphColor(GraphDataIdx idx, QColor color) {
+  auto graphData = m_graph.getGraphData(idx);
+  if(graphData != nullptr) {
+    graphData->color = color;
+  }
 }
 
 int GraphParametersModel::getLineWidth(GraphDataIdx idx) const {
-
+  auto graphData = m_graph.getGraphData(idx);
+  return graphData != nullptr ? graphData->width : 0;
 }
 
-void GraphParametersModel::setLineWidth(GraphDataIdx idx, int) {
+bool GraphParametersModel::setLineWidth(GraphDataIdx idx, int width) {
+  if(width < 1 || MAX_GRAPH_LINE_WIDTH < width) {
+    Logger::log(GuiMessage::WARNING_FORBIDDEN_LINE_WIDTH, width, 1, MAX_GRAPH_LINE_WIDTH);
+    return false;
+  }
 
+  auto graphData = m_graph.getGraphData(idx);
+  if(graphData != nullptr) {
+    graphData->width = width;
+    return true;
+  }
+
+  return false;
 }
 
 std::string GraphParametersModel::getGraphName(GraphDataIdx idx) const {
-
+  auto graphData = m_graph.getGraphData(idx);
+  return graphData != nullptr ? graphData->name : "";
 }
 
-void GraphParametersModel::setGraphName(GraphDataIdx idx, std::string) const {
-
+void GraphParametersModel::setGraphName(GraphDataIdx idx, std::string name) const {
+  auto graphData = m_graph.getGraphData(idx);
+  if(graphData != nullptr) {
+    graphData->name = name;
+  }
 }
 
 std::string GraphParametersModel::getGraphUnits(GraphDataIdx idx) const {
-
+  auto graphData = m_graph.getGraphData(idx);
+  return graphData != nullptr ? graphData->units : "";
 }
 
-void GraphParametersModel::setGraphUnits(GraphDataIdx idx, std::string) const {
-
+void GraphParametersModel::setGraphUnits(GraphDataIdx idx, std::string units) const {
+  auto graphData = m_graph.getGraphData(idx);
+  if(graphData != nullptr) {
+    graphData->units = units;
+  }
 }
 
-std::string GraphParametersModel::getReferenceName(GraphDataIdx idx) const {
-
+std::string GraphParametersModel::getReferenceName() const {
+  return m_graph.getGraphReferenceData().name;
 }
 
-void GraphParametersModel::setReferencehName(GraphDataIdx idx, std::string) const {
-
+void GraphParametersModel::setReferencehName(std::string name) {
+  m_graph.getGraphReferenceData().name = name;
 }
 
-std::string GraphParametersModel::getReferenceUnits(GraphDataIdx idx) const {
-
+std::string GraphParametersModel::getReferenceUnits() const {
+  return m_graph.getGraphReferenceData().units;
 }
 
-void GraphParametersModel::setReferenceUnits(GraphDataIdx idx, std::string) const {
-
+void GraphParametersModel::setReferenceUnits(std::string units) {
+  m_graph.getGraphReferenceData().units = units;
 }
 
 } // namespace Gui
