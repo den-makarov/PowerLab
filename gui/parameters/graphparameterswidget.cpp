@@ -3,9 +3,11 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QApplication>
+#include <QCheckBox>
 
 #include "graphparameterswidget.h"
 #include "graphs/graphwidget.h"
+#include "graphs/graphparametersmodel.h"
 
 namespace PowerLab {
 namespace Gui {
@@ -26,7 +28,7 @@ void GraphParametersWidget::updateGraphList(std::vector<GraphWidget*> graphs) {
 void GraphParametersWidget::createGraphListSelector() {
   QGroupBox* graphWidgetsGroup = new QGroupBox(tr("Graph selector"));
 
-  QVBoxLayout *graphWidgetLayout = new QVBoxLayout;
+  QVBoxLayout* graphWidgetLayout = new QVBoxLayout;
   m_graphWidgetList = new QComboBox;
   for(size_t idx = 0; idx < m_graphs.size(); idx++) {
     auto graph = m_graphs[idx];
@@ -37,11 +39,11 @@ void GraphParametersWidget::createGraphListSelector() {
   graphWidgetLayout->addWidget(m_graphWidgetList);
   graphWidgetsGroup->setLayout(graphWidgetLayout);
 
-  QGridLayout* grid = new QGridLayout;
-  grid->setAlignment(Qt::AlignTop);
-  grid->addWidget(graphWidgetsGroup, 0, 0);
+  m_grid = new QGridLayout;
+  m_grid->setAlignment(Qt::AlignTop);
+  m_grid->addWidget(graphWidgetsGroup, 0, 0);
 
-  setLayout(grid);
+  setLayout(m_grid);
 }
 
 void GraphParametersWidget::updateView() {
@@ -88,6 +90,21 @@ void GraphParametersWidget::updateGraphParamsView(GraphWidget* graph) {
   if(!graph) {
     return;
   }
+
+  GraphParametersModel model(*graph);
+
+  QGroupBox* graphGridSettingsGroup = new QGroupBox(tr("Grid settings"));
+  QVBoxLayout* graphGridSettingsLayout = new QVBoxLayout;
+
+  QCheckBox* isAutoGrid = new QCheckBox("Auto grid");
+  isAutoGrid->setChecked(model.isAutoGrid());
+
+  graphGridSettingsLayout->setAlignment(Qt::AlignTop);
+  graphGridSettingsLayout->addWidget(isAutoGrid);
+
+  graphGridSettingsGroup->setLayout(graphGridSettingsLayout);
+
+  m_grid->addWidget(graphGridSettingsGroup, 1, 0);
 }
 
 } // namespace Gui

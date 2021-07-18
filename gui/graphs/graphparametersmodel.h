@@ -25,17 +25,17 @@ public:
   QRectF getValueBounds() const;
   void setValueBounds(QRectF bounds);
 
-  bool isAutoGrid() const;
-  void setAutoGrid(bool isAuto);
-
-  int getGridLinesNumber(GridSide side) const;
-  void setGridLinesNumber(GridSide side, int number);
-
   QColor getGridLinesColor() const;
   void setGridLinesColor(QColor color);
 
   QColor getBackgroundColor() const;
   void setBackgroundColor(QColor color);
+
+  bool isAutoGrid() const;
+  void setAutoGrid(bool isAuto);
+
+  int getGridLinesNumber(GridSide side) const;
+  void setGridLinesNumber(GridSide side, int number);
 
   double getGridLinesOrigin(GridSide side) const;
   void setGridLinesOrigin(GridSide side, double origin);

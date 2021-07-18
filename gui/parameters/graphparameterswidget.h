@@ -4,6 +4,7 @@
 #include "parameterswidget.h"
 
 class QComboBox;
+class QGridLayout;
 
 namespace PowerLab {
 namespace Gui {
@@ -27,6 +28,7 @@ private:
 
   std::vector<GraphWidget*> m_graphs;
   QComboBox* m_graphWidgetList = nullptr;
+  QGridLayout* m_grid;
 
   constexpr static int NO_GRAPH_FOCUSED = -1;
 };
