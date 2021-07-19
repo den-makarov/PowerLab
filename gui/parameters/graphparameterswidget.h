@@ -5,6 +5,8 @@
 
 class QComboBox;
 class QGridLayout;
+class QPushButton;
+class QCheckBox;
 
 namespace PowerLab {
 namespace Gui {
@@ -21,14 +23,24 @@ signals:
   void graphListUpdated();
 
 private:
-  void updateGraphParamsView(GraphWidget* graph);
+  void updateGraphParametersView(GraphWidget* graph);
   void updateView();
-  void createGraphListSelector();
+
+  void setGraphParametersVisible(bool visible);
+
+  void createGraphSelector();
+  void createPlotColorControls();
+  void createPlotGridControls();
+  void createGraphDataControls();
+
   int findFocusedGraphIdx() const;
 
   std::vector<GraphWidget*> m_graphs;
-  QComboBox* m_graphWidgetList = nullptr;
-  QGridLayout* m_grid;
+  QGridLayout* m_grid = nullptr;
+  QComboBox* m_graphSelector = nullptr;
+  QPushButton* m_bgColorButton = nullptr;
+  QPushButton* m_gridColors = nullptr;
+  QCheckBox* m_isAutoGrid = nullptr;
 
   constexpr static int NO_GRAPH_FOCUSED = -1;
 };

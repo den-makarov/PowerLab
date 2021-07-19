@@ -285,7 +285,6 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
     m_plot->setArea(width(), height());
   }
 
-  m_plot->setBackground(QColor(0xFF, 0xFF, 0xA0));
   setupDefaultPlotMargins();
   m_graphProcessor->setPlotLimits(m_plot->getMarginsRect());
 
@@ -294,6 +293,8 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 //  paintDemoThreePhaseSignal(&painter, 0);
   for(auto& graphData : m_graphs) {
     m_graphProcessor->setPenColor(graphData.color);
+    m_graphProcessor->setPenWidth(graphData.width);
+
     GraphProcessor::GraphPoints points{m_horizontalScale.points, graphData.points};
     m_graphProcessor->plot(&painter, points, m_plot->getBoundsRect());
   }

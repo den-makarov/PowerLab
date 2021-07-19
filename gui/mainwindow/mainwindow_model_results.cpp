@@ -83,8 +83,6 @@ void MainWindow::drawGraph() {
   addModelResultWidget(graphWidget,
                        title);
 
-  emit newGraphWidget(graphWidget);
-
   std::vector<std::string> signalNames;
   if(m_graphData) {
     int rows = m_graphData->rowCount();
@@ -115,6 +113,8 @@ void MainWindow::drawGraph() {
   }
 
   graphWidget->plot();
+
+  emit newGraphWidget(graphWidget);
 }
 
 } // namespace Gui

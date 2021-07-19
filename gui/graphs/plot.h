@@ -122,7 +122,7 @@ private:
   Margins m_margins = {0, 0, 0, 0};
   std::vector<AxisLabel> m_XLabels;
   std::vector<AxisLabel> m_YLabels;
-  QColor m_bgcolor = Qt::white;
+  QColor m_bgcolor = {0xFF, 0xFF, 0xA0};
   QColor m_gridColor = {0xB0, 0xB0, 0xB0};
 
   static constexpr int MIN_SPACE_BETWEEN_X_GRID_LINES_PXL = 100;
