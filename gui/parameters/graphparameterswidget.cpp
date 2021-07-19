@@ -107,12 +107,22 @@ void GraphParametersWidget::createPlotGridControls() {
   addLabel(tr("H min"), 6, 0);
   m_hMin = new QDoubleSpinBox;
   m_hMin->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+  connect(m_hMin, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+          [this](double value){
+    this->updateGridLinesRange(value, SideControl::HORIZONTAL_MIN);
+  });
+
   m_grid->addWidget(m_hMin, 6, 1);
   m_manualGridControls.push_back(m_hMin);
 
   addLabel(tr("H max"), 7, 0);
   m_hMax = new QDoubleSpinBox;
   m_hMax->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+  connect(m_hMax, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+          [this](double value){
+    this->updateGridLinesRange(value, SideControl::HORIZONTAL_MAX);
+  });
+
   m_grid->addWidget(m_hMax, 7, 1);
   m_manualGridControls.push_back(m_hMax);
 
@@ -120,18 +130,33 @@ void GraphParametersWidget::createPlotGridControls() {
   m_hLines = new QSpinBox;
   m_hLines->setRange(0, 40);
   m_hLines->setSingleStep(1);
+  connect(m_hLines, QOverload<int>::of(&QSpinBox::valueChanged),
+          [this](int value){
+    this->updateGridLinesNumber(value, true);
+  });
+
   m_grid->addWidget(m_hLines, 8, 1);
   m_manualGridControls.push_back(m_hLines);
 
   addLabel(tr("V min"), 9, 0);
   m_vMin = new QDoubleSpinBox;
   m_vMin->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+  connect(m_vMin, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+          [this](double value){
+    this->updateGridLinesRange(value, SideControl::VERTICAL_MIN);
+  });
+
   m_grid->addWidget(m_vMin, 9, 1);
   m_manualGridControls.push_back(m_vMin);
 
   addLabel(tr("V max"), 10, 0);
   m_vMax = new QDoubleSpinBox;
   m_vMax->setRange(std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max());
+  connect(m_vMax, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+          [this](double value){
+    this->updateGridLinesRange(value, SideControl::VERTICAL_MAX);
+  });
+
   m_grid->addWidget(m_vMax, 10, 1);
   m_manualGridControls.push_back(m_vMax);
 
@@ -139,6 +164,11 @@ void GraphParametersWidget::createPlotGridControls() {
   m_vLines = new QSpinBox;
   m_vLines->setRange(0, 40);
   m_vLines->setSingleStep(1);
+  connect(m_vLines, QOverload<int>::of(&QSpinBox::valueChanged),
+          [this](int value){
+    this->updateGridLinesNumber(value, false);
+  });
+
   m_grid->addWidget(m_vLines, 11, 1);
   m_manualGridControls.push_back(m_vLines);
 }
@@ -348,6 +378,51 @@ void GraphParametersWidget::colorControlRequested(ColorControl control) {
 
   buttonControl->setPalette(QPalette(color));
   buttonControl->setAutoFillBackground(true);
+}
+
+void GraphParametersWidget::updateGridLinesRange(double value, SideControl side) {
+  auto graph = getCurrentGraph();
+  if(!graph) {
+    return;
+  }
+
+  GraphParametersModel model(*graph);
+
+  switch(side) {
+    case SideControl::HORIZONTAL_MIN:
+      model.setGridLinesOrigin(GraphParametersModel::GridSide::X_SIDE, value);
+      break;
+
+    case SideControl::HORIZONTAL_MAX:
+      model.setGridLinesEnd(GraphParametersModel::GridSide::X_SIDE, value);
+      break;
+
+    case SideControl::VERTICAL_MIN:
+      model.setGridLinesOrigin(GraphParametersModel::GridSide::Y_SIDE, value);
+      break;
+
+    case SideControl::VERTICAL_MAX:
+      model.setGridLinesEnd(GraphParametersModel::GridSide::Y_SIDE, value);
+      break;
+  }
+
+  graph->repaint();
+}
+
+void GraphParametersWidget::updateGridLinesNumber(int value, bool isHorizontal) {
+  auto graph = getCurrentGraph();
+  if(!graph) {
+    return;
+  }
+
+  GraphParametersModel model(*graph);
+  if(isHorizontal) {
+    model.setGridLinesNumber(GraphParametersModel::GridSide::X_SIDE, value);
+  } else {
+    model.setGridLinesNumber(GraphParametersModel::GridSide::Y_SIDE, value);
+  }
+
+  graph->repaint();
 }
 
 } // namespace Gui

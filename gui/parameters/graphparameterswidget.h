@@ -32,10 +32,19 @@ private:
     GRAPH_DATA_LINE_COLOR
   };
 
+  enum class SideControl {
+    HORIZONTAL_MIN,
+    HORIZONTAL_MAX,
+    VERTICAL_MIN,
+    VERTICAL_MAX
+  };
+
 private slots:
   void graphSelectorChanged(int idx);
   void autoGridChanged(int state);
   void colorControlRequested(ColorControl control);
+  void updateGridLinesRange(double value, SideControl side);
+  void updateGridLinesNumber(int value, bool isHorizontal);
 
 private:
   void updateView();
