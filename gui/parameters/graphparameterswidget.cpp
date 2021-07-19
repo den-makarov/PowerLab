@@ -7,6 +7,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QColorDialog>
+#include <QSpinBox>
+#include <QDoubleSpinBox>
 
 #include "graphparameterswidget.h"
 #include "graphs/graphwidget.h"
@@ -108,6 +110,15 @@ void GraphParametersWidget::createPlotColorControls() {
 
   m_grid->addWidget(m_gridColors, 3, 1);
   addHorizontalSeparator(4);
+
+  m_layoutElements.push_back(m_bgColorButton);
+  m_layoutElements.push_back(m_gridColors);
+}
+
+void GraphParametersWidget::addLabel(const QString& text, int row, int column) {
+  QLabel* label = new QLabel(text);
+  m_grid->addWidget(label, row, column);
+  m_layoutElements.push_back(label);
 }
 
 void GraphParametersWidget::createPlotGridControls() {
@@ -115,6 +126,43 @@ void GraphParametersWidget::createPlotGridControls() {
   m_isAutoGrid->setChecked(true);
 
   m_grid->addWidget(m_isAutoGrid, 5, 0, 1, -1);
+  m_layoutElements.push_back(m_isAutoGrid);
+
+  addLabel(tr("H min"), 6, 0);
+  m_hMin = new QDoubleSpinBox;
+  m_grid->addWidget(m_hMin, 6, 1);
+  m_manualGridControls.push_back(m_hMin);
+
+  addLabel(tr("H max"), 7, 0);
+  m_hMax = new QDoubleSpinBox;
+  m_grid->addWidget(m_hMax, 7, 1);
+  m_manualGridControls.push_back(m_hMax);
+
+  addLabel(tr("H lines"), 8, 0);
+  m_hLines = new QSpinBox;
+  m_grid->addWidget(m_hLines, 8, 1);
+  m_manualGridControls.push_back(m_hLines);
+
+  addLabel(tr("V min"), 9, 0);
+  m_vMin = new QDoubleSpinBox;
+  m_grid->addWidget(m_vMin, 9, 1);
+  m_manualGridControls.push_back(m_vMin);
+
+  addLabel(tr("V max"), 10, 0);
+  m_vMax = new QDoubleSpinBox;
+  m_grid->addWidget(m_vMax, 10, 1);
+  m_manualGridControls.push_back(m_vMax);
+
+  addLabel(tr("V lines"), 11, 0);
+  m_vLines = new QSpinBox;
+  m_grid->addWidget(m_vLines, 11, 1);
+  m_manualGridControls.push_back(m_vLines);
+}
+
+void GraphParametersWidget::setManualGridControlsEnabled(bool enabled) {
+  for(auto item : m_manualGridControls) {
+    item->setEnabled(enabled);
+  }
 }
 
 void GraphParametersWidget::createGraphDataControls() {
@@ -139,9 +187,6 @@ void GraphParametersWidget::updateView() {
 }
 
 void GraphParametersWidget::setGraphParametersVisible(bool visible) {
-  m_bgColorButton->setVisible(visible);
-  m_gridColors->setVisible(visible);
-  m_isAutoGrid->setVisible(visible);
   for(auto item : m_layoutElements) {
     item->setVisible(visible);
   }
@@ -185,6 +230,12 @@ void GraphParametersWidget::updateGraphParametersView(GraphWidget* graph) {
   m_gridColors->setAutoFillBackground(true);
 
   m_isAutoGrid->setChecked(model.isAutoGrid());
+
+  if(m_isAutoGrid->isChecked()) {
+    setManualGridControlsEnabled(false);
+  } else {
+    setManualGridControlsEnabled(true);
+  }
 }
 
 } // namespace Gui

@@ -7,6 +7,8 @@ class QComboBox;
 class QGridLayout;
 class QPushButton;
 class QCheckBox;
+class QSpinBox;
+class QDoubleSpinBox;
 
 namespace PowerLab {
 namespace Gui {
@@ -33,6 +35,8 @@ private:
   void createPlotGridControls();
   void createGraphDataControls();
   void addHorizontalSeparator(int rowIndex);
+  void addLabel(const QString& text, int row, int column);
+  void setManualGridControlsEnabled(bool enabled);
 
   int findFocusedGraphIdx() const;
 
@@ -42,7 +46,15 @@ private:
   QPushButton* m_bgColorButton = nullptr;
   QPushButton* m_gridColors = nullptr;
   QCheckBox* m_isAutoGrid = nullptr;
+  QSpinBox* m_hLines = nullptr;
+  QSpinBox* m_vLines = nullptr;
+  QDoubleSpinBox* m_hMin = nullptr;
+  QDoubleSpinBox* m_hMax = nullptr;
+  QDoubleSpinBox* m_vMin = nullptr;
+  QDoubleSpinBox* m_vMax = nullptr;
+
   std::vector<QWidget*> m_layoutElements;
+  std::vector<QWidget*> m_manualGridControls;
 
   constexpr static int NO_GRAPH_FOCUSED = -1;
 };
