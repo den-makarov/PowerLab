@@ -55,6 +55,7 @@ private:
   void setManualGridControlsEnabled(bool enabled);
 
   int findFocusedGraphIdx() const;
+  GraphWidget* getCurrentGraph() const;
   void setDoubleSpinBoxValue(QDoubleSpinBox& box, double number);
 
   std::vector<GraphWidget*> m_graphs;

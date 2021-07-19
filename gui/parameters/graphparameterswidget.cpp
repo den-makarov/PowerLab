@@ -263,7 +263,26 @@ void GraphParametersWidget::updateGraphData(const GraphParametersModel&) {
 
 }
 
+GraphWidget* GraphParametersWidget::getCurrentGraph() const {
+  auto graphIdx = m_graphSelector->currentData();
+
+  if(graphIdx.isValid()) {
+    return m_graphs.at(graphIdx.toUInt());
+  } else {
+    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_SELECTOR_DATA,
+                m_graphSelector->currentIndex(),
+                m_graphSelector->currentText().toStdString());
+
+    return nullptr;
+  }
+}
+
 void GraphParametersWidget::graphSelectorChanged(int index) {
+  if(index == -1) {
+    // In case when QComboBox is cleared
+    return;
+  }
+
   GraphWidget* graph = nullptr;
   size_t idx = static_cast<size_t>(index);
 
@@ -276,21 +295,16 @@ void GraphParametersWidget::graphSelectorChanged(int index) {
 }
 
 void GraphParametersWidget::autoGridChanged(int state) {
-  auto graphIdx = m_graphSelector->currentData();
-  if(graphIdx.isValid()) {
-    auto graph = m_graphs.at(graphIdx.toUInt());
+  auto graph = getCurrentGraph();
+  if(graph) {
     GraphParametersModel model(*graph);
     model.setAutoGrid(state == Qt::Checked);
 
     if(state == Qt::Checked) {
-      m_graphs[graphIdx.toUInt()]->repaint();
+      graph->repaint();
     }
 
     updateGraphParametersView(graph);
-  } else {
-    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_SELECTOR_DATA,
-                m_graphSelector->currentIndex(),
-                m_graphSelector->currentText());
   }
 }
 
@@ -302,15 +316,12 @@ void GraphParametersWidget::colorControlRequested(ColorControl control) {
     return;
   }
 
-  auto graphIdx = m_graphSelector->currentData();
-  if(!graphIdx.isValid()) {
-    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_SELECTOR_DATA,
-                m_graphSelector->currentIndex(),
-                m_graphSelector->currentText());
+  auto graph = getCurrentGraph();
+  if(!graph) {
     return;
   }
 
-  GraphParametersModel model(*m_graphs[graphIdx.toUInt()]);
+  GraphParametersModel model(*graph);
   QPushButton* buttonControl = nullptr;
 
   switch(control) {
@@ -328,7 +339,7 @@ void GraphParametersWidget::colorControlRequested(ColorControl control) {
       break;
   }
 
-  m_graphs[graphIdx.toUInt()]->repaint();
+  graph->repaint();
 
   if(!buttonControl) {
     Logger::log(GuiMessage::ERROR_INVALID_BUTTON_COLOR_CONTROL);
