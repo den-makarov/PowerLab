@@ -38,6 +38,14 @@ void GraphParametersWidget::updateGraphList(std::vector<GraphWidget*> graphs) {
   emit graphListUpdated();
 }
 
+void GraphParametersWidget::addHorizontalSeparator(int rowIndex) {
+  QFrame *line = new QFrame;
+  line->setFrameShape(QFrame::HLine);
+  line->setFrameShadow(QFrame::Sunken);
+  m_grid->addWidget(line, rowIndex, 0, 1, -1);
+  m_layoutElements.push_back(line);
+}
+
 void GraphParametersWidget::createGraphSelector() {
   QLabel* graphSelectorLabel = new QLabel(tr("Graph selector"));
 
@@ -58,8 +66,9 @@ void GraphParametersWidget::createGraphSelector() {
     this->updateGraphParametersView(graph);
   });
 
-  m_grid->addWidget(graphSelectorLabel, 0, 0);
-  m_grid->addWidget(m_graphSelector, 1, 0);
+  m_grid->addWidget(graphSelectorLabel, 0, 0, 1, -1);
+  m_grid->addWidget(m_graphSelector, 1, 0, 1, -1);
+  addHorizontalSeparator(2);
 }
 
 void GraphParametersWidget::createPlotColorControls() {
@@ -98,13 +107,14 @@ void GraphParametersWidget::createPlotColorControls() {
   });
 
   m_grid->addWidget(m_gridColors, 3, 1);
+  addHorizontalSeparator(4);
 }
 
 void GraphParametersWidget::createPlotGridControls() {
   m_isAutoGrid = new QCheckBox("Auto grid");
   m_isAutoGrid->setChecked(true);
 
-  m_grid->addWidget(m_isAutoGrid, 5, 0);
+  m_grid->addWidget(m_isAutoGrid, 5, 0, 1, -1);
 }
 
 void GraphParametersWidget::createGraphDataControls() {
@@ -132,6 +142,9 @@ void GraphParametersWidget::setGraphParametersVisible(bool visible) {
   m_bgColorButton->setVisible(visible);
   m_gridColors->setVisible(visible);
   m_isAutoGrid->setVisible(visible);
+  for(auto item : m_layoutElements) {
+    item->setVisible(visible);
+  }
 }
 
 int GraphParametersWidget::findFocusedGraphIdx() const {

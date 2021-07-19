@@ -32,6 +32,7 @@ private:
   void createPlotColorControls();
   void createPlotGridControls();
   void createGraphDataControls();
+  void addHorizontalSeparator(int rowIndex);
 
   int findFocusedGraphIdx() const;
 
@@ -41,6 +42,7 @@ private:
   QPushButton* m_bgColorButton = nullptr;
   QPushButton* m_gridColors = nullptr;
   QCheckBox* m_isAutoGrid = nullptr;
+  std::vector<QWidget*> m_layoutElements;
 
   constexpr static int NO_GRAPH_FOCUSED = -1;
 };
