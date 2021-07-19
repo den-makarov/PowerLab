@@ -48,13 +48,35 @@ RoundedSegments findOptimalRoundedSegments(double from, double to, int maxStepNu
   return segments;
 }
 
+int orderOfTen(double value) {
+  int result = 0;
+
+  if(std::fabs(value) < 10 * std::numeric_limits<double>::epsilon()) {
+    return result;
+  }
+
+  if(std::fabs(value) > 10.0) {
+    while(std::fabs(value) > 10.0) {
+      value /= 10;
+      result++;
+    }
+  } else {
+    while(std::fabs(value) < 1.0) {
+      value *= 10;
+      result--;
+    }
+  }
+
+  return result;
+}
+
 std::ostream& operator<<(std::ostream& out, const RoundedSegments& rs) {
   out << "Segments: {" << rs.from
       << ", " << rs.to
       << ", " << rs.step << "}";
 
   if(!(std::isnan(rs.from) || std::isnan(rs.to) || std::isnan(rs.step))) {
-    int cnt = (rs.to - rs.from) / rs.step;
+    int cnt = static_cast<int>((rs.to - rs.from) / rs.step);
     out << " [";
     for(auto i = rs.from; i < rs.to && cnt >= 0; i += rs.step, cnt--) {
       out << i << ", ";

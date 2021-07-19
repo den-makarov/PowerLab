@@ -12,6 +12,8 @@ struct RoundedSegments {
   double step;
 };
 
+int orderOfTen(double value);
+
 RoundedSegments findOptimalRoundedSegments(double from, double to, int maxStepNumber);
 
 std::ostream& operator<<(std::ostream& out, const RoundedSegments& rs);

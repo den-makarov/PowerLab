@@ -13,6 +13,7 @@ class QDoubleSpinBox;
 namespace PowerLab {
 namespace Gui {
 
+class GraphParametersModel;
 class GraphWidget;
 
 class GraphParametersWidget : public ParametersWidget {
@@ -25,8 +26,23 @@ signals:
   void graphListUpdated();
 
 private:
-  void updateGraphParametersView(GraphWidget* graph);
+  enum class ColorControl {
+    BACKGROUND_COLOR,
+    GRID_LINES_COLOR,
+    GRAPH_DATA_LINE_COLOR
+  };
+
+private slots:
+  void graphSelectorChanged(int idx);
+  void autoGridChanged(int state);
+  void colorControlRequested(ColorControl control);
+
+private:
   void updateView();
+  void updateGraphParametersView(GraphWidget* graph);
+  void updateGridColors(const GraphParametersModel& model);
+  void updateGridLines(const GraphParametersModel& model);
+  void updateGraphData(const GraphParametersModel& model);
 
   void setGraphParametersVisible(bool visible);
 
@@ -39,6 +55,7 @@ private:
   void setManualGridControlsEnabled(bool enabled);
 
   int findFocusedGraphIdx() const;
+  void setDoubleSpinBoxValue(QDoubleSpinBox& box, double number);
 
   std::vector<GraphWidget*> m_graphs;
   QGridLayout* m_grid = nullptr;
