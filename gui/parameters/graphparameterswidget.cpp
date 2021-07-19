@@ -47,6 +47,17 @@ void GraphParametersWidget::createGraphSelector() {
     m_graphSelector->addItem(graph->objectName(), QVariant::fromValue(idx));
   }
 
+  connect(m_graphSelector, QOverload<int>::of(&QComboBox::currentIndexChanged), [this](int index){
+    GraphWidget* graph = nullptr;
+    size_t idx = static_cast<size_t>(index);
+
+    if(idx < this->m_graphs.size()) {
+      graph = this->m_graphs.at(idx);
+    }
+
+    this->updateGraphParametersView(graph);
+  });
+
   m_grid->addWidget(graphSelectorLabel, 0, 0);
   m_grid->addWidget(m_graphSelector, 1, 0);
 }
