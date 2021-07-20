@@ -43,12 +43,14 @@ private slots:
   void graphSelectorChanged(int idx);
   void autoGridChanged(int state);
   void colorControlRequested(ColorControl control);
+  void updatePlotScaleRange(double value, SideControl side);
   void updateGridLinesRange(double value, SideControl side);
   void updateGridLinesNumber(int value, bool isHorizontal);
 
 private:
   void updateView();
   void updateGraphParametersView(GraphWidget* graph);
+  void updatePlotScale(const GraphParametersModel& model);
   void updateGridColors(const GraphParametersModel& model);
   void updateGridLines(const GraphParametersModel& model);
   void updateGraphData(const GraphParametersModel& model);
@@ -57,6 +59,7 @@ private:
 
   void createGraphSelector();
   void createPlotColorControls();
+  void createPlotScaleControls();
   void createPlotGridControls();
   void createGraphDataControls();
   void addHorizontalSeparator(int rowIndex);
@@ -73,16 +76,23 @@ private:
   QPushButton* m_bgColorButton = nullptr;
   QPushButton* m_gridColors = nullptr;
   QCheckBox* m_isAutoGrid = nullptr;
-  QSpinBox* m_hLines = nullptr;
-  QSpinBox* m_vLines = nullptr;
-  QDoubleSpinBox* m_hMin = nullptr;
-  QDoubleSpinBox* m_hMax = nullptr;
-  QDoubleSpinBox* m_vMin = nullptr;
-  QDoubleSpinBox* m_vMax = nullptr;
+
+  QSpinBox* m_hGridLines = nullptr;
+  QSpinBox* m_vGridLines = nullptr;
+  QDoubleSpinBox* m_hGridMin = nullptr;
+  QDoubleSpinBox* m_hGridMax = nullptr;
+  QDoubleSpinBox* m_vGridMin = nullptr;
+  QDoubleSpinBox* m_vGridMax = nullptr;
+
+  QDoubleSpinBox* m_hScaleMin = nullptr;
+  QDoubleSpinBox* m_hScaleMax = nullptr;
+  QDoubleSpinBox* m_vScaleMin = nullptr;
+  QDoubleSpinBox* m_vScaleMax = nullptr;
 
   std::vector<QWidget*> m_layoutElements;
   std::vector<QWidget*> m_manualGridControls;
 
+  bool m_blockModelUpdateSignals = false;
   constexpr static int NO_GRAPH_FOCUSED = -1;
 };
 

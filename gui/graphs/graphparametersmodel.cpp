@@ -17,8 +17,8 @@ QRectF GraphParametersModel::getValueBounds() const {
 
 void GraphParametersModel::setValueBounds(QRectF bounds) {
   auto b = m_graph.getPlot().getBounds();
-  b.yMin = bounds.bottom();
-  b.yMax = bounds.top();
+  b.yMin = bounds.top();
+  b.yMax = bounds.bottom();
   b.xMin = bounds.left();
   b.xMax = bounds.right();
   m_graph.getPlot().setBounds(b);

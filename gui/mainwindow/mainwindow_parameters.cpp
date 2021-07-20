@@ -15,6 +15,7 @@ bool MainWindow::createParametersWidgets() {
     this->m_graphParameters->updateGraphList(m_graphWidgetSet);
   });
 
+  // @TODO: Sync parameters dock hide with action
   if(!createDockWindow(m_graphParameters, WidgetType::PARAMETERS, tr("Graph Parameters"))) {
     result = false;
   }
