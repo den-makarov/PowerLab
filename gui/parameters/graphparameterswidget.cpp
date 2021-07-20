@@ -312,10 +312,10 @@ void GraphParametersWidget::updatePlotScale(const GraphParametersModel& model) {
   auto xMax = plotArea.right();
   setDoubleSpinBoxValue(*m_hScaleMax, xMax);
 
-  auto yMin = plotArea.bottom();
+  auto yMin = plotArea.top();
   setDoubleSpinBoxValue(*m_vScaleMin, yMin);
 
-  auto yMax = plotArea.top();
+  auto yMax = plotArea.bottom();
   setDoubleSpinBoxValue(*m_vScaleMax, yMax);
 }
 
@@ -473,11 +473,11 @@ void GraphParametersWidget::updatePlotScaleRange(double value, SideControl side)
       break;
 
     case SideControl::VERTICAL_MIN:
-      plotArea.setBottom(value);
+      plotArea.setTop(value);
       break;
 
     case SideControl::VERTICAL_MAX:
-      plotArea.setTop(value);
+      plotArea.setBottom(value);
       break;
   }
 
