@@ -9,6 +9,7 @@ class QPushButton;
 class QCheckBox;
 class QSpinBox;
 class QDoubleSpinBox;
+class QLineEdit;
 
 namespace PowerLab {
 namespace Gui {
@@ -46,6 +47,9 @@ private slots:
   void updatePlotScaleRange(double value, SideControl side);
   void updateGridLinesRange(double value, SideControl side);
   void updateGridLinesNumber(int value, bool isHorizontal);
+  void graphDataSelectorChanged(int idx);
+//  void updateGraphDataName(int index, QString text);
+//  void updateGraphDataUnits(int index, QString text);
 
 private:
   void updateView();
@@ -54,6 +58,7 @@ private:
   void updateGridColors(const GraphParametersModel& model);
   void updateGridLines(const GraphParametersModel& model);
   void updateGraphData(const GraphParametersModel& model);
+  void updateGraphDataSelected(const GraphParametersModel& model);
 
   void setGraphParametersVisible(bool visible);
 
@@ -62,6 +67,8 @@ private:
   void createPlotScaleControls();
   void createPlotGridControls();
   void createGraphDataControls();
+  void createGraphReferenceControls();
+
   void addHorizontalSeparator(int rowIndex);
   void addLabel(const QString& text, int row, int column);
   void setManualGridControlsEnabled(bool enabled);
@@ -71,10 +78,21 @@ private:
   void setDoubleSpinBoxValue(QDoubleSpinBox& box, double number);
 
   std::vector<GraphWidget*> m_graphs;
+  std::vector<QWidget*> m_layoutElements;
+  std::vector<QWidget*> m_manualGridControls;
+
   QGridLayout* m_grid = nullptr;
+
   QComboBox* m_graphSelector = nullptr;
+
+  QDoubleSpinBox* m_hScaleMin = nullptr;
+  QDoubleSpinBox* m_hScaleMax = nullptr;
+  QDoubleSpinBox* m_vScaleMin = nullptr;
+  QDoubleSpinBox* m_vScaleMax = nullptr;
+
   QPushButton* m_bgColorButton = nullptr;
-  QPushButton* m_gridColors = nullptr;
+  QPushButton* m_gridColor = nullptr;
+
   QCheckBox* m_isAutoGrid = nullptr;
 
   QSpinBox* m_hGridLines = nullptr;
@@ -84,13 +102,14 @@ private:
   QDoubleSpinBox* m_vGridMin = nullptr;
   QDoubleSpinBox* m_vGridMax = nullptr;
 
-  QDoubleSpinBox* m_hScaleMin = nullptr;
-  QDoubleSpinBox* m_hScaleMax = nullptr;
-  QDoubleSpinBox* m_vScaleMin = nullptr;
-  QDoubleSpinBox* m_vScaleMax = nullptr;
+  QComboBox* m_graphDataSelector = nullptr;
+  QSpinBox* m_graphDataLineWidth = nullptr;
+  QPushButton* m_graphDataLineColor = nullptr;
+  QLineEdit* m_graphDataName = nullptr;
+  QLineEdit* m_graphDataUnits = nullptr;
 
-  std::vector<QWidget*> m_layoutElements;
-  std::vector<QWidget*> m_manualGridControls;
+  QLineEdit* m_graphReferenceName = nullptr;
+  QLineEdit* m_graphReferenceUnits = nullptr;
 
   bool m_blockModelUpdateSignals = false;
   constexpr static int NO_GRAPH_FOCUSED = -1;

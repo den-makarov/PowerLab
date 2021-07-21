@@ -11,6 +11,7 @@
 #include <QColorDialog>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
+#include <QLineEdit>
 
 #include "graphparameterswidget.h"
 #include "graphs/graphwidget.h"
@@ -37,6 +38,8 @@ GraphParametersWidget::GraphParametersWidget(QWidget *parent, std::vector<GraphW
   createPlotGridControls();
   addHorizontalSeparator(m_grid->rowCount());
   createGraphDataControls();
+  addHorizontalSeparator(m_grid->rowCount());
+  createGraphReferenceControls();
 
   updateView();
 }
@@ -129,15 +132,15 @@ void GraphParametersWidget::createPlotColorControls() {
   auto rowIdx = m_grid->rowCount();
   m_grid->addWidget(m_bgColorButton, rowIdx, 0);
 
-  m_gridColors = new QPushButton(tr("Grid color"));
-  connect(m_gridColors, &QPushButton::clicked, [this](bool /*Not interested*/){
+  m_gridColor = new QPushButton(tr("Grid color"));
+  connect(m_gridColor, &QPushButton::clicked, [this](bool /*Not interested*/){
     this->colorControlRequested(ColorControl::GRID_LINES_COLOR);
   });
 
-  m_grid->addWidget(m_gridColors, rowIdx++, 1);
+  m_grid->addWidget(m_gridColor, rowIdx++, 1);
 
   m_layoutElements.push_back(m_bgColorButton);
-  m_layoutElements.push_back(m_gridColors);
+  m_layoutElements.push_back(m_gridColor);
 }
 
 void GraphParametersWidget::addLabel(const QString& text, int row, int column) {
@@ -233,7 +236,49 @@ void GraphParametersWidget::setManualGridControlsEnabled(bool enabled) {
 }
 
 void GraphParametersWidget::createGraphDataControls() {
+  auto rowIdx = m_grid->rowCount();
 
+  m_graphDataSelector = new QComboBox;
+  m_graphDataName = new QLineEdit;
+  m_graphDataUnits = new QLineEdit;
+  m_graphDataLineWidth = new QSpinBox;
+  m_graphDataLineColor = new QPushButton(tr("Line color"));
+
+  connect(m_graphDataSelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
+          this, &GraphParametersWidget::graphDataSelectorChanged);
+
+  m_grid->addWidget(m_graphDataSelector, rowIdx++, 0, 1, -1);
+
+  m_grid->addWidget(m_graphDataLineColor, rowIdx, 0);
+  m_grid->addWidget(m_graphDataLineWidth, rowIdx++, 1);
+
+  addLabel(tr("Scale V name"), rowIdx, 0);
+  m_grid->addWidget(m_graphDataName, rowIdx++, 1);
+
+  addLabel(tr("Scale V units"), rowIdx, 0);
+  m_grid->addWidget(m_graphDataUnits, rowIdx++, 1);
+
+  m_layoutElements.push_back(m_graphDataSelector);
+  m_layoutElements.push_back(m_graphDataName);
+  m_layoutElements.push_back(m_graphDataUnits);
+  m_layoutElements.push_back(m_graphDataLineWidth);
+  m_layoutElements.push_back(m_graphDataLineColor);
+}
+
+void GraphParametersWidget::createGraphReferenceControls() {
+  auto rowIdx = m_grid->rowCount();
+
+  m_graphReferenceName = new QLineEdit;
+  m_graphReferenceUnits = new QLineEdit;
+
+  addLabel(tr("Scale H name"), rowIdx, 0);
+  m_grid->addWidget(m_graphReferenceName, rowIdx++, 1);
+
+  addLabel(tr("Scale H units"), rowIdx, 0);
+  m_grid->addWidget(m_graphReferenceUnits, rowIdx++, 1);
+
+  m_layoutElements.push_back(m_graphReferenceName);
+  m_layoutElements.push_back(m_graphReferenceUnits);
 }
 
 void GraphParametersWidget::updateView() {
@@ -323,8 +368,8 @@ void GraphParametersWidget::updateGridColors(const GraphParametersModel& model) 
   m_bgColorButton->setPalette(model.getBackgroundColor());
   m_bgColorButton->setAutoFillBackground(true);
 
-  m_gridColors->setPalette((model.getGridLinesColor()));
-  m_gridColors->setAutoFillBackground(true);
+  m_gridColor->setPalette((model.getGridLinesColor()));
+  m_gridColor->setAutoFillBackground(true);
 }
 
 void GraphParametersWidget::updateGridLines(const GraphParametersModel& model) {
@@ -363,8 +408,25 @@ void GraphParametersWidget::setDoubleSpinBoxValue(QDoubleSpinBox& box, double va
   }
 }
 
-void GraphParametersWidget::updateGraphData(const GraphParametersModel&) {
+void GraphParametersWidget::updateGraphData(const GraphParametersModel& model) {
+  auto graphSize = model.getGraphNumber();
 
+  m_graphDataSelector->clear();
+  for(GraphParametersModel::GraphDataIdx idx = 0; idx < graphSize; idx++) {
+    auto graphDataName = model.getGraphName(idx);
+    m_graphDataSelector->addItem(QString::fromStdString(graphDataName), QVariant::fromValue(idx));
+  }
+}
+
+void GraphParametersWidget::updateGraphDataSelected(const GraphParametersModel& model) {
+  auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(m_graphDataSelector->currentIndex());
+  if(graphDataIdx >= model.getGraphNumber()) {
+    // Logger::log(ERROR_INVALID_GRAPH_DATA_IDX)
+    return;
+  }
+
+  m_graphDataName->setText(QString::fromStdString(model.getGraphName(graphDataIdx)));
+  m_graphDataUnits->setText(QString::fromStdString(model.getGraphUnits(graphDataIdx)));
 }
 
 GraphWidget* GraphParametersWidget::getCurrentGraph() const {
@@ -395,6 +457,18 @@ void GraphParametersWidget::graphSelectorChanged(int index) {
     updateGraphParametersView(graph);
   } else {
     Logger::log(GuiMessage::ERROR_INVALID_GRAPH_SELECTOR_INDEX, index);
+  }
+}
+
+void GraphParametersWidget::graphDataSelectorChanged(int index) {
+  if(index == -1) {
+    // In case when QComboBox is cleared
+    return;
+  }
+
+  auto graph = getCurrentGraph();
+  if(graph) {
+    updateGraphDataSelected(GraphParametersModel(*graph));
   }
 }
 
@@ -436,7 +510,7 @@ void GraphParametersWidget::colorControlRequested(ColorControl control) {
 
     case ColorControl::GRID_LINES_COLOR:
       model.setGridLinesColor(color);
-      buttonControl = m_gridColors;
+      buttonControl = m_gridColor;
       break;
 
     case ColorControl::GRAPH_DATA_LINE_COLOR:
