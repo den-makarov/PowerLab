@@ -43,7 +43,7 @@ private:
 private slots:
   void graphSelectorChanged(int idx);
   void autoGridChanged(int state);
-  void colorControlRequested(ColorControl control);
+  void colorControlRequested(ColorControl control, int idx = 0);
   void updatePlotScaleRange(double value, SideControl side);
   void updateGridLinesRange(double value, SideControl side);
   void updateGridLinesNumber(int value, bool isHorizontal);
@@ -58,7 +58,7 @@ private:
   void updateGridColors(const GraphParametersModel& model);
   void updateGridLines(const GraphParametersModel& model);
   void updateGraphData(const GraphParametersModel& model);
-  void updateGraphDataSelected(const GraphParametersModel& model);
+  void updateGraphDataSelected(const GraphParametersModel& model, int graphDataIdx);
 
   void setGraphParametersVisible(bool visible);
 

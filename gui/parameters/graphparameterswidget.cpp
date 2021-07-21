@@ -241,15 +241,23 @@ void GraphParametersWidget::createGraphDataControls() {
   m_graphDataSelector = new QComboBox;
   m_graphDataName = new QLineEdit;
   m_graphDataUnits = new QLineEdit;
-  m_graphDataLineWidth = new QSpinBox;
   m_graphDataLineColor = new QPushButton(tr("Line color"));
+  m_graphDataLineWidth = new QSpinBox;
+  m_graphDataLineWidth->setRange(1, 10);
 
   connect(m_graphDataSelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
           this, &GraphParametersWidget::graphDataSelectorChanged);
 
+  connect(m_graphDataLineColor, &QPushButton::clicked, [this](bool /*Not interested*/){
+    this->colorControlRequested(ColorControl::GRAPH_DATA_LINE_COLOR,
+                                m_graphDataSelector->currentIndex());
+  });
+
   m_grid->addWidget(m_graphDataSelector, rowIdx++, 0, 1, -1);
 
   m_grid->addWidget(m_graphDataLineColor, rowIdx, 0);
+
+
   m_grid->addWidget(m_graphDataLineWidth, rowIdx++, 1);
 
   addLabel(tr("Scale V name"), rowIdx, 0);
@@ -416,17 +424,24 @@ void GraphParametersWidget::updateGraphData(const GraphParametersModel& model) {
     auto graphDataName = model.getGraphName(idx);
     m_graphDataSelector->addItem(QString::fromStdString(graphDataName), QVariant::fromValue(idx));
   }
+
+  // @TODO: Keep track of the last graph data index
+  updateGraphDataSelected(model, 0);
+
+  m_graphReferenceName->setText(QString::fromStdString(model.getReferenceName()));
+  m_graphReferenceUnits->setText(QString::fromStdString(model.getReferenceUnits()));
 }
 
-void GraphParametersWidget::updateGraphDataSelected(const GraphParametersModel& model) {
-  auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(m_graphDataSelector->currentIndex());
-  if(graphDataIdx >= model.getGraphNumber()) {
-    // Logger::log(ERROR_INVALID_GRAPH_DATA_IDX)
-    return;
-  }
+void GraphParametersWidget::updateGraphDataSelected(const GraphParametersModel& model, int graphDataIdx) {
+  auto idx = static_cast<GraphParametersModel::GraphDataIdx>(graphDataIdx);
 
-  m_graphDataName->setText(QString::fromStdString(model.getGraphName(graphDataIdx)));
-  m_graphDataUnits->setText(QString::fromStdString(model.getGraphUnits(graphDataIdx)));
+  m_graphDataName->setText(QString::fromStdString(model.getGraphName(idx)));
+  m_graphDataUnits->setText(QString::fromStdString(model.getGraphUnits(idx)));
+
+  m_graphDataLineColor->setPalette(model.getGraphColor(idx));
+  m_graphDataLineColor->setAutoFillBackground(true);
+
+  m_graphDataLineWidth->setValue(model.getLineWidth(idx));
 }
 
 GraphWidget* GraphParametersWidget::getCurrentGraph() const {
@@ -468,7 +483,15 @@ void GraphParametersWidget::graphDataSelectorChanged(int index) {
 
   auto graph = getCurrentGraph();
   if(graph) {
-    updateGraphDataSelected(GraphParametersModel(*graph));
+    auto model = GraphParametersModel(*graph);
+    auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(m_graphDataSelector->currentIndex());
+
+    if(graphDataIdx >= model.getGraphNumber()) {
+      // Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+      return;
+    }
+
+    updateGraphDataSelected(model, m_graphDataSelector->currentIndex());
   }
 }
 
@@ -486,7 +509,7 @@ void GraphParametersWidget::autoGridChanged(int state) {
   }
 }
 
-void GraphParametersWidget::colorControlRequested(ColorControl control) {
+void GraphParametersWidget::colorControlRequested(ColorControl control, int idx) {
   const QColor color = QColorDialog::getColor(Qt::white, this, "Select Color");
 
   if(!color.isValid()) {
@@ -514,6 +537,13 @@ void GraphParametersWidget::colorControlRequested(ColorControl control) {
       break;
 
     case ColorControl::GRAPH_DATA_LINE_COLOR:
+      auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(idx);
+      if(graphDataIdx >= model.getGraphNumber()) {
+        // Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+        return;
+      }
+      model.setGraphColor(graphDataIdx, color);
+      buttonControl = m_graphDataLineColor;
       break;
   }
 
