@@ -244,6 +244,7 @@ void GraphParametersWidget::createGraphDataControls() {
   m_graphDataLineColor = new QPushButton(tr("Line color"));
   m_graphDataLineWidth = new QSpinBox;
   m_graphDataLineWidth->setRange(1, 10);
+  m_graphDataLineWidth->setPrefix(tr("Line width: "));
 
   connect(m_graphDataSelector, QOverload<int>::of(&QComboBox::currentIndexChanged),
           this, &GraphParametersWidget::graphDataSelectorChanged);
@@ -253,11 +254,24 @@ void GraphParametersWidget::createGraphDataControls() {
                                 m_graphDataSelector->currentIndex());
   });
 
+  connect(m_graphDataName, &QLineEdit::textEdited, [this](const QString& text){
+    auto idx = this->m_graphDataSelector->currentIndex();
+    this->updateGraphDataName(idx, text);
+  });
+
+  connect(m_graphDataUnits, &QLineEdit::textEdited, [this](const QString& text){
+    auto idx = this->m_graphDataSelector->currentIndex();
+    this->updateGraphDataUnits(idx, text);
+  });
+
+  connect(m_graphDataLineWidth, QOverload<int>::of(&QSpinBox::valueChanged),
+          [this](int value){
+    auto idx = this->m_graphDataSelector->currentIndex();
+    this->updateGraphDataLineWidth(idx, value);
+  });
+
   m_grid->addWidget(m_graphDataSelector, rowIdx++, 0, 1, -1);
-
   m_grid->addWidget(m_graphDataLineColor, rowIdx, 0);
-
-
   m_grid->addWidget(m_graphDataLineWidth, rowIdx++, 1);
 
   addLabel(tr("Scale V name"), rowIdx, 0);
@@ -284,6 +298,14 @@ void GraphParametersWidget::createGraphReferenceControls() {
 
   addLabel(tr("Scale H units"), rowIdx, 0);
   m_grid->addWidget(m_graphReferenceUnits, rowIdx++, 1);
+
+  connect(m_graphReferenceName, &QLineEdit::textEdited, [this](const QString& text){
+    this->updateGraphDataName(GRAPH_DATA_REFERENCE_INDEX, text);
+  });
+
+  connect(m_graphReferenceUnits, &QLineEdit::textEdited, [this](const QString& text){
+    this->updateGraphDataUnits(GRAPH_DATA_REFERENCE_INDEX, text);
+  });
 
   m_layoutElements.push_back(m_graphReferenceName);
   m_layoutElements.push_back(m_graphReferenceUnits);
@@ -487,7 +509,7 @@ void GraphParametersWidget::graphDataSelectorChanged(int index) {
     auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(m_graphDataSelector->currentIndex());
 
     if(graphDataIdx >= model.getGraphNumber()) {
-      // Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+      Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
       return;
     }
 
@@ -539,7 +561,7 @@ void GraphParametersWidget::colorControlRequested(ColorControl control, int idx)
     case ColorControl::GRAPH_DATA_LINE_COLOR:
       auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(idx);
       if(graphDataIdx >= model.getGraphNumber()) {
-        // Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+        Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
         return;
       }
       model.setGraphColor(graphDataIdx, color);
@@ -629,6 +651,70 @@ void GraphParametersWidget::updateGridLinesNumber(int value, bool isHorizontal) 
     model.setGridLinesNumber(GraphParametersModel::GridSide::X_SIDE, value);
   } else {
     model.setGridLinesNumber(GraphParametersModel::GridSide::Y_SIDE, value);
+  }
+
+  graph->repaint();
+}
+
+void GraphParametersWidget::updateGraphDataLineWidth(int index, int width) {
+  auto graph = getCurrentGraph();
+  if(!graph || m_blockModelUpdateSignals) {
+    return;
+  }
+
+  GraphParametersModel model(*graph);
+
+  auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(index);
+  if(graphDataIdx >= model.getGraphNumber()) {
+    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+    return;
+  }
+
+  model.setLineWidth(graphDataIdx, width);
+  graph->repaint();
+}
+
+void GraphParametersWidget::updateGraphDataName(int index, QString text) {
+  auto graph = getCurrentGraph();
+  if(!graph || m_blockModelUpdateSignals) {
+    return;
+  }
+
+  GraphParametersModel model(*graph);
+
+  if(index == GRAPH_DATA_REFERENCE_INDEX) {
+    model.setReferenceName(text.toStdString());
+  } else {
+    auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(index);
+    if(graphDataIdx >= model.getGraphNumber()) {
+      Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+      return;
+    }
+
+    model.setGraphName(graphDataIdx, text.toStdString());
+  }
+
+  graph->repaint();
+}
+
+void GraphParametersWidget::updateGraphDataUnits(int index, QString text) {
+  auto graph = getCurrentGraph();
+  if(!graph || m_blockModelUpdateSignals) {
+    return;
+  }
+
+  GraphParametersModel model(*graph);
+
+  if(index == GRAPH_DATA_REFERENCE_INDEX) {
+    model.setReferenceUnits(text.toStdString());
+  } else {
+    auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(index);
+    if(graphDataIdx >= model.getGraphNumber()) {
+      Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+      return;
+    }
+
+    model.setGraphUnits(graphDataIdx, text.toStdString());
   }
 
   graph->repaint();

@@ -287,6 +287,8 @@ void GraphWidget::paintEvent(QPaintEvent *event) {
 
   setupDefaultPlotMargins();
   m_graphProcessor->setPlotLimits(m_plot->getMarginsRect());
+  updateHorizontalLabels();
+  updateVerticalLabels();
 
   m_plot->update(&painter);
 

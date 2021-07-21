@@ -26,6 +26,7 @@ std::string getMessagePhrase(GuiMessage msg) {
     {GuiMessage::ERROR_INVALID_NUMBER_OF_GRID_LINES, "Number %1% of grid lines isn't supported. Chose from range (%2%, %3%)"},
     {GuiMessage::ERROR_INVALID_GRAPH_INDEX, "Invalid graph index %1%"},
     {GuiMessage::ERROR_INVALID_GRAPH_SELECTOR_INDEX, "Invalid graph index selected %1%"},
+    {GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, "Invalid graph data index selected %1%. Expected range [0, %2%]"},
     {GuiMessage::ERROR_INVALID_GRAPH_SELECTOR_DATA, "Invalid associated data with selected graph. Current index %1%, selected text %2%"},
     {GuiMessage::ERROR_INVALID_COLOR, "Invalid color provided"},
     {GuiMessage::ERROR_INVALID_BUTTON_COLOR_CONTROL, "Invalid color control button"},

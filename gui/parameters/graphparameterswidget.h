@@ -48,8 +48,9 @@ private slots:
   void updateGridLinesRange(double value, SideControl side);
   void updateGridLinesNumber(int value, bool isHorizontal);
   void graphDataSelectorChanged(int idx);
-//  void updateGraphDataName(int index, QString text);
-//  void updateGraphDataUnits(int index, QString text);
+  void updateGraphDataLineWidth(int index, int width);
+  void updateGraphDataName(int index, QString text);
+  void updateGraphDataUnits(int index, QString text);
 
 private:
   void updateView();
@@ -113,6 +114,7 @@ private:
 
   bool m_blockModelUpdateSignals = false;
   constexpr static int NO_GRAPH_FOCUSED = -1;
+  constexpr static int GRAPH_DATA_REFERENCE_INDEX = -2;
 };
 
 } // namespace Gui

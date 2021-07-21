@@ -155,7 +155,7 @@ std::string GraphParametersModel::getReferenceName() const {
   return m_graph.getGraphReferenceData().name;
 }
 
-void GraphParametersModel::setReferencehName(std::string name) {
+void GraphParametersModel::setReferenceName(std::string name) {
   m_graph.getGraphReferenceData().name = name;
 }
 

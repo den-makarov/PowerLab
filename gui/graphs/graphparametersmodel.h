@@ -57,7 +57,7 @@ public:
   void setGraphUnits(GraphDataIdx idx, std::string units) const;
 
   std::string getReferenceName() const;
-  void setReferencehName(std::string name);
+  void setReferenceName(std::string name);
 
   std::string getReferenceUnits() const;
   void setReferenceUnits(std::string units);
