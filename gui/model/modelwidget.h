@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class QGraphicsScene;
+
 namespace PowerLab {
 namespace Gui {
 
@@ -13,6 +15,8 @@ public:
 
 signals:
 
+private:
+  QGraphicsScene* m_scene = nullptr;
 };
 
 } // namespace Gui

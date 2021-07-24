@@ -16,6 +16,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    backend/modeldesign/elementparameter.cpp \
+    backend/modeldesign/abstractelement.cpp \
+    backend/modeldesign/elementconnection.cpp \
+    backend/modeldesign/elementconnectionmanager.cpp \
+    backend/modeldesign/elementport.cpp \
     backend/modelresult/modelresultmeta.cpp \
     backend/modelresult/modelresult.cpp \
     backend/modelresult/modelresultvalues.cpp \
@@ -27,6 +32,7 @@ SOURCES += \
     backend/logger/model_message.cpp \
     backend/utils/string_utils.cpp \
     backend/utils/math_utils.cpp \
+    gui/elements/drawingitem.cpp \
     gui/library/librarywidget.cpp \
     gui/main.cpp \
     gui/dialogs/metadatawindow.cpp \
@@ -47,6 +53,11 @@ SOURCES += \
     gui/parameters/parameterswidget.cpp
 
 HEADERS += \
+    backend/modeldesign/elementparameter.h \
+    backend/modeldesign/abstractelement.h \
+    backend/modeldesign/elementport.h \
+    backend/modeldesign/elementconnectionmanager.h \
+    backend/modeldesign/elementconnection.h \
     backend/modelresult/modelresultmeta.h \
     backend/modelresult/modelresultvalidator.h \
     backend/modelresult/modelresult.h \
@@ -59,6 +70,7 @@ HEADERS += \
     backend/version.h \
     backend/utils/string_utils.h \
     backend/utils/math_utils.h \
+    gui/elements/drawingitem.h \
     gui/library/librarywidget.h \
     gui/mainwindow/mainwindow.h \
     gui/dialogs/metadatawindow.h \
