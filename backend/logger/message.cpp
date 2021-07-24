@@ -11,6 +11,7 @@ std::ostream& operator<<(std::ostream& out, const LogMessage::Tag& tag) {
     case LogMessage::Tag::GUI: out << "GUI"; break;
     case LogMessage::Tag::SYSTEM: out << "SYSTEM"; break;
     case LogMessage::Tag::MODEL_RESULT: out << "MODEL_RESULT"; break;
+    case LogMessage::Tag::MODEL_DESIGN: out << "MODEL_DESIGN"; break;
   }
 
   return out;
@@ -54,14 +55,14 @@ bool LogMessageFilter::operator()(const LogMessage& msg) const {
   return result;
 }
 
-std::string getMessagePhrase(DefaultMessage msg) {
-  static std::map<DefaultMessage, std::string> msgPhrases = {
-    {DefaultMessage::DEBUG_LAST, "Restricted to use"},
-    {DefaultMessage::INFO_LAST, "Restricted to use"},
-    {DefaultMessage::WARNING_LAST, "Restricted to use"},
-    {DefaultMessage::ERROR_LAST, "Restricted to use"},
+std::string getMessagePhrase(Message msg) {
+  static std::map<Message, std::string> msgPhrases = {
+    {Message::DEBUG_LAST, "Restricted to use"},
+    {Message::INFO_LAST, "Restricted to use"},
+    {Message::WARNING_LAST, "Restricted to use"},
+    {Message::ERROR_LAST, "Restricted to use"},
     // Debug messagess
-    {DefaultMessage::DEBUG_MSG, "%1%"},
+    {Message::DEBUG_MSG, "%1%"},
     // Info messages
     // Warning messages
     // Error messages

@@ -1,11 +1,11 @@
 #include "elementparameter.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelDesign {
 
 ElementParameter::ElementParameter() {
 
 }
 
-} // namespace Model
+} // namespace ModelDesign
 } // namespace PowerLab

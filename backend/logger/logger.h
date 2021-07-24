@@ -13,9 +13,10 @@
 #include <type_traits>
 
 #include "message.h"
-#include "system_message.h"
-#include "model_message.h"
-#include "gui_message.h"
+#include "systemmessage.h"
+#include "modelresultmessage.h"
+#include "modeldesignmessage.h"
+#include "guimessage.h"
 
 namespace PowerLab {
 namespace Logger {
@@ -110,7 +111,8 @@ private:
   std::string getPhrase(T msgType) {
     using namespace Gui;
     using namespace System;
-    using namespace Model;
+    using namespace ModelResult;
+    using namespace ModelDesign;
     return getMessagePhrase(msgType);
   }
 
@@ -140,13 +142,15 @@ private:
 
   template<typename T>
   LogMessage::Tag msgTypeToTag(T /* msgType*/ ) const {
-    if constexpr(std::is_same<T, System::SystemMessage>::value) {
+    if constexpr(std::is_same<T, System::Message>::value) {
       return LogMessage::Tag::SYSTEM;
-    } else if constexpr(std::is_same<T, Gui::GuiMessage>::value) {
+    } else if constexpr(std::is_same<T, Gui::Message>::value) {
       return LogMessage::Tag::GUI;
-    } else if constexpr(std::is_same<T, Model::ModelMessage>::value) {
+    } else if constexpr(std::is_same<T, ModelResult::Message>::value) {
       return LogMessage::Tag::MODEL_RESULT;
-    } else if constexpr(std::is_same<T, DefaultMessage>::value) {
+    } else if constexpr(std::is_same<T, ModelDesign::Message>::value) {
+      return LogMessage::Tag::MODEL_DESIGN;
+    } else if constexpr(std::is_same<T, Message>::value) {
       return LogMessage::Tag::NONE;
     } else {
       static_assert(dependent_false<T>::value, "Enum declaration required");

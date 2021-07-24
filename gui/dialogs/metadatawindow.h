@@ -7,7 +7,7 @@ class QAbstractItemModel;
 class QListView;
 
 namespace PowerLab {
-namespace Model {
+namespace ModelResult {
   class ModelResult;
 }
 }
@@ -19,7 +19,7 @@ class MetaDataWindow : public QDialog {
 public:
   explicit MetaDataWindow(QWidget *parent = nullptr);
 
-  QAbstractItemModel* loadModelResults(const Model::ModelResult& modelResult);
+  QAbstractItemModel* loadModelResults(const ModelResult::ModelResult& modelResult);
 
 private:
   constexpr static size_t MIN_WINDOW_WIDTH = 500;

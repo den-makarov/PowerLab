@@ -7,7 +7,7 @@
 #include "elementconnection.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelDesign {
 
 class ElementConnectionManager {
 public:
@@ -29,10 +29,10 @@ private:
 
   std::map<ConnectionId, std::unique_ptr<ElementConnection>> m_connections;
 
-  static ConnectionId connectionCounter;
+  static ConnectionId m_connectionCounter;
 };
 
-} // namespace Model
+} // namespace ModelDesign
 } // namespace PowerLab
 
 #endif // ELEMENTCONNECTIONMANAGER_H

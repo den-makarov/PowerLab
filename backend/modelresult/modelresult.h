@@ -10,7 +10,7 @@
 #include "modelresultmeta.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelResult {
 
 class ModelResultValidator;
 
@@ -60,7 +60,7 @@ private:
   void extractSignalsDataPoints(const std::string& filename);
 };
 
-} // namespace model
+} // namespace ModelResult
 } // namespace PowerLab
 
 #endif // MODELRESULT_H

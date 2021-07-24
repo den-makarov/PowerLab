@@ -5,7 +5,7 @@
 
 #include "plot.h"
 #include "logger.h"
-#include "math_utils.h"
+#include "mathutils.h"
 
 namespace PowerLab {
 namespace Gui {
@@ -53,7 +53,7 @@ void Plot::setMainGridLinesXNumber(int xNumber) {
   if(!m_autoGrid) {
     m_gridXNumber = xNumber;
   } else {
-    Logger::log(GuiMessage::WARNING_SET_PLOT_GRID_LINES_ON_AUTO_GRID);
+    Logger::log(Message::WARNING_SET_PLOT_GRID_LINES_ON_AUTO_GRID);
   }
 }
 
@@ -61,7 +61,7 @@ void Plot::setMainGridLinesYNumber(int yNumber) {
   if(!m_autoGrid) {
     m_gridYNumber = yNumber;
   } else {
-    Logger::log(GuiMessage::WARNING_SET_PLOT_GRID_LINES_ON_AUTO_GRID);
+    Logger::log(Message::WARNING_SET_PLOT_GRID_LINES_ON_AUTO_GRID);
   }
 }
 

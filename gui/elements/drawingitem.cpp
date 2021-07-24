@@ -3,7 +3,7 @@
 namespace PowerLab {
 namespace Gui {
 
-DrawingItem::DrawingItem(DrawingItem* parent)
+DrawingItem::DrawingItem(QGraphicsItem* parent)
   : QGraphicsItem(parent)
 {
 

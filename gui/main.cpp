@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
   QString appTitle = appName + " - " + appVersion;
 
   PowerLab::Logger::LogProvider::instance().addStream(std::cout);
-  PowerLab::Logger::log(PowerLab::System::SystemMessage::DEBUG_APPLICATION_START,
+  PowerLab::Logger::log(PowerLab::System::Message::DEBUG_APPLICATION_START,
                         appTitle.toStdString());
 
   QCoreApplication::setApplicationVersion(appVersion);

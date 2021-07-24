@@ -4,10 +4,10 @@
 
 #include "modelresultmeta.h"
 #include "logger.h"
-#include "string_utils.h"
+#include "stringutils.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelResult {
 
 // Map for search token
 const std::unordered_map<std::string, ModelResultMeta::TokenType> ModelResultMeta::STR_TO_TOKEN_TYPE = {
@@ -79,7 +79,7 @@ bool ModelResultMeta::addToken(ModelResultMeta::TokenType type, const std::strin
   bool result = false;
 
   if(type == TokenType::UNKNOWN) {
-    Logger::log(Model::ModelMessage::ERROR_ADD_UNKNOWN_TOKEN, str);
+    Logger::log(ModelResult::Message::ERROR_ADD_UNKNOWN_TOKEN, str);
   } else {
     auto pos = str.find(':');
     if(pos != std::string::npos) {
@@ -214,5 +214,5 @@ std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Data& data) {
   return out;
 }
 
-} // namespace Model
+} // namespace ModelResult
 } // namespace PowerLab

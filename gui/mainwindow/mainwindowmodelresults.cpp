@@ -60,7 +60,7 @@ void MainWindow::showMetaData(bool parsingResult, const std::string& msg) {
 }
 
 void MainWindow::openModelResults(const QString& filename) {
-  m_modelResult = std::make_unique<Model::ModelResult>();
+  m_modelResult = std::make_unique<ModelResult::ModelResult>();
 
   if(m_modelResult) {
     m_metaDataLoadedCB = [this](bool parsingResult, const std::string& msg) {
@@ -96,7 +96,7 @@ void MainWindow::drawGraph() {
   }
 
   if(signalNames.size() < 1) {
-    Logger::log(GuiMessage::ERROR_NO_SELECTED_SIGNALS_TO_PLOT);
+    Logger::log(Message::ERROR_NO_SELECTED_SIGNALS_TO_PLOT);
     return;
   }
 

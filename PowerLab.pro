@@ -16,6 +16,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    backend/logger/guimessage.cpp \
+    backend/logger/modelresultmessage.cpp \
+    backend/logger/modeldesignmessage.cpp \
+    backend/logger/systemmessage.cpp \
     backend/modeldesign/elementparameter.cpp \
     backend/modeldesign/abstractelement.cpp \
     backend/modeldesign/elementconnection.cpp \
@@ -27,32 +31,33 @@ SOURCES += \
     backend/modelresult/modelresultvalidator.cpp \
     backend/logger/logger.cpp \
     backend/logger/message.cpp \
-    backend/logger/system_message.cpp \
-    backend/logger/gui_message.cpp \
-    backend/logger/model_message.cpp \
-    backend/utils/string_utils.cpp \
-    backend/utils/math_utils.cpp \
+    backend/utils/mathutils.cpp \
+    backend/utils/stringutils.cpp \
     gui/elements/drawingitem.cpp \
     gui/library/librarywidget.cpp \
     gui/main.cpp \
     gui/dialogs/metadatawindow.cpp \
     gui/mainwindow/mainwindow.cpp \
-    gui/mainwindow/mainwindow_actions.cpp \
-    gui/mainwindow/mainwindow_controls.cpp \
-    gui/mainwindow/mainwindow_model_results.cpp \
-    gui/mainwindow/mainwindow_model_designs.cpp \
-    gui/mainwindow/mainwindow_parameters.cpp \
-    gui/mainwindow/mainwindow_component_library.cpp \
     gui/graphs/graphprocessor.cpp \
     gui/graphs/graphwidget.cpp \
     gui/graphs/graphparametersmodel.cpp \
     gui/graphs/plot.cpp \
     gui/graphs/zoomselectionrectarea.cpp \
+    gui/mainwindow/mainwindowactions.cpp \
+    gui/mainwindow/mainwindowcomponentlibrary.cpp \
+    gui/mainwindow/mainwindowcontrols.cpp \
+    gui/mainwindow/mainwindowmodeldesigns.cpp \
+    gui/mainwindow/mainwindowmodelresults.cpp \
+    gui/mainwindow/mainwindowparameters.cpp \
     gui/model/modelwidget.cpp \
     gui/parameters/graphparameterswidget.cpp \
     gui/parameters/parameterswidget.cpp
 
 HEADERS += \
+    backend/logger/guimessage.h \
+    backend/logger/modelresultmessage.h \
+    backend/logger/modeldesignmessage.h \
+    backend/logger/systemmessage.h \
     backend/modeldesign/elementparameter.h \
     backend/modeldesign/abstractelement.h \
     backend/modeldesign/elementport.h \
@@ -64,12 +69,9 @@ HEADERS += \
     backend/modelresult/modelresultvalues.h \
     backend/logger/logger.h \
     backend/logger/message.h \
-    backend/logger/system_message.h \
-    backend/logger/model_message.h \
-    backend/logger/gui_message.h \
+    backend/utils/mathutils.h \
+    backend/utils/stringutils.h \
     backend/version.h \
-    backend/utils/string_utils.h \
-    backend/utils/math_utils.h \
     gui/elements/drawingitem.h \
     gui/library/librarywidget.h \
     gui/mainwindow/mainwindow.h \

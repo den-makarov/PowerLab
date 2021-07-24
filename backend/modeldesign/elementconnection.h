@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace PowerLab {
-namespace Model {
+namespace ModelDesign {
 
 using ConnectionId = size_t;
 
@@ -24,7 +24,7 @@ private:
   const ConnectionId m_id;
 };
 
-} // namespace Model
+} // namespace ModelDesign
 } // namespace PowerLab
 
 #endif // ELEMENTCONNECTION_H

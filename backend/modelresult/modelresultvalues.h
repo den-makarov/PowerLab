@@ -6,11 +6,11 @@
 #include <vector>
 #include <fstream>
 
-#include "string_utils.h"
+#include "stringutils.h"
 #include "logger.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelResult {
 
 template <typename T = double>
 class ModelResultValue {
@@ -25,7 +25,7 @@ public:
     std::ifstream file(m_filename);
 
     if(!file.is_open()) {
-      Logger::log(ModelMessage::ERROR_VALUES_FILE_NOT_OPEN, filename);
+      Logger::log(Message::ERROR_VALUES_FILE_NOT_OPEN, filename);
       return;
     }
 
@@ -40,7 +40,7 @@ public:
     }
 
     if(!valuesFound) {
-      Logger::log(ModelMessage::ERROR_VALUES_NOT_FOUND, filename);
+      Logger::log(Message::ERROR_VALUES_NOT_FOUND, filename);
     }
   }
 
@@ -55,7 +55,7 @@ private:
       file >> dataPointCounter;
 
       if(dataPointCounter >= m_values.at(0).size()) {
-        Logger::log(ModelMessage::ERROR_DATA_POINT_INDEX_INVALID,
+        Logger::log(Message::ERROR_DATA_POINT_INDEX_INVALID,
                     dataPointCounter,
                     m_values[0].size());
         break;
@@ -65,7 +65,7 @@ private:
         auto& value = m_values.at(signalCounter).at(dataPointCounter);
         file >> value;
         if(file.eof()) {
-          Logger::log(ModelMessage::ERROR_VALUES_UNEXPECTED_END,
+          Logger::log(Message::ERROR_VALUES_UNEXPECTED_END,
                       m_values.size(),
                       m_values[0].size(),
                       dataPointCounter);
@@ -74,7 +74,7 @@ private:
       }
 
       if(dataPointCounter == m_values.at(0).size() - 1) {
-        Logger::log(ModelMessage::DEBUG_VALUES_FILE_EXPECTED_END_REACHED);
+        Logger::log(Message::DEBUG_VALUES_FILE_EXPECTED_END_REACHED);
         break;
       }
     }
@@ -85,7 +85,7 @@ private:
   std::vector<std::vector<T>> m_values;
 };
 
-} // namespace model
+} // namespace ModelResult
 } // namespace PowerLab
 
 #endif // MODELRESULTVALUE_H

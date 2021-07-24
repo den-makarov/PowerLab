@@ -7,7 +7,7 @@
 #include "modelresultvalues.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelResult {
 
 ModelResult::ModelResult()
   : m_validator(new ModelResultValidator())
@@ -30,11 +30,11 @@ size_t ModelResult::getPointsNumber() const {
 void ModelResult::addSignalDataPoint(const SignalName& signalName, DataPoint point) {
   auto signalIt = m_signals.find(signalName);
   if(signalIt == m_signals.end()) {
-    Logger::log(Model::ModelMessage::ERROR_UNKNOWN_SIGNAL_NAME, signalName);
+    Logger::log(Message::ERROR_UNKNOWN_SIGNAL_NAME, signalName);
     return;
   }
 
-  Logger::log(Model::ModelMessage::DEBUG_NEW_DATA_POINT_FOR_SIGNAL, signalName, point);
+  Logger::log(Message::DEBUG_NEW_DATA_POINT_FOR_SIGNAL, signalName, point);
   auto& signal = signalIt->second;
   signal.points.push_back(point);
 }
@@ -43,11 +43,11 @@ void ModelResult::addSignalDataPoints(const SignalName& signalName,
                                       const SignalDataPoints& data) {
   auto signalIt = m_signals.find(signalName);
   if(signalIt == m_signals.end()) {
-    Logger::log(Model::ModelMessage::ERROR_UNKNOWN_SIGNAL_NAME, signalName);
+    Logger::log(Message::ERROR_UNKNOWN_SIGNAL_NAME, signalName);
     return;
   }
 
-  Logger::log(Model::ModelMessage::DEBUG_NEW_DATA_FOR_SIGNAL, signalName, data.size());
+  Logger::log(Message::DEBUG_NEW_DATA_FOR_SIGNAL, signalName, data.size());
   auto& signal = signalIt->second;
   signal.points.insert(signal.points.end(), data.begin(), data.end());
 }
@@ -56,11 +56,11 @@ template<typename DataIterator>
 void ModelResult::addSignalDataPoints(const SignalName& signalName, DataIterator begin, DataIterator end) {
   auto signalIt = m_signals.find(signalName);
   if(signalIt == m_signals.end()) {
-    Logger::log(Model::ModelMessage::ERROR_UNKNOWN_SIGNAL_NAME, signalName);
+    Logger::log(Message::ERROR_UNKNOWN_SIGNAL_NAME, signalName);
     return;
   }
 
-  Logger::log(Model::ModelMessage::DEBUG_NEW_DATA_FOR_SIGNAL, signalName, std::distance(begin, end));
+  Logger::log(Message::DEBUG_NEW_DATA_FOR_SIGNAL, signalName, std::distance(begin, end));
   auto& signal = signalIt->second;
   signal.points.insert(signal.points.end(), begin, end);
 }
@@ -93,7 +93,7 @@ std::string ModelResult::getSignalUnitsSISymbol(const std::string& signalName) c
 ModelResult::SignalDataPoints ModelResult::getSignalDataPoints(const SignalName& name) const {
   auto signalIt = m_signals.find(name);
   if(signalIt == m_signals.end()) {
-    Logger::log(Model::ModelMessage::ERROR_UNKNOWN_SIGNAL_NAME, name);
+    Logger::log(Message::ERROR_UNKNOWN_SIGNAL_NAME, name);
     return {};
   }
 
@@ -117,24 +117,24 @@ void ModelResult::extractSignalsDataPoints(const std::string& filename) {
       addSignalDataPoints(signalName, values->getSignalPoints(i));
     }
   } else {
-    Logger::log(Model::ModelMessage::ERROR_META_DATA_NOT_READY);
+    Logger::log(Message::ERROR_META_DATA_NOT_READY);
   }
 }
 
 void ModelResult::openFile(const std::string& filename) {
   if(filename.empty()) {
-    Logger::log(Model::ModelMessage::DEBUG_NO_FILE_SELECTED);
+    Logger::log(Message::DEBUG_NO_FILE_SELECTED);
     m_metaDataLoadCB(false, "No file selected");
     return;
   }
 
   if(m_validator->validate(filename)) {
-    Logger::log(Model::ModelMessage::DEBUG_NEW_MODEL_RESULT_DATA,
+    Logger::log(Message::DEBUG_NEW_MODEL_RESULT_DATA,
                   getVariablesNumber(),
                   getPointsNumber());
 
     extractSignalsDataPoints(filename);
-    Logger::log(Model::ModelMessage::DEBUG_META_DATA_READY);
+    Logger::log(Message::DEBUG_META_DATA_READY);
     m_metaDataLoadCB(true, "Chose signals to plot");
   } else {
     m_metaDataLoadCB(false, "Meta data validation failed");
@@ -149,11 +149,11 @@ void ModelResult::setupMetaDataLoadCB(ModelResult::MetaDataLoadCB cb) {
 
 void ModelResult::defaultMetaDataLoadSignal(bool parseResult, const std::string& msg) {
   if(parseResult) {
-    Logger::log(Model::ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, "Parsing success", msg);
+    Logger::log(Message::DEBUG_DEFAULT_META_DATA_CALLBACK, "Parsing success", msg);
   } else {
-    Logger::log(Model::ModelMessage::DEBUG_DEFAULT_META_DATA_CALLBACK, "Parsing failed", msg);
+    Logger::log(Message::DEBUG_DEFAULT_META_DATA_CALLBACK, "Parsing failed", msg);
   }
 }
 
-} // namespace Model
+} // namespace ModelResult
 } // namespace PowerLab

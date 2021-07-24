@@ -1,12 +1,12 @@
-#ifndef MODEL_MESSAGE_H
-#define MODEL_MESSAGE_H
+#ifndef MODEL_RESULT_MESSAGE_H
+#define MODEL_RESULT_MESSAGE_H
 
 #include <string>
 
 namespace PowerLab {
-namespace Model {
+namespace ModelResult {
 
-enum class ModelMessage {
+enum class Message {
   // DEBUG MESSAGES
   DEBUG_META_DATA_PARSING_COMPLETE,
   DEBUG_NEW_MODEL_RESULT_DATA,
@@ -41,9 +41,9 @@ enum class ModelMessage {
   ERROR_LAST
 };
 
-std::string getMessagePhrase(ModelMessage msg);
+std::string getMessagePhrase(Message msg);
 
-} // namespace Model
+} // namespace ModelResult
 } // namespace PowerLab
 
-#endif // MODEL_MESSAGE_H
+#endif // MODEL_RESULT_MESSAGE_H

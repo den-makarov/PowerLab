@@ -106,8 +106,8 @@ private:
 
   std::vector<GraphWidget*> m_graphWidgetSet;
   QAbstractItemModel* m_graphData = nullptr;
-  std::unique_ptr<Model::ModelResult> m_modelResult;
-  Model::ModelResult::MetaDataLoadCB m_metaDataLoadedCB;
+  std::unique_ptr<ModelResult::ModelResult> m_modelResult;
+  ModelResult::ModelResult::MetaDataLoadCB m_metaDataLoadedCB;
 
   QMenu* m_viewMenu;
   QAction* m_addGraphAction = nullptr;

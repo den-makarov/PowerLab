@@ -2,7 +2,7 @@
 #include <limits>
 #include <set>
 
-#include "math_utils.h"
+#include "mathutils.h"
 
 namespace PowerLab {
 namespace Utilities {

@@ -16,7 +16,7 @@
 #include "graphparameterswidget.h"
 #include "graphs/graphwidget.h"
 #include "graphs/graphparametersmodel.h"
-#include "utils/math_utils.h"
+#include "utils/mathutils.h"
 #include "logger.h"
 
 namespace PowerLab {
@@ -472,7 +472,7 @@ GraphWidget* GraphParametersWidget::getCurrentGraph() const {
   if(graphIdx.isValid()) {
     return m_graphs.at(graphIdx.toUInt());
   } else {
-    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_SELECTOR_DATA,
+    Logger::log(Message::ERROR_INVALID_GRAPH_SELECTOR_DATA,
                 m_graphSelector->currentIndex(),
                 m_graphSelector->currentText().toStdString());
 
@@ -493,7 +493,7 @@ void GraphParametersWidget::graphSelectorChanged(int index) {
     graph = m_graphs.at(idx);
     updateGraphParametersView(graph);
   } else {
-    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_SELECTOR_INDEX, index);
+    Logger::log(Message::ERROR_INVALID_GRAPH_SELECTOR_INDEX, index);
   }
 }
 
@@ -509,7 +509,7 @@ void GraphParametersWidget::graphDataSelectorChanged(int index) {
     auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(m_graphDataSelector->currentIndex());
 
     if(graphDataIdx >= model.getGraphNumber()) {
-      Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+      Logger::log(Message::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
       return;
     }
 
@@ -535,7 +535,7 @@ void GraphParametersWidget::colorControlRequested(ColorControl control, int idx)
   const QColor color = QColorDialog::getColor(Qt::white, this, "Select Color");
 
   if(!color.isValid()) {
-    Logger::log(GuiMessage::ERROR_INVALID_COLOR);
+    Logger::log(Message::ERROR_INVALID_COLOR);
     return;
   }
 
@@ -561,7 +561,7 @@ void GraphParametersWidget::colorControlRequested(ColorControl control, int idx)
     case ColorControl::GRAPH_DATA_LINE_COLOR:
       auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(idx);
       if(graphDataIdx >= model.getGraphNumber()) {
-        Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+        Logger::log(Message::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
         return;
       }
       model.setGraphColor(graphDataIdx, color);
@@ -572,7 +572,7 @@ void GraphParametersWidget::colorControlRequested(ColorControl control, int idx)
   graph->repaint();
 
   if(!buttonControl) {
-    Logger::log(GuiMessage::ERROR_INVALID_BUTTON_COLOR_CONTROL);
+    Logger::log(Message::ERROR_INVALID_BUTTON_COLOR_CONTROL);
     return;
   }
 
@@ -666,7 +666,7 @@ void GraphParametersWidget::updateGraphDataLineWidth(int index, int width) {
 
   auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(index);
   if(graphDataIdx >= model.getGraphNumber()) {
-    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+    Logger::log(Message::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
     return;
   }
 
@@ -687,7 +687,7 @@ void GraphParametersWidget::updateGraphDataName(int index, QString text) {
   } else {
     auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(index);
     if(graphDataIdx >= model.getGraphNumber()) {
-      Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+      Logger::log(Message::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
       return;
     }
 
@@ -710,7 +710,7 @@ void GraphParametersWidget::updateGraphDataUnits(int index, QString text) {
   } else {
     auto graphDataIdx = static_cast<GraphParametersModel::GraphDataIdx>(index);
     if(graphDataIdx >= model.getGraphNumber()) {
-      Logger::log(GuiMessage::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
+      Logger::log(Message::ERROR_INVALID_GRAPH_DATA_INDEX, graphDataIdx, model.getGraphNumber());
       return;
     }
 

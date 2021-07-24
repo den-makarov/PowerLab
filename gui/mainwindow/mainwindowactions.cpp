@@ -153,7 +153,7 @@ void MainWindow::createFileActions() {
 }
 
 void MainWindow::createModelActions() {
-//  QToolBar* modelToolBar = addToolBar(tr("Model"));
+//  QToolBar* modelToolBar = addToolBar(tr("ModelResult"));
 }
 
 void MainWindow::createControlsActions() {

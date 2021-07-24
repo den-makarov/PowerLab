@@ -4,7 +4,7 @@
 #include "elementport.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelDesign {
 
 ElementConnection::ElementConnection(ConnectionId id)
   : m_id(id)
@@ -35,5 +35,5 @@ bool ElementConnection::isConnectedPort(const ElementPort* port) const {
   return std::find(m_connectedPorts.begin(), m_connectedPorts.end(), port) != m_connectedPorts.end();
 }
 
-} // namespace Model
+} // namespace ModelDesign
 } // namespace PowerLab

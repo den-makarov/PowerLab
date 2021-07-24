@@ -7,9 +7,8 @@ namespace PowerLab {
 namespace Gui {
 
 class DrawingItem : public QGraphicsItem {
-  Q_OBJECT
 public:
-  DrawingItem(DrawingItem* parent = nullptr);
+  DrawingItem(QGraphicsItem* parent = nullptr);
 };
 
 } // namespace Gui

@@ -83,7 +83,7 @@ MetaDataWindow::MetaDataWindow(QWidget *parent) : QDialog(parent) {
   button_layout->addWidget(cancel, 1, 3, Qt::AlignRight);
 }
 
-QAbstractItemModel* MetaDataWindow::loadModelResults(const Model::ModelResult& modelResults) {
+QAbstractItemModel* MetaDataWindow::loadModelResults(const ModelResult::ModelResult& modelResults) {
   m_signalsModel->removeRows(0, m_signalsModel->rowCount());
   int row = 0;
 
@@ -101,7 +101,7 @@ QAbstractItemModel* MetaDataWindow::loadModelResults(const Model::ModelResult& m
 void MetaDataWindow::addSignalToGraph() {
   QItemSelectionModel *selectionModel = m_signalsView->selectionModel();
   if(!selectionModel) {
-    Logger::log(GuiMessage::ERROR_SELECTION_INVALID);
+    Logger::log(Message::ERROR_SELECTION_INVALID);
     return;
   }
 
@@ -117,7 +117,7 @@ void MetaDataWindow::addSignalToGraph() {
         auto row_idx = m_graphModel->index(m_graphModel->rowCount() - 1, 0);
         m_graphModel->setData(row_idx, data);
       } else {
-        Logger::log(GuiMessage::DEBUG_ATTEMPT_ADD_ITEM_TWICE, data.toString().toStdString());
+        Logger::log(Message::DEBUG_ATTEMPT_ADD_ITEM_TWICE, data.toString().toStdString());
       }
     }
   }
@@ -128,7 +128,7 @@ void MetaDataWindow::addSignalToGraph() {
 void MetaDataWindow::removeSignalFromGraph() {
   QItemSelectionModel *selectionModel = m_graphView->selectionModel();
   if(!selectionModel) {
-    Logger::log(GuiMessage::ERROR_SELECTION_INVALID);
+    Logger::log(Message::ERROR_SELECTION_INVALID);
     return;
   }
 

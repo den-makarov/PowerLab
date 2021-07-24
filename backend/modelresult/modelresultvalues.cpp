@@ -1,10 +1,10 @@
 #include <cassert>
 
-#include "string_utils.h"
+#include "stringutils.h"
 #include "modelresultvalues.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelResult {
 
-} // namespace Model
+} // namespace ModelResult
 } // namespace PowerLab

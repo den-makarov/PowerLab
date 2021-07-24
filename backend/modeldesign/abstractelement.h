@@ -9,14 +9,13 @@
 #include "elementparameter.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelDesign {
 
 class AbstractElement {
 public:
   using ElementName = std::string;
 
   AbstractElement(const ElementName& name);
-  ~AbstractElement();
 
   const ElementName& getName() const;
 
@@ -25,15 +24,15 @@ public:
   void addParameter(std::unique_ptr<ElementParameter>&& parameter);
 
 private:
-  int x;
-  int y;
+  int x = 0;
+  int y = 0;
   ElementName m_name;
   std::vector<std::unique_ptr<ElementPort>> m_ports;
   std::vector<std::unique_ptr<AbstractElement>> m_children;
   std::vector<std::unique_ptr<ElementParameter>> m_parameters;
 };
 
-} // namespace Model
+} // namespace ModelDesign
 } // namespace PowerLab
 
 #endif // ABSTRACTELEMENT_H

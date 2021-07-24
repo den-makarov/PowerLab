@@ -1,7 +1,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "string_utils.h"
+#include "stringutils.h"
 
 namespace PowerLab {
 namespace Utilities {

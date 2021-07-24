@@ -6,7 +6,7 @@
 #include "elementconnection.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelDesign {
 
 class AbstractElement;
 
@@ -23,7 +23,7 @@ private:
   const AbstractElement& m_owner;
 };
 
-} // namespace Model
+} // namespace ModelDesign
 } // namespace PowerLab
 
 #endif // ELEMENTPORT_H

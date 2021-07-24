@@ -6,7 +6,7 @@
 namespace PowerLab {
 namespace System {
 
-enum class SystemMessage {
+enum class Message {
   // DEBUG MESSAGES
   DEBUG_APPLICATION_START,
   DEBUG_LAST,
@@ -22,7 +22,7 @@ enum class SystemMessage {
   ERROR_LAST
 };
 
-std::string getMessagePhrase(SystemMessage msg);
+std::string getMessagePhrase(Message msg);
 
 } // namespace System
 } // namespace PowerLab

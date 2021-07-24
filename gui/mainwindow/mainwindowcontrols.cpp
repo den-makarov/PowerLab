@@ -83,7 +83,7 @@ void MainWindow::open() {
     openModelResults(filename);
     emit fileOpened(filename);
   } else {
-    Logger::log(System::SystemMessage::WARNING_ATTEMPT_OPEN_UNKNOWN_FILE_FORMAT, filename.toStdString());
+    Logger::log(System::Message::WARNING_ATTEMPT_OPEN_UNKNOWN_FILE_FORMAT, filename.toStdString());
   }
 }
 

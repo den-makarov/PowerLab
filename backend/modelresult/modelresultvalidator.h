@@ -6,7 +6,7 @@
 #include <memory>
 
 namespace PowerLab {
-namespace Model {
+namespace ModelResult {
 
 class ModelResultMeta;
 
@@ -26,7 +26,7 @@ private:
   bool readSignalLines(std::ifstream& file, std::string& line);
 };
 
-} // namespace Model
+} // namespace ModelResult
 } // namespace PowerLab
 
 #endif // MODELRESULTVALIDATOR_H

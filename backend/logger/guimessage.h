@@ -6,7 +6,7 @@
 namespace PowerLab {
 namespace Gui {
 
-enum class GuiMessage {
+enum class Message {
   // DEBUG MESSAGES
   DEBUG_ATTEMPT_ADD_ITEM_TWICE,
   DEBUG_LAST,
@@ -35,7 +35,7 @@ enum class GuiMessage {
   ERROR_LAST
 };
 
-std::string getMessagePhrase(GuiMessage msg);
+std::string getMessagePhrase(Message msg);
 
 } // namespace Gui
 } // namespace PowerLab

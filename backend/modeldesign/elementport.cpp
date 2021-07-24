@@ -2,7 +2,7 @@
 #include "elementconnectionmanager.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelDesign {
 
 ElementPort::ElementPort(const AbstractElement& owner)
   : m_owner(owner)
@@ -22,5 +22,5 @@ bool ElementPort::isConnected(ConnectionId connection) const {
   return m_connections.find(connection) != m_connections.end();
 }
 
-} // namespace Model
+} // namespace ModelDesign
 } // namespace PowerLab

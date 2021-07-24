@@ -8,7 +8,7 @@
 #include "logger.h"
 
 namespace PowerLab {
-namespace Model {
+namespace ModelResult {
 
 class ModelResultMeta {
 public:
@@ -87,7 +87,7 @@ std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Flags& data);
 std::ostream& operator<<(std::ostream& out, const ModelResultMeta::SignalDescriptor& signal);
 std::ostream& operator<<(std::ostream& out, const ModelResultMeta::Data& data);
 
-} // namespace Model
+} // namespace ModelResult
 } // namespace PowerLab
 
 #endif // MODELRESULTMETA_H

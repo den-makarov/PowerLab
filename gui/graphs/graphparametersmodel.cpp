@@ -42,7 +42,7 @@ int GraphParametersModel::getGridLinesNumber(GridSide side) const {
 
 void GraphParametersModel::setGridLinesNumber(GridSide side, int number) {
   if(number < 0 || MAX_GRID_LINES_NUMBER < number) {
-    Logger::log(GuiMessage::ERROR_INVALID_NUMBER_OF_GRID_LINES, number, 0, MAX_GRID_LINES_NUMBER);
+    Logger::log(Message::ERROR_INVALID_NUMBER_OF_GRID_LINES, number, 0, MAX_GRID_LINES_NUMBER);
     return;
   }
 
@@ -114,7 +114,7 @@ int GraphParametersModel::getLineWidth(GraphDataIdx idx) const {
 
 bool GraphParametersModel::setLineWidth(GraphDataIdx idx, int width) {
   if(width < 1 || MAX_GRAPH_LINE_WIDTH < width) {
-    Logger::log(GuiMessage::WARNING_FORBIDDEN_LINE_WIDTH, width, 1, MAX_GRAPH_LINE_WIDTH);
+    Logger::log(Message::WARNING_FORBIDDEN_LINE_WIDTH, width, 1, MAX_GRAPH_LINE_WIDTH);
     return false;
   }
 

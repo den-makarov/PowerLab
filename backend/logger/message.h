@@ -8,7 +8,7 @@
 namespace PowerLab {
 namespace Logger {
 
-enum class DefaultMessage {
+enum class Message {
   // DEBUG MESSAGES
   DEBUG_MSG,
   DEBUG_LAST,
@@ -36,6 +36,7 @@ public:
     SYSTEM,
     GUI,
     MODEL_RESULT,
+    MODEL_DESIGN,
     NONE
   };
 
@@ -103,7 +104,7 @@ private:
 };
 
 std::ostream& operator<<(std::ostream& out, const LogMessage& msg);
-std::string getMessagePhrase(DefaultMessage msg);
+std::string getMessagePhrase(Message msg);
 
 } // namespace Logger
 } // namespace PowerLab

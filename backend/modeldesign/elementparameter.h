@@ -2,14 +2,14 @@
 #define ELEMENTPARAMETER_H
 
 namespace PowerLab {
-namespace Model {
+namespace ModelDesign {
 
 class ElementParameter {
 public:
   ElementParameter();
 };
 
-} // namespace Model
+} // namespace ModelDesign
 } // namespace PowerLab
 
 #endif // ELEMENTPARAMETER_H

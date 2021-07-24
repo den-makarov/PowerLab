@@ -97,7 +97,7 @@ namespace PowerLab {
 namespace Gui {
 
 GraphWidget::~GraphWidget() {
-  Logger::log(Logger::DefaultMessage::DEBUG_MSG, "Graph widget destructor");
+  Logger::log(Logger::Message::DEBUG_MSG, "Graph widget destructor");
 }
 
 GraphWidget::GraphWidget(QWidget *parent, GraphProcessor* graph, Plot* plot)
@@ -130,7 +130,7 @@ size_t GraphWidget::getGraphCount() const {
 
 const GraphWidget::GraphData* GraphWidget::getGraphData(size_t idx) const {
   if(idx >= m_graphs.size()) {
-    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_INDEX, idx);
+    Logger::log(Message::ERROR_INVALID_GRAPH_INDEX, idx);
     return nullptr;
   } else {
     return &m_graphs.at(idx);
@@ -139,7 +139,7 @@ const GraphWidget::GraphData* GraphWidget::getGraphData(size_t idx) const {
 
 GraphWidget::GraphData* GraphWidget::getGraphData(size_t idx) {
   if(idx >= m_graphs.size()) {
-    Logger::log(GuiMessage::ERROR_INVALID_GRAPH_INDEX, idx);
+    Logger::log(Message::ERROR_INVALID_GRAPH_INDEX, idx);
     return nullptr;
   } else {
     return &m_graphs.at(idx);
@@ -185,7 +185,7 @@ void GraphWidget::addGraphData(std::string name,
     resetGraphVerticalScale();
     updateVerticalLabels();
   } else {
-    Logger::log(GuiMessage::ERROR_ATTEMPT_PLOT_SAME_SIGNAL, name);
+    Logger::log(Message::ERROR_ATTEMPT_PLOT_SAME_SIGNAL, name);
   }
 }
 
@@ -271,7 +271,7 @@ void GraphWidget::setupDefaultPlotMargins() const {
 
 void GraphWidget::paintEvent(QPaintEvent *event) {
   if(m_graphs.size() < 1) {
-    Logger::log(GuiMessage::ERROR_NO_DATA_TO_PLOT);
+    Logger::log(Message::ERROR_NO_DATA_TO_PLOT);
     return;
   }
 
@@ -404,7 +404,7 @@ void GraphWidget::zoomFinish() {
 
     std::ostringstream msg;
     msg << "Zoomed area: " << zoomBounds;
-    Logger::log(Logger::DefaultMessage::DEBUG_MSG, msg.str());
+    Logger::log(Logger::Message::DEBUG_MSG, msg.str());
 
     updateVerticalScale(zoomBounds.bottom(), zoomBounds.top(), 0.0);
     updateHorizontalScale(zoomBounds.left(), zoomBounds.right(), 0.0);
