@@ -21,8 +21,8 @@ void AbstractElement::addChild(std::unique_ptr<AbstractElement>&& child) {
   m_children.emplace_back(std::move(child));
 }
 
-void AbstractElement::addParameter(std::unique_ptr<ElementParameter>&& parameter) {
-  m_parameters.emplace_back(std::move(parameter));
+void AbstractElement::addParameter(const ParameterName& name, std::unique_ptr<ElementParameter>&& parameter) {
+  m_parameters.emplace(name, std::move(parameter));
 }
 
 } // namespace ModelDesign
