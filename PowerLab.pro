@@ -25,6 +25,10 @@ SOURCES += \
     backend/modeldesign/elementconnection.cpp \
     backend/modeldesign/elementconnectionmanager.cpp \
     backend/modeldesign/elementport.cpp \
+    backend/modeldesign/elements/basic/resistor.cpp \
+    backend/modeldesign/elements/sources/source.cpp \
+    backend/modeldesign/elements/sources/voltagesource.cpp \
+    backend/modeldesign/elements/sources/waveformsource.cpp \
     backend/modelresult/modelresultmeta.cpp \
     backend/modelresult/modelresult.cpp \
     backend/modelresult/modelresultvalues.cpp \
@@ -63,6 +67,10 @@ HEADERS += \
     backend/modeldesign/elementport.h \
     backend/modeldesign/elementconnectionmanager.h \
     backend/modeldesign/elementconnection.h \
+    backend/modeldesign/elements/basic/resistor.h \
+    backend/modeldesign/elements/sources/source.h \
+    backend/modeldesign/elements/sources/voltagesource.h \
+    backend/modeldesign/elements/sources/waveformsource.h \
     backend/modelresult/modelresultmeta.h \
     backend/modelresult/modelresultvalidator.h \
     backend/modelresult/modelresult.h \

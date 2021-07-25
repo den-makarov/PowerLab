@@ -9,6 +9,10 @@ AbstractElement::AbstractElement(const ElementName& name)
 
 }
 
+void AbstractElement::updateName(const ElementName& name) {
+  m_name = name;
+}
+
 const AbstractElement::ElementName& AbstractElement::getName() const {
   return m_name;
 }

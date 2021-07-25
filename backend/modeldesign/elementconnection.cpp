@@ -35,5 +35,13 @@ bool ElementConnection::isConnectedPort(const ElementPort* port) const {
   return std::find(m_connectedPorts.begin(), m_connectedPorts.end(), port) != m_connectedPorts.end();
 }
 
+void ElementConnection::setUserName(const std::string& name) {
+  m_userName = name;
+}
+
+const std::string& ElementConnection::getUserName() const {
+  return m_userName;
+}
+
 } // namespace ModelDesign
 } // namespace PowerLab

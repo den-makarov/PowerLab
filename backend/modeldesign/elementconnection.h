@@ -2,6 +2,7 @@
 #define ELEMENTCONNECTION_H
 
 #include <vector>
+#include <string>
 
 namespace PowerLab {
 namespace ModelDesign {
@@ -15,6 +16,9 @@ public:
   explicit ElementConnection(ConnectionId id);
   ~ElementConnection();
 
+  void setUserName(const std::string& name);
+  const std::string& getUserName() const;
+
   void connectPort(ElementPort* port);
   void disconnectPort(ElementPort* port);
   bool isConnectedPort(const ElementPort* port) const;
@@ -22,6 +26,7 @@ public:
 private:
   std::vector<ElementPort*> m_connectedPorts;
   const ConnectionId m_id;
+  std::string m_userName;
 };
 
 } // namespace ModelDesign

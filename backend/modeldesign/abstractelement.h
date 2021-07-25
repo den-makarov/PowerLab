@@ -17,17 +17,16 @@ public:
   using ElementName = std::string;
   using ParameterName = std::string;
 
-  AbstractElement(const ElementName& name);
+  explicit AbstractElement(const ElementName& name);
 
   const ElementName& getName() const;
+  void updateName(const ElementName& name);
 
   void addPort(std::unique_ptr<ElementPort>&& port);
   void addChild(std::unique_ptr<AbstractElement>&& child);
   void addParameter(const ParameterName& name, std::unique_ptr<ElementParameter>&& parameter);
 
 private:
-  int x = 0;
-  int y = 0;
   ElementName m_name;
   std::vector<std::unique_ptr<ElementPort>> m_ports;
   std::vector<std::unique_ptr<AbstractElement>> m_children;
