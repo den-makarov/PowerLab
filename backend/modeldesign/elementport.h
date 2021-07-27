@@ -19,7 +19,7 @@ public:
   bool isConnected() const;
 
 private:
-  ConnectionId m_connection;
+  ConnectionId m_connection = UNCONNECTED;
   const AbstractElement& m_owner;
 };
 
