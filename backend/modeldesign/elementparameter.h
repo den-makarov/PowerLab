@@ -68,7 +68,7 @@ private:
 
 class Resistance : public ElementParameter {
 public:
-  Resistance(const std::string& name, double value = 1.0);
+  Resistance(double value = 1.0);
   virtual ~Resistance() override = default;
 
   virtual ParameterType getType() const override;

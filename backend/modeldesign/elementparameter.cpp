@@ -5,6 +5,7 @@
 #include "logger.h"
 
 namespace {
+
 const std::map<PowerLab::ModelDesign::ParameterType, std::string> UNITS_MAP = {
   { PowerLab::ModelDesign::ParameterType::RESISTANCE, "Ohm" },
   { PowerLab::ModelDesign::ParameterType::INDUCTANCE, "H" },
@@ -18,6 +19,25 @@ const std::map<PowerLab::ModelDesign::ParameterType, std::string> UNITS_MAP = {
   { PowerLab::ModelDesign::ParameterType::VOLUME, "m3" },
   { PowerLab::ModelDesign::ParameterType::QUANTITY, "" },
 };
+
+std::string getStringName(PowerLab::ModelDesign::ParameterType type) {
+  std::string name = "";
+  switch(type) {
+  case PowerLab::ModelDesign::ParameterType::RESISTANCE: name = "resistance"; break;
+  case PowerLab::ModelDesign::ParameterType::INDUCTANCE: name = "inductance"; break;
+  case PowerLab::ModelDesign::ParameterType::CAPACITANCE: name = "capacitance"; break;
+  case PowerLab::ModelDesign::ParameterType::VOLTAGE: name = "voltage"; break;
+  case PowerLab::ModelDesign::ParameterType::CURRENT: name = "current"; break;
+  case PowerLab::ModelDesign::ParameterType::TEMPERATURE: name = "temperature"; break;
+  case PowerLab::ModelDesign::ParameterType::LENGTH: name = "length"; break;
+  case PowerLab::ModelDesign::ParameterType::WIDTH: name = "width"; break;
+  case PowerLab::ModelDesign::ParameterType::AREA: name = "area"; break;
+  case PowerLab::ModelDesign::ParameterType::VOLUME: name = "volume"; break;
+  case PowerLab::ModelDesign::ParameterType::QUANTITY: name = "quantity"; break;
+  }
+  return name;
+}
+
 }
 
 namespace PowerLab {
@@ -66,8 +86,8 @@ void ElementParameter::getValue(const std::string** pointer) const {
 void ElementParameter::setValue(const std::string&) {
 }
 
-Resistance::Resistance(const std::string& name, double value)
-  : ElementParameter(name)
+Resistance::Resistance(double value)
+  : ElementParameter(getStringName(ParameterType::RESISTANCE))
   , m_value(value)
 {
 }
