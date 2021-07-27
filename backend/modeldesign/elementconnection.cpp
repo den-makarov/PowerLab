@@ -13,7 +13,7 @@ ElementConnection::ElementConnection(ConnectionId id)
 
 ElementConnection::~ElementConnection() {
   for(auto& p : m_connectedPorts) {
-    p->disconnect(m_id);
+    p->disconnect();
   }
 }
 

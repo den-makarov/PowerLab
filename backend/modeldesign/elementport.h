@@ -15,11 +15,11 @@ public:
   ElementPort(const AbstractElement& owner);
 
   void connect(ConnectionId connection);
-  void disconnect(ConnectionId connection);
-  bool isConnected(ConnectionId connection) const;
+  void disconnect();
+  bool isConnected() const;
 
 private:
-  std::set<ConnectionId> m_connections;
+  ConnectionId m_connection;
   const AbstractElement& m_owner;
 };
 

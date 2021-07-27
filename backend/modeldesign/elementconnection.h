@@ -1,6 +1,7 @@
 #ifndef ELEMENTCONNECTION_H
 #define ELEMENTCONNECTION_H
 
+#include <limits>
 #include <vector>
 #include <string>
 
@@ -8,6 +9,8 @@ namespace PowerLab {
 namespace ModelDesign {
 
 using ConnectionId = size_t;
+
+static constexpr ConnectionId UNCONNECTED = std::numeric_limits<size_t>::max();
 
 class ElementPort;
 
