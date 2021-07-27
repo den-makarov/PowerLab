@@ -25,7 +25,7 @@
 namespace PowerLab {
 namespace ModelDesign {
 
-class Inductor : public AbstractElement {
+class Inductor : public CircuitElement {
 public:
   Inductor(const ElementName& name);
 };

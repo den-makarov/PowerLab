@@ -9,7 +9,7 @@
 namespace PowerLab {
 namespace ModelDesign {
 
-class Source : public AbstractElement {
+class Source : public CircuitElement {
 public:
   enum class Type {
     VOLTAGE,

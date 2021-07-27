@@ -12,7 +12,7 @@
 namespace PowerLab {
 namespace ModelDesign {
 
-class Resistor : public AbstractElement {
+class Resistor : public CircuitElement {
 public:
   Resistor(const ElementName& name);
 };

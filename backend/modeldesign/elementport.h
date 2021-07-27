@@ -8,11 +8,11 @@
 namespace PowerLab {
 namespace ModelDesign {
 
-class AbstractElement;
+class CircuitElement;
 
 class ElementPort {
 public:
-  ElementPort(const AbstractElement& owner);
+  ElementPort(const CircuitElement& owner);
 
   void connect(ConnectionId connection);
   void disconnect();
@@ -20,7 +20,7 @@ public:
 
 private:
   ConnectionId m_connection = UNCONNECTED;
-  const AbstractElement& m_owner;
+  const CircuitElement& m_owner;
 };
 
 } // namespace ModelDesign

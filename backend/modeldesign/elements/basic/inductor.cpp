@@ -4,7 +4,7 @@ namespace PowerLab {
 namespace ModelDesign {
 
 Inductor::Inductor(const ElementName& name)
-  : AbstractElement(name)
+  : CircuitElement(name)
 {
 }
 

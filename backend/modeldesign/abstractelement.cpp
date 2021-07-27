@@ -3,29 +3,29 @@
 namespace PowerLab {
 namespace ModelDesign {
 
-AbstractElement::AbstractElement(const ElementName& name)
+CircuitElement::CircuitElement(const ElementName& name)
   : m_name(name)
 {
 
 }
 
-void AbstractElement::updateName(const ElementName& name) {
+void CircuitElement::updateName(const ElementName& name) {
   m_name = name;
 }
 
-const AbstractElement::ElementName& AbstractElement::getName() const {
+const CircuitElement::ElementName& CircuitElement::getName() const {
   return m_name;
 }
 
-void AbstractElement::addPort(std::unique_ptr<ElementPort>&& port) {
+void CircuitElement::addPort(std::unique_ptr<ElementPort>&& port) {
   m_ports.emplace_back(std::move(port));
 }
 
-void AbstractElement::addChild(std::unique_ptr<AbstractElement>&& child) {
+void CircuitElement::addChild(std::unique_ptr<CircuitElement>&& child) {
   m_children.emplace_back(std::move(child));
 }
 
-void AbstractElement::addParameter(const ParameterName& name, std::unique_ptr<ElementParameter>&& parameter) {
+void CircuitElement::addParameter(const ParameterName& name, std::unique_ptr<ElementParameter>&& parameter) {
   m_parameters.emplace(name, std::move(parameter));
 }
 

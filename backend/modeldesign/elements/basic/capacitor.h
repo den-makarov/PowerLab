@@ -29,7 +29,7 @@
 namespace PowerLab {
 namespace ModelDesign {
 
-class Capacitor : public AbstractElement {
+class Capacitor : public CircuitElement {
 public:
   Capacitor(const ElementName& name);
 };

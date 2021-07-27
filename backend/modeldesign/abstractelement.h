@@ -12,24 +12,24 @@
 namespace PowerLab {
 namespace ModelDesign {
 
-class AbstractElement {
+class CircuitElement {
 public:
   using ElementName = std::string;
   using ParameterName = std::string;
 
-  explicit AbstractElement(const ElementName& name);
+  explicit CircuitElement(const ElementName& name);
 
   const ElementName& getName() const;
   void updateName(const ElementName& name);
 
   void addPort(std::unique_ptr<ElementPort>&& port);
-  void addChild(std::unique_ptr<AbstractElement>&& child);
+  void addChild(std::unique_ptr<CircuitElement>&& child);
   void addParameter(const ParameterName& name, std::unique_ptr<ElementParameter>&& parameter);
 
 private:
   ElementName m_name;
   std::vector<std::unique_ptr<ElementPort>> m_ports;
-  std::vector<std::unique_ptr<AbstractElement>> m_children;
+  std::vector<std::unique_ptr<CircuitElement>> m_children;
   std::map<ParameterName, std::unique_ptr<ElementParameter>> m_parameters;
 };
 

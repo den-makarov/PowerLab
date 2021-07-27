@@ -4,7 +4,7 @@ namespace PowerLab {
 namespace ModelDesign {
 
 Source::Source(const ElementName& name, std::unique_ptr<WaveFormSource>&& waveform)
-  : AbstractElement(name)
+  : CircuitElement(name)
   , m_waveform(std::move(waveform))
 {
 }

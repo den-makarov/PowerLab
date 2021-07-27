@@ -4,7 +4,7 @@
 namespace PowerLab {
 namespace ModelDesign {
 
-ElementPort::ElementPort(const AbstractElement& owner)
+ElementPort::ElementPort(const CircuitElement& owner)
   : m_owner(owner)
 {
 

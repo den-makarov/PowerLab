@@ -17,7 +17,7 @@
 namespace PowerLab {
 namespace ModelDesign {
 
-class Switch : public AbstractElement {
+class Switch : public CircuitElement {
 public:
   Switch(const ElementName& name);
 private:

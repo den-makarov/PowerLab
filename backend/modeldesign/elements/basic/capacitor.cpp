@@ -4,7 +4,7 @@ namespace PowerLab {
 namespace ModelDesign {
 
 Capacitor::Capacitor(const ElementName& name)
-  : AbstractElement(name)
+  : CircuitElement(name)
 {
 }
 
