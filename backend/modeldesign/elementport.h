@@ -1,8 +1,6 @@
 #ifndef ELEMENTPORT_H
 #define ELEMENTPORT_H
 
-#include <set>
-
 #include "elementconnection.h"
 
 namespace PowerLab {

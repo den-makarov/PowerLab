@@ -43,6 +43,10 @@ std::string getStringName(PowerLab::ModelDesign::ParameterType type) {
 namespace PowerLab {
 namespace ModelDesign {
 
+std::string parameterTypeToString(ParameterType type) {
+  return getStringName(type);
+}
+
 ElementParameter::ElementParameter(const std::string& name)
   : m_name(name)
 {
@@ -60,34 +64,34 @@ const std::string& ElementParameter::getUnits() const {
   return UNITS_MAP.at(ElementParameter::getType());
 }
 
-void ElementParameter::getValue(const double** pointer) const {
+void ElementParameter::getValueImpl(const double** pointer) const {
   static double INVALID_VALUE = std::numeric_limits<double>::quiet_NaN();
   *pointer = &INVALID_VALUE;
 }
 
-void ElementParameter::setValue(double) {
+void ElementParameter::setValueImpl(double) {
 
 }
 
-void ElementParameter::getValue(const int** pointer) const {
+void ElementParameter::getValueImpl(const int** pointer) const {
   static int INVALID_VALUE = std::numeric_limits<int>::min();
   *pointer = &INVALID_VALUE;
 }
 
-void ElementParameter::setValue(int) {
+void ElementParameter::setValueImpl(int) {
 
 }
 
-void ElementParameter::getValue(const std::string** pointer) const {
+void ElementParameter::getValueImpl(const std::string** pointer) const {
   static std::string INVALID_VALUE = "INVALID_VALUE";
   *pointer = &INVALID_VALUE;
 }
 
-void ElementParameter::setValue(const std::string&) {
+void ElementParameter::setValueImpl(const std::string&) {
 }
 
 Resistance::Resistance(double value)
-  : ElementParameter(getStringName(ParameterType::RESISTANCE))
+  : DoubleElementParameter(getStringName(ParameterType::RESISTANCE))
   , m_value(value)
 {
 }
@@ -100,28 +104,12 @@ const std::string& Resistance::getUnits() const {
   return UNITS_MAP.at(getType());
 }
 
-void Resistance::getValue(const double** pointer) const {
+void Resistance::getValueImpl(const double** pointer) const {
   *pointer = &m_value;
 }
 
-void Resistance::setValue(double value) {
+void Resistance::setValueImpl(double value) {
   m_value = value;
-}
-
-void Resistance::getValue(const int** pointer) const {
-  ElementParameter::getValue(pointer);
-}
-
-void Resistance::setValue(int value) {
-  ElementParameter::setValue(value);
-}
-
-void Resistance::getValue(const std::string** pointer) const {
-  ElementParameter::getValue(pointer);
-}
-
-void Resistance::setValue(const std::string& value) {
-  ElementParameter::setValue(value);
 }
 
 } // namespace ModelDesign

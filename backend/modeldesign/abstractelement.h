@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <optional>
 
 #include "elementport.h"
 #include "elementparameter.h"
@@ -25,6 +26,8 @@ public:
   void addPort(std::unique_ptr<ElementPort>&& port);
   void addChild(std::unique_ptr<CircuitElement>&& child);
   void addParameter(const ParameterName& name, std::unique_ptr<ElementParameter>&& parameter);
+  const ElementParameter* getParameter(const std::string& name) const;
+  ElementParameter* getParameter(const std::string& name);
 
 private:
   ElementName m_name;

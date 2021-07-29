@@ -29,5 +29,23 @@ void CircuitElement::addParameter(const ParameterName& name, std::unique_ptr<Ele
   m_parameters.emplace(name, std::move(parameter));
 }
 
+const ElementParameter* CircuitElement::getParameter(const std::string& name) const {
+  auto it = m_parameters.find(name);
+  if(it != m_parameters.end()) {
+    return it->second.get();
+  } else {
+    return nullptr;
+  }
+}
+
+ElementParameter* CircuitElement::getParameter(const std::string& name) {
+  auto it = m_parameters.find(name);
+  if(it != m_parameters.end()) {
+    return it->second.get();
+  } else {
+    return nullptr;
+  }
+}
+
 } // namespace ModelDesign
 } // namespace PowerLab

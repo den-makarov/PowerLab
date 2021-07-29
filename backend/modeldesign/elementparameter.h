@@ -37,9 +37,9 @@ public:
                                 || std::is_same<T, double>::value;
     static_assert(supportedType, "Parameter type isn't supported");
 
-    const T** pointer;
-    getValue(pointer);
-    return **pointer;
+    const T* pointer = nullptr;
+    getValueImpl(&pointer);
+    return *pointer;
   }
 
   template<typename T>
@@ -49,24 +49,52 @@ public:
                                 || std::is_same<T, double>::value;
     static_assert(supportedType, "Parameter type isn't supported");
 
-    setValue(value);
+    setValueImpl(value);
   }
 
 protected:
-  virtual void getValue(const double** pointer) const = 0;
-  virtual void setValue(double value) = 0;
+  virtual void getValueImpl(const double** pointer) const = 0;
+  virtual void setValueImpl(double value) = 0;
 
-  virtual void getValue(const int** pointer) const = 0;
-  virtual void setValue(int pointer) = 0;
+  virtual void getValueImpl(const int** pointer) const = 0;
+  virtual void setValueImpl(int value) = 0;
 
-  virtual void getValue(const std::string** pointer) const = 0;
-  virtual void setValue(const std::string& pointer) = 0;
+  virtual void getValueImpl(const std::string** pointer) const = 0;
+  virtual void setValueImpl(const std::string& value) = 0;
 
 private:
   const std::string m_name;
 };
 
-class Resistance : public ElementParameter {
+class DoubleElementParameter : public ElementParameter {
+public:
+  explicit DoubleElementParameter(const std::string& name)
+    : ElementParameter(name) {}
+  virtual ~DoubleElementParameter() override = default;
+
+private:
+  virtual void getValueImpl(const int** pointer) const override {
+    ElementParameter::getValueImpl(pointer);
+  }
+
+  virtual void setValueImpl(int value) override {
+    ElementParameter::setValueImpl(value);
+  }
+
+  virtual void getValueImpl(const std::string** pointer) const override {
+    ElementParameter::getValueImpl(pointer);
+  }
+
+  virtual void setValueImpl(const std::string& value) override {
+    ElementParameter::setValueImpl(value);
+  }
+
+protected:
+  virtual void getValueImpl(const double** pointer) const override = 0;
+  virtual void setValueImpl(double value) override = 0;
+};
+
+class Resistance : public DoubleElementParameter {
 public:
   Resistance(double value = 1.0);
   virtual ~Resistance() override = default;
@@ -75,17 +103,13 @@ public:
   virtual const std::string& getUnits() const override;
 
 private:
-  virtual void getValue(const double** pointer) const override;
-  virtual void setValue(double value) override;
-
-  virtual void getValue(const int** pointer) const override;
-  virtual void setValue(int value) override;
-
-  virtual void getValue(const std::string** pointer) const override;
-  virtual void setValue(const std::string& value) override;
+  virtual void getValueImpl(const double** pointer) const override;
+  virtual void setValueImpl(double value) override;
 
   double m_value;
 };
+
+std::string parameterTypeToString(ParameterType type);
 
 } // namespace ModelDesign
 } // namespace PowerLab
