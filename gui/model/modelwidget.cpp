@@ -18,8 +18,8 @@ ModelWidget::ModelWidget(QWidget *parent, const QString& title)
   Logger::log(Logger::Message::DEBUG_MSG, R->getName());
   auto value = R->getParameter(parameterTypeToString(ModelDesign::ParameterType::RESISTANCE));
   if(value) {
-//    value->setValue(10.0);
-    Logger::log(Logger::Message::DEBUG_MSG, value->getValue<double>());
+    std::string param = parameterTypeToString(value->getType()) + ": " + std::to_string(value->getValue<double>()) + " " + value->getUnits();
+    Logger::log(Logger::Message::DEBUG_MSG, param);
   }
   delete R;
 }

@@ -32,6 +32,7 @@ SOURCES += \
     backend/modeldesign/elements/sources/source.cpp \
     backend/modeldesign/elements/sources/voltagesource.cpp \
     backend/modeldesign/elements/sources/waveformsource.cpp \
+    backend/modeldesign/parameters/resistance.cpp \
     backend/modelresult/modelresultmeta.cpp \
     backend/modelresult/modelresult.cpp \
     backend/modelresult/modelresultvalues.cpp \
@@ -77,6 +78,7 @@ HEADERS += \
     backend/modeldesign/elements/sources/source.h \
     backend/modeldesign/elements/sources/voltagesource.h \
     backend/modeldesign/elements/sources/waveformsource.h \
+    backend/modeldesign/parameters/resistance.h \
     backend/modelresult/modelresultmeta.h \
     backend/modelresult/modelresultvalidator.h \
     backend/modelresult/modelresult.h \

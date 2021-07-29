@@ -1,4 +1,5 @@
 #include "resistor.h"
+#include "modeldesign/parameters/resistance.h"
 
 namespace PowerLab {
 namespace ModelDesign {

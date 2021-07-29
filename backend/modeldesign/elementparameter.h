@@ -94,22 +94,8 @@ protected:
   virtual void setValueImpl(double value) override = 0;
 };
 
-class Resistance : public DoubleElementParameter {
-public:
-  Resistance(double value = 1.0);
-  virtual ~Resistance() override = default;
-
-  virtual ParameterType getType() const override;
-  virtual const std::string& getUnits() const override;
-
-private:
-  virtual void getValueImpl(const double** pointer) const override;
-  virtual void setValueImpl(double value) override;
-
-  double m_value;
-};
-
-std::string parameterTypeToString(ParameterType type);
+const std::string& parameterTypeToString(ParameterType type);
+const std::string& parameterTypeUnits(ParameterType type);
 
 } // namespace ModelDesign
 } // namespace PowerLab

@@ -20,8 +20,8 @@ const std::map<PowerLab::ModelDesign::ParameterType, std::string> UNITS_MAP = {
   { PowerLab::ModelDesign::ParameterType::QUANTITY, "" },
 };
 
-std::string getStringName(PowerLab::ModelDesign::ParameterType type) {
-  std::string name = "";
+const std::string& getStringName(PowerLab::ModelDesign::ParameterType type) {
+  static std::string name = "";
   switch(type) {
   case PowerLab::ModelDesign::ParameterType::RESISTANCE: name = "resistance"; break;
   case PowerLab::ModelDesign::ParameterType::INDUCTANCE: name = "inductance"; break;
@@ -43,8 +43,12 @@ std::string getStringName(PowerLab::ModelDesign::ParameterType type) {
 namespace PowerLab {
 namespace ModelDesign {
 
-std::string parameterTypeToString(ParameterType type) {
+const std::string& parameterTypeToString(ParameterType type) {
   return getStringName(type);
+}
+
+const std::string& parameterTypeUnits(ParameterType type) {
+  return UNITS_MAP.at(type);
 }
 
 ElementParameter::ElementParameter(const std::string& name)
@@ -88,28 +92,6 @@ void ElementParameter::getValueImpl(const std::string** pointer) const {
 }
 
 void ElementParameter::setValueImpl(const std::string&) {
-}
-
-Resistance::Resistance(double value)
-  : DoubleElementParameter(getStringName(ParameterType::RESISTANCE))
-  , m_value(value)
-{
-}
-
-ParameterType Resistance::getType() const {
-  return ParameterType::RESISTANCE;
-}
-
-const std::string& Resistance::getUnits() const {
-  return UNITS_MAP.at(getType());
-}
-
-void Resistance::getValueImpl(const double** pointer) const {
-  *pointer = &m_value;
-}
-
-void Resistance::setValueImpl(double value) {
-  m_value = value;
 }
 
 } // namespace ModelDesign
