@@ -8,7 +8,7 @@ Resistor::Resistor(const ElementName& name)
   : CircuitElement(name)
 {
   auto resistance = std::make_unique<Resistance>();
-  addParameter(parameterTypeToString(ParameterType::RESISTANCE), std::move(resistance));
+  addParameter(ParameterType::RESISTANCE, std::move(resistance));
 
   auto port1 = std::make_unique<ElementPort>(*this);
   auto port2 = std::make_unique<ElementPort>(*this);

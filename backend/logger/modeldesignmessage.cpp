@@ -15,6 +15,7 @@ std::string getMessagePhrase(Message msg) {
     // Info messages
     // Warning messages
     // Error messages
+    {Message::ERROR_ELEMENT_PARAMETER_DOESNT_SUPPORT_TYPE, "Wrong usage of parameter \"%1%\". It isn't %2% type"},
   };
 
   return msgPhrases.at(msg);

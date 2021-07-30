@@ -25,9 +25,15 @@ public:
 
   void addPort(std::unique_ptr<ElementPort>&& port);
   void addChild(std::unique_ptr<CircuitElement>&& child);
+
   void addParameter(const ParameterName& name, std::unique_ptr<ElementParameter>&& parameter);
+  void addParameter(const ParameterType& name, std::unique_ptr<ElementParameter>&& parameter);
+
   const ElementParameter* getParameter(const std::string& name) const;
   ElementParameter* getParameter(const std::string& name);
+  const ElementParameter* getParameter(const ParameterType& type) const;
+  ElementParameter* getParameter(const ParameterType& type);
+  std::vector<const ElementParameter*> getAllParameters() const;
 
 private:
   ElementName m_name;

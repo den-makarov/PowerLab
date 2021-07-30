@@ -1,15 +1,15 @@
-#ifndef RESISTANCE_H
-#define RESISTANCE_H
+#ifndef INDUCTANCE_H
+#define INDUCTANCE_H
 
 #include "modeldesign/elementparameter.h"
 
 namespace PowerLab {
 namespace ModelDesign {
 
-class Resistance : public FloatElementParameter {
+class Inductance : public FloatElementParameter {
 public:
-  Resistance(double value = 1.0);
-  virtual ~Resistance() override = default;
+  Inductance(double value = 0.001);
+  virtual ~Inductance() override = default;
 
   virtual ParameterType getType() const override;
 };
@@ -17,4 +17,4 @@ public:
 } // namespace ModelDesign
 } // namespace PowerLab
 
-#endif // RESISTANCE_H
+#endif // INDUCTANCE_H

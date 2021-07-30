@@ -3,6 +3,7 @@
 
 #include <variant>
 #include <string>
+#include <iostream>
 
 namespace PowerLab {
 namespace ModelDesign {
@@ -13,6 +14,10 @@ enum class ParameterType {
   CAPACITANCE,
   VOLTAGE,
   CURRENT,
+  FREQUENCY,
+  PERIOD,
+  PHASE,
+  TIME,
   TEMPERATURE,
   LENGTH,
   WIDTH,
@@ -23,10 +28,9 @@ enum class ParameterType {
 
 class ElementParameter {
 public:
-  explicit ElementParameter(const std::string& name);
-  virtual ~ElementParameter() = default;
+  ElementParameter() = default;
+  virtual ~ElementParameter();
 
-  const std::string& getName() const;
   virtual ParameterType getType() const = 0;
   virtual const std::string& getUnits() const = 0;
 
@@ -61,43 +65,66 @@ protected:
 
   virtual void getValueImpl(const std::string** pointer) const = 0;
   virtual void setValueImpl(const std::string& value) = 0;
-
-private:
-  const std::string m_name;
 };
 
-class DoubleElementParameter : public ElementParameter {
+class FloatElementParameter : public ElementParameter {
 public:
-  explicit DoubleElementParameter(const std::string& name)
-    : ElementParameter(name) {}
-  virtual ~DoubleElementParameter() override = default;
+  explicit FloatElementParameter(double value)
+    : m_value(value)
+  {}
+  virtual ~FloatElementParameter() override = default;
+
+  virtual const std::string& getUnits() const override;
 
 private:
-  virtual void getValueImpl(const int** pointer) const override {
-    ElementParameter::getValueImpl(pointer);
-  }
+  virtual void getValueImpl(const int** pointer) const override;
+  virtual void setValueImpl(int value) override;
+  virtual void getValueImpl(const std::string** pointer) const override;
+  virtual void setValueImpl(const std::string& value) override;
+  virtual void getValueImpl(const double** pointer) const override;
+  virtual void setValueImpl(double value) override;
 
-  virtual void setValueImpl(int value) override {
-    ElementParameter::setValueImpl(value);
-  }
+  double m_value;
+};
 
-  virtual void getValueImpl(const std::string** pointer) const override {
-    ElementParameter::getValueImpl(pointer);
-  }
+class IntegerElementParameter : public ElementParameter {
+public:
+  IntegerElementParameter() = default;
+  virtual ~IntegerElementParameter() override = default;
 
-  virtual void setValueImpl(const std::string& value) override {
-    ElementParameter::setValueImpl(value);
-  }
+private:
+  virtual void getValueImpl(const std::string** pointer) const override;
+  virtual void setValueImpl(const std::string& value) override;
+  virtual void getValueImpl(const double** pointer) const override;
+  virtual void setValueImpl(double value) override;
 
 protected:
-  virtual void getValueImpl(const double** pointer) const override = 0;
-  virtual void setValueImpl(double value) override = 0;
+  virtual void getValueImpl(const int** pointer) const override = 0;
+  virtual void setValueImpl(int value) override = 0;
 };
 
-const std::string& parameterTypeToString(ParameterType type);
-const std::string& parameterTypeUnits(ParameterType type);
+class StringElementParameter : public ElementParameter {
+public:
+  StringElementParameter() = default;
+  virtual ~StringElementParameter() override = default;
+
+private:
+  virtual void getValueImpl(const int** pointer) const override;
+  virtual void setValueImpl(int value) override;
+  virtual void getValueImpl(const double** pointer) const override;
+  virtual void setValueImpl(double value) override;
+
+protected:
+  virtual void getValueImpl(const std::string** pointer) const override = 0;
+  virtual void setValueImpl(const std::string& value) override = 0;
+};
+
+const std::string& parameterTypeToStr(ParameterType type);
+const std::string& parameterTypeUnitsToStr(ParameterType type);
 
 } // namespace ModelDesign
 } // namespace PowerLab
+
+std::ostream& operator<<(std::ostream& out, const PowerLab::ModelDesign::ParameterType& type);
 
 #endif // ELEMENTPARAMETER_H
