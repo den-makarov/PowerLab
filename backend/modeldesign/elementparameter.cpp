@@ -151,10 +151,6 @@ std::vector<const ElementParameter*> ElementParameterMap::getAllParameters() con
   return result;
 }
 
-const std::string& FloatElementParameter::getUnits() const {
-  return ElementParameter::getUnits();
-}
-
 void FloatElementParameter::getValueImpl(const int** pointer) const {
   ElementParameter::getValueImpl(pointer);
 }
@@ -177,10 +173,6 @@ void FloatElementParameter::getValueImpl(const double** pointer) const {
 
 void FloatElementParameter::setValueImpl(double value) {
   m_value = value;
-}
-
-const std::string& IntegerElementParameter::getUnits() const {
-  return ElementParameter::getUnits();
 }
 
 void IntegerElementParameter::getValueImpl(const double** pointer) const {
@@ -215,10 +207,6 @@ void StateElementParameter::setValueImpl(int value) {
   }
 
   IntegerElementParameter::setValueImpl(value);
-}
-
-const std::string& StringElementParameter::getUnits() const {
-  return ElementParameter::getUnits();
 }
 
 void StringElementParameter::getValueImpl(const int** pointer) const {

@@ -10,7 +10,6 @@ class VoltageSource : public Source {
 public:
   VoltageSource(const ElementName& name, std::unique_ptr<WaveFormSource>&& waveform);
   virtual ~VoltageSource() override = default;
-  virtual Type getSourceType() const override;
 private:
 };
 

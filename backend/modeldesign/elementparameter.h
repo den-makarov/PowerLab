@@ -34,12 +34,11 @@ using ParameterName = std::string;
 
 class ElementParameter {
 public:
-  ElementParameter() = default;
   virtual ~ElementParameter();
 
   virtual ParameterType getType() const = 0;
   virtual ParameterName getName() const;
-  virtual const std::string& getUnits() const = 0;
+  virtual const std::string& getUnits() const;
 
   template<typename T>
   const auto& getValue() const {
@@ -64,6 +63,8 @@ public:
   }
 
 protected:
+  ElementParameter() = default;
+
   virtual void getValueImpl(const double** pointer) const = 0;
   virtual void setValueImpl(double value) = 0;
 
@@ -95,12 +96,12 @@ private:
 
 class FloatElementParameter : public ElementParameter {
 public:
+  virtual ~FloatElementParameter() override = default;
+
+protected:
   explicit FloatElementParameter(double value)
     : m_value(value)
   {}
-  virtual ~FloatElementParameter() override = default;
-
-  virtual const std::string& getUnits() const override;
 
 private:
   virtual void getValueImpl(const int** pointer) const override;
@@ -115,16 +116,15 @@ private:
 
 class IntegerElementParameter : public ElementParameter {
 public:
+  virtual ~IntegerElementParameter() override = default;
+
+protected:
   explicit IntegerElementParameter(int value)
     : m_value(value)
   {}
-  virtual ~IntegerElementParameter() override = default;
 
-  virtual const std::string& getUnits() const override;
-
-protected:
-  virtual void setValueImpl(int value) override;
   virtual void getValueImpl(const int** pointer) const override;
+  virtual void setValueImpl(int value) override;
 
 private:
   virtual void getValueImpl(const std::string** pointer) const override;
@@ -137,20 +137,24 @@ private:
 
 class StateElementParameter : public IntegerElementParameter {
 public:
+  virtual ~StateElementParameter() override = default;
+
+protected:
   explicit StateElementParameter(int value)
     : IntegerElementParameter(value)
   {}
-  virtual ~StateElementParameter() override = default;
+
 private:
   virtual void setValueImpl(int value) override;
 };
 
 class StringElementParameter : public ElementParameter {
 public:
-  StringElementParameter() = default;
   virtual ~StringElementParameter() override = default;
 
-  virtual const std::string& getUnits() const override;
+protected:
+  StringElementParameter() = default;
+
 private:
   virtual void getValueImpl(const int** pointer) const override;
   virtual void setValueImpl(int value) override;

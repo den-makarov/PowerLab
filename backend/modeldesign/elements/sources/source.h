@@ -16,14 +16,19 @@ public:
     CURRENT
   };
 
-  explicit Source(const ElementName& name, std::unique_ptr<WaveFormSource>&& waveform);
   virtual ~Source() = default;
-  virtual Type getSourceType() const = 0;
+  Type getSourceType() const;
 
   const WaveFormSource& getWaveForm() const;
   WaveFormSource& getWaveForm();
+
+  virtual std::string str() const;
+protected:
+  explicit Source(const ElementName& name, Type type, std::unique_ptr<WaveFormSource>&& waveform);
+
 private:
   std::unique_ptr<WaveFormSource> m_waveform;
+  const Type m_type;
 };
 
 } // namespace ModelDesign
