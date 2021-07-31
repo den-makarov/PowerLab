@@ -2,10 +2,8 @@
 #define ABSTRACTELEMENT_H
 
 #include <vector>
-#include <map>
 #include <string>
 #include <memory>
-#include <optional>
 
 #include "elementport.h"
 #include "elementparameter.h"
@@ -16,30 +14,24 @@ namespace ModelDesign {
 class CircuitElement {
 public:
   using ElementName = std::string;
-  using ParameterName = std::string;
-
-  explicit CircuitElement(const ElementName& name);
 
   const ElementName& getName() const;
   void updateName(const ElementName& name);
 
-  void addPort(std::unique_ptr<ElementPort>&& port);
   void addChild(std::unique_ptr<CircuitElement>&& child);
-
-  void addParameter(const ParameterName& name, std::unique_ptr<ElementParameter>&& parameter);
-  void addParameter(const ParameterType& name, std::unique_ptr<ElementParameter>&& parameter);
-
-  const ElementParameter* getParameter(const std::string& name) const;
-  ElementParameter* getParameter(const std::string& name);
-  const ElementParameter* getParameter(const ParameterType& type) const;
-  ElementParameter* getParameter(const ParameterType& type);
   std::vector<const ElementParameter*> getAllParameters() const;
+
+protected:
+  explicit CircuitElement(const ElementName& name);
+
+  void addPort(std::unique_ptr<ElementPort>&& port);
+
+  ElementParameterMap m_parameters;
 
 private:
   ElementName m_name;
   std::vector<std::unique_ptr<ElementPort>> m_ports;
   std::vector<std::unique_ptr<CircuitElement>> m_children;
-  std::map<ParameterName, std::unique_ptr<ElementParameter>> m_parameters;
 };
 
 } // namespace ModelDesign

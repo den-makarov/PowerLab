@@ -8,7 +8,7 @@ Capacitor::Capacitor(const ElementName& name)
   : CircuitElement(name)
 {
   auto capacitance = std::make_unique<Capacitance>();
-  addParameter(ParameterType::CAPACITANCE, std::move(capacitance));
+  m_parameters.addParameter(ParameterType::CAPACITANCE, std::move(capacitance));
 
   auto port1 = std::make_unique<ElementPort>(*this);
   auto port2 = std::make_unique<ElementPort>(*this);

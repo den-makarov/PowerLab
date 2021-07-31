@@ -1,29 +1,44 @@
 #ifndef WAVEFORMSOURCE_H
 #define WAVEFORMSOURCE_H
 
+#include <string>
+
+#include "modeldesign/elementparameter.h"
+
 namespace PowerLab {
 namespace ModelDesign {
 
+enum class SignalType {
+  UNDEFINED, // Used for measurement purpose
+  CONSTANT,
+  PULSE,
+  EXPONENTIAL,
+  SINUSOIDAL,
+  PIECE_WISE,
+  SINGLE_FREQUENCE_MODULATED,
+  AMLITUDE_MODULATED,
+  TRANSIENT_NOISE,
+  RANDOM,
+  EXTERNAL_DATA
+};
+
 class WaveFormSource {
 public:
-  enum class Type {
-    NO_WAVEFORM, // Used for measurement purpose
-    DIRECT_CURRENT,
-    PULSE,
-    EXPONENTIAL,
-    SINUSOIDAL,
-    PIECE_WISE,
-    SINGLE_FREQUENCE_MODULATED,
-    AMLITUDE_MODULATED,
-    TRANSIENT_NOISE,
-    RANDOM,
-    EXTERNAL_DATA
-  };
-
-  WaveFormSource();
   virtual ~WaveFormSource() = default;
 
-  virtual Type getWaveFormType() = 0;
+  virtual std::string getModel() const = 0;
+
+  std::vector<const ElementParameter*> getAllParameters() const;
+
+  SignalType getSignalType() const;
+
+protected:
+  explicit WaveFormSource(SignalType form = SignalType::UNDEFINED);
+
+  ElementParameterMap m_parameters;
+
+private:
+  const SignalType m_signalType;
 };
 
 } // namespace ModelDesign

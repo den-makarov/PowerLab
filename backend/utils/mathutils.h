@@ -6,6 +6,8 @@
 namespace PowerLab {
 namespace Utilities {
 
+static constexpr double PI = 3.14159265;
+
 struct RoundedSegments {
   double from;
   double to;
@@ -14,8 +16,10 @@ struct RoundedSegments {
 
 int orderOfTen(double value);
 
-RoundedSegments findOptimalRoundedSegments(double from, double to, int maxStepNumber);
+double radianToDegree(double rad);
+double degreeToRadian(double degree);
 
+RoundedSegments findOptimalRoundedSegments(double from, double to, int maxStepNumber);
 std::ostream& operator<<(std::ostream& out, const RoundedSegments& rs);
 
 } // namespace Utilities

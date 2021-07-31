@@ -1,8 +1,10 @@
 #ifndef ELEMENTPARAMETER_H
 #define ELEMENTPARAMETER_H
 
-#include <variant>
 #include <string>
+#include <map>
+#include <memory>
+#include <vector>
 #include <iostream>
 
 namespace PowerLab {
@@ -24,8 +26,11 @@ enum class ParameterType {
   AREA,
   VOLUME,
   QUANTITY,
-  STATE
+  STATE,
+  COEFFICIENT
 };
+
+using ParameterName = std::string;
 
 class ElementParameter {
 public:
@@ -33,6 +38,7 @@ public:
   virtual ~ElementParameter();
 
   virtual ParameterType getType() const = 0;
+  virtual ParameterName getName() const;
   virtual const std::string& getUnits() const = 0;
 
   template<typename T>
@@ -66,6 +72,25 @@ protected:
 
   virtual void getValueImpl(const std::string** pointer) const = 0;
   virtual void setValueImpl(const std::string& value) = 0;
+};
+
+class ElementParameterMap {
+public:
+  ElementParameterMap() = default;
+
+  void addParameter(const ParameterName& name, std::unique_ptr<ElementParameter>&& parameter);
+  void addParameter(const ParameterType& name, std::unique_ptr<ElementParameter>&& parameter);
+
+  const ElementParameter* getParameter(const std::string& name) const;
+  ElementParameter* getParameter(const std::string& name);
+
+  const ElementParameter* getParameter(const ParameterType& type) const;
+  ElementParameter* getParameter(const ParameterType& type);
+
+  std::vector<const ElementParameter*> getAllParameters() const;
+
+private:
+  std::map<ParameterName, std::unique_ptr<ElementParameter>> m_parameters;
 };
 
 class FloatElementParameter : public ElementParameter {

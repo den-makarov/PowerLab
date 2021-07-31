@@ -1,5 +1,4 @@
 #include <limits>
-#include <map>
 
 #include "elementparameter.h"
 #include "logger.h"
@@ -23,6 +22,7 @@ const std::map<PowerLab::ModelDesign::ParameterType, std::string> UNITS_MAP = {
   { PowerLab::ModelDesign::ParameterType::VOLUME, "m3" },
   { PowerLab::ModelDesign::ParameterType::QUANTITY, "" },
   { PowerLab::ModelDesign::ParameterType::STATE, "" },
+  { PowerLab::ModelDesign::ParameterType::COEFFICIENT, "" },
 };
 
 const std::string& getStringName(PowerLab::ModelDesign::ParameterType type) {
@@ -44,6 +44,7 @@ const std::string& getStringName(PowerLab::ModelDesign::ParameterType type) {
   case PowerLab::ModelDesign::ParameterType::AREA: name = "area"; break;
   case PowerLab::ModelDesign::ParameterType::VOLUME: name = "volume"; break;
   case PowerLab::ModelDesign::ParameterType::QUANTITY: name = "quantity"; break;
+  case PowerLab::ModelDesign::ParameterType::COEFFICIENT: name = "coefficient"; break;
   }
   return name;
 }
@@ -67,6 +68,10 @@ const std::string& parameterTypeUnitsToStr(ParameterType type) {
 }
 
 ElementParameter::~ElementParameter() { /* EMPTY */ }
+
+ParameterName ElementParameter::getName() const {
+  return parameterTypeToStr(getType());
+}
 
 ParameterType ElementParameter::getType() const {
   return ParameterType::QUANTITY;
@@ -101,6 +106,49 @@ void ElementParameter::getValueImpl(const std::string** pointer) const {
 }
 
 void ElementParameter::setValueImpl(const std::string&) {
+}
+
+void ElementParameterMap::addParameter(const ParameterName& name, std::unique_ptr<ElementParameter>&& parameter) {
+  m_parameters[name] = std::move(parameter);
+}
+
+void ElementParameterMap::addParameter(const ParameterType& name, std::unique_ptr<ElementParameter>&& parameter) {
+  addParameter(parameterTypeToStr(name), std::move(parameter));
+}
+
+const ElementParameter* ElementParameterMap::getParameter(const std::string& name) const {
+  auto it = m_parameters.find(name);
+  if(it != m_parameters.end()) {
+    return it->second.get();
+  } else {
+    return nullptr;
+  }
+}
+
+ElementParameter* ElementParameterMap::getParameter(const std::string& name) {
+  auto it = m_parameters.find(name);
+  if(it != m_parameters.end()) {
+    return it->second.get();
+  } else {
+    return nullptr;
+  }
+}
+
+const ElementParameter* ElementParameterMap::getParameter(const ParameterType& type) const {
+  return getParameter(parameterTypeToStr(type));
+}
+
+ElementParameter* ElementParameterMap::getParameter(const ParameterType& type) {
+  return getParameter(parameterTypeToStr(type));
+}
+
+std::vector<const ElementParameter*> ElementParameterMap::getAllParameters() const {
+  std::vector<const ElementParameter*> result;
+  for(auto&& [name, param] : m_parameters) {
+    result.push_back(param.get());
+  }
+
+  return result;
 }
 
 const std::string& FloatElementParameter::getUnits() const {

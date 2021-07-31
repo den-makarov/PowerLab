@@ -7,6 +7,14 @@
 namespace PowerLab {
 namespace Utilities {
 
+double radianToDegree(double rad) {
+  return 180 * rad / PI;
+}
+
+double degreeToRadian(double degree) {
+  return PI * degree / 180;
+}
+
 RoundedSegments findOptimalRoundedSegments(double from, double to, int maxStepNumber) {
   if(from >= to || maxStepNumber <= 0) {
     auto nan = std::numeric_limits<double>::quiet_NaN();

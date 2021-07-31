@@ -27,7 +27,7 @@ ModelWidget::ModelWidget(QWidget *parent, const QString& title)
 
   for(auto item : elements) {
     auto params = item->getAllParameters();
-    Logger::log(Logger::Message::DEBUG_MSG, item->getName());
+    std::string desc = "Element " + item->getName();
     for(auto p : params) {
       std::string value;
       if(p->getType() == ModelDesign::ParameterType::STATE) {
@@ -36,7 +36,7 @@ ModelWidget::ModelWidget(QWidget *parent, const QString& title)
       } else {
         value = std::to_string(p->getValue<double>());
       }
-      std::string desc = parameterTypeToStr(p->getType()) + ": " + value + " " + p->getUnits();
+      desc += " " + parameterTypeToStr(p->getType()) + ": " + value + " " + p->getUnits();
       Logger::log(Logger::Message::DEBUG_MSG, desc);
     }
   }

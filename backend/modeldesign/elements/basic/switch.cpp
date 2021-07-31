@@ -8,7 +8,7 @@ Switch::Switch(const ElementName& name)
   : CircuitElement(name)
 {
   auto initialStatus = std::make_unique<SwitchStatus>(SwitchState(SwitchState::State::OFF));
-  addParameter(ParameterType::STATE, std::move(initialStatus));
+  m_parameters.addParameter(ParameterType::STATE, std::move(initialStatus));
 
   auto powerPort1 = std::make_unique<ElementPort>(*this);
   auto powerPort2 = std::make_unique<ElementPort>(*this);

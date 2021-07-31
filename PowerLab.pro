@@ -33,9 +33,12 @@ SOURCES += \
     backend/modeldesign/elements/sources/voltagesource.cpp \
     backend/modeldesign/elements/sources/waveformsource.cpp \
     backend/modeldesign/parameters/capacitance.cpp \
+    backend/modeldesign/parameters/frequency.cpp \
     backend/modeldesign/parameters/inductance.cpp \
+    backend/modeldesign/parameters/phase.cpp \
     backend/modeldesign/parameters/resistance.cpp \
     backend/modeldesign/parameters/switchstate.cpp \
+    backend/modeldesign/parameters/voltage.cpp \
     backend/modelresult/modelresultmeta.cpp \
     backend/modelresult/modelresult.cpp \
     backend/modelresult/modelresultvalues.cpp \
@@ -82,9 +85,12 @@ HEADERS += \
     backend/modeldesign/elements/sources/voltagesource.h \
     backend/modeldesign/elements/sources/waveformsource.h \
     backend/modeldesign/parameters/capacitance.h \
+    backend/modeldesign/parameters/frequency.h \
     backend/modeldesign/parameters/inductance.h \
+    backend/modeldesign/parameters/phase.h \
     backend/modeldesign/parameters/resistance.h \
     backend/modeldesign/parameters/switchstate.h \
+    backend/modeldesign/parameters/voltage.h \
     backend/modelresult/modelresultmeta.h \
     backend/modelresult/modelresultvalidator.h \
     backend/modelresult/modelresult.h \
