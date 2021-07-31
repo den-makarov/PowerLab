@@ -5,6 +5,8 @@
 #include "modeldesign/elements/basic/resistor.h"
 #include "modeldesign/elements/basic/capacitor.h"
 #include "modeldesign/elements/basic/inductor.h"
+#include "modeldesign/elements/basic/switch.h"
+#include "modeldesign/parameters/switchstate.h"
 #include "logger.h"
 
 namespace PowerLab {
@@ -21,12 +23,20 @@ ModelWidget::ModelWidget(QWidget *parent, const QString& title)
   elements.push_back(new ModelDesign::Resistor("R1"));
   elements.push_back(new ModelDesign::Inductor("L1"));
   elements.push_back(new ModelDesign::Capacitor("C1"));
+  elements.push_back(new ModelDesign::Switch("SW1"));
 
   for(auto item : elements) {
     auto params = item->getAllParameters();
     Logger::log(Logger::Message::DEBUG_MSG, item->getName());
     for(auto p : params) {
-      std::string desc = parameterTypeToStr(p->getType()) + ": " + std::to_string(p->getValue<double>()) + " " + p->getUnits();
+      std::string value;
+      if(p->getType() == ModelDesign::ParameterType::STATE) {
+        ModelDesign::SwitchState state(p->getValue<int>());
+        value = state.str();
+      } else {
+        value = std::to_string(p->getValue<double>());
+      }
+      std::string desc = parameterTypeToStr(p->getType()) + ": " + value + " " + p->getUnits();
       Logger::log(Logger::Message::DEBUG_MSG, desc);
     }
   }

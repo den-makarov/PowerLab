@@ -22,6 +22,7 @@ const std::map<PowerLab::ModelDesign::ParameterType, std::string> UNITS_MAP = {
   { PowerLab::ModelDesign::ParameterType::AREA, "m2" },
   { PowerLab::ModelDesign::ParameterType::VOLUME, "m3" },
   { PowerLab::ModelDesign::ParameterType::QUANTITY, "" },
+  { PowerLab::ModelDesign::ParameterType::STATE, "" },
 };
 
 const std::string& getStringName(PowerLab::ModelDesign::ParameterType type) {
@@ -38,6 +39,7 @@ const std::string& getStringName(PowerLab::ModelDesign::ParameterType type) {
   case PowerLab::ModelDesign::ParameterType::TIME: name = "time"; break;
   case PowerLab::ModelDesign::ParameterType::TEMPERATURE: name = "temperature"; break;
   case PowerLab::ModelDesign::ParameterType::LENGTH: name = "length"; break;
+  case PowerLab::ModelDesign::ParameterType::STATE: name = "state"; break;
   case PowerLab::ModelDesign::ParameterType::WIDTH: name = "width"; break;
   case PowerLab::ModelDesign::ParameterType::AREA: name = "area"; break;
   case PowerLab::ModelDesign::ParameterType::VOLUME: name = "volume"; break;
@@ -129,6 +131,10 @@ void FloatElementParameter::setValueImpl(double value) {
   m_value = value;
 }
 
+const std::string& IntegerElementParameter::getUnits() const {
+  return ElementParameter::getUnits();
+}
+
 void IntegerElementParameter::getValueImpl(const double** pointer) const {
   ElementParameter::getValueImpl(pointer);
 }
@@ -143,6 +149,28 @@ void IntegerElementParameter::getValueImpl(const std::string** pointer) const {
 
 void IntegerElementParameter::setValueImpl(const std::string& value) {
   ElementParameter::setValueImpl(value);
+}
+
+void IntegerElementParameter::getValueImpl(const int** pointer) const {
+  *pointer = &m_value;
+}
+
+void IntegerElementParameter::setValueImpl(int value) {
+  m_value = value;
+}
+
+void StateElementParameter::setValueImpl(int value) {
+  if(value >= 1) {
+    value = 1;
+  } else {
+    value = 0;
+  }
+
+  IntegerElementParameter::setValueImpl(value);
+}
+
+const std::string& StringElementParameter::getUnits() const {
+  return ElementParameter::getUnits();
 }
 
 void StringElementParameter::getValueImpl(const int** pointer) const {

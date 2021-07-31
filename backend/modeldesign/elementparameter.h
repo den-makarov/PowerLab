@@ -23,7 +23,8 @@ enum class ParameterType {
   WIDTH,
   AREA,
   VOLUME,
-  QUANTITY
+  QUANTITY,
+  STATE
 };
 
 class ElementParameter {
@@ -89,8 +90,16 @@ private:
 
 class IntegerElementParameter : public ElementParameter {
 public:
-  IntegerElementParameter() = default;
+  explicit IntegerElementParameter(int value)
+    : m_value(value)
+  {}
   virtual ~IntegerElementParameter() override = default;
+
+  virtual const std::string& getUnits() const override;
+
+protected:
+  virtual void setValueImpl(int value) override;
+  virtual void getValueImpl(const int** pointer) const override;
 
 private:
   virtual void getValueImpl(const std::string** pointer) const override;
@@ -98,9 +107,17 @@ private:
   virtual void getValueImpl(const double** pointer) const override;
   virtual void setValueImpl(double value) override;
 
-protected:
-  virtual void getValueImpl(const int** pointer) const override = 0;
-  virtual void setValueImpl(int value) override = 0;
+  int m_value;
+};
+
+class StateElementParameter : public IntegerElementParameter {
+public:
+  explicit StateElementParameter(int value)
+    : IntegerElementParameter(value)
+  {}
+  virtual ~StateElementParameter() override = default;
+private:
+  virtual void setValueImpl(int value) override;
 };
 
 class StringElementParameter : public ElementParameter {
@@ -108,6 +125,7 @@ public:
   StringElementParameter() = default;
   virtual ~StringElementParameter() override = default;
 
+  virtual const std::string& getUnits() const override;
 private:
   virtual void getValueImpl(const int** pointer) const override;
   virtual void setValueImpl(int value) override;
