@@ -27,7 +27,6 @@ enum class ParameterType {
   VOLUME,
   QUANTITY,
   STATE,
-  COEFFICIENT
 };
 
 using ParameterName = std::string;

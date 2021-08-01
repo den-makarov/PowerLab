@@ -22,6 +22,8 @@ enum class SignalType {
   EXTERNAL_DATA
 };
 
+static constexpr SignalType CURRENT_MEASUREMENT = SignalType::UNDEFINED;
+
 class WaveFormSource {
 public:
   virtual ~WaveFormSource() = default;
@@ -39,6 +41,14 @@ protected:
 
 private:
   const SignalType m_signalType;
+};
+
+class EmptyWaveForm : WaveFormSource {
+public:
+  EmptyWaveForm();
+  virtual ~EmptyWaveForm() override = default;
+
+  virtual std::string getModel() const override;
 };
 
 } // namespace ModelDesign

@@ -13,7 +13,7 @@ const std::map<PowerLab::ModelDesign::ParameterType, std::string> UNITS_MAP = {
   { PowerLab::ModelDesign::ParameterType::CURRENT, "A" },
   { PowerLab::ModelDesign::ParameterType::FREQUENCY, "Hz" },
   { PowerLab::ModelDesign::ParameterType::PERIOD, "s" },
-  { PowerLab::ModelDesign::ParameterType::PHASE, "rad" },
+  { PowerLab::ModelDesign::ParameterType::PHASE, "deg" },
   { PowerLab::ModelDesign::ParameterType::TIME, "s" },
   { PowerLab::ModelDesign::ParameterType::TEMPERATURE, "C" },
   { PowerLab::ModelDesign::ParameterType::LENGTH, "m" },
@@ -22,7 +22,6 @@ const std::map<PowerLab::ModelDesign::ParameterType, std::string> UNITS_MAP = {
   { PowerLab::ModelDesign::ParameterType::VOLUME, "m3" },
   { PowerLab::ModelDesign::ParameterType::QUANTITY, "" },
   { PowerLab::ModelDesign::ParameterType::STATE, "" },
-  { PowerLab::ModelDesign::ParameterType::COEFFICIENT, "" },
 };
 
 const std::string& getStringName(PowerLab::ModelDesign::ParameterType type) {
@@ -39,12 +38,11 @@ const std::string& getStringName(PowerLab::ModelDesign::ParameterType type) {
   case PowerLab::ModelDesign::ParameterType::TIME: name = "time"; break;
   case PowerLab::ModelDesign::ParameterType::TEMPERATURE: name = "temperature"; break;
   case PowerLab::ModelDesign::ParameterType::LENGTH: name = "length"; break;
-  case PowerLab::ModelDesign::ParameterType::STATE: name = "state"; break;
   case PowerLab::ModelDesign::ParameterType::WIDTH: name = "width"; break;
   case PowerLab::ModelDesign::ParameterType::AREA: name = "area"; break;
   case PowerLab::ModelDesign::ParameterType::VOLUME: name = "volume"; break;
   case PowerLab::ModelDesign::ParameterType::QUANTITY: name = "quantity"; break;
-  case PowerLab::ModelDesign::ParameterType::COEFFICIENT: name = "coefficient"; break;
+  case PowerLab::ModelDesign::ParameterType::STATE: name = "state"; break;
   }
   return name;
 }

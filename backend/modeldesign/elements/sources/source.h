@@ -1,6 +1,9 @@
 #ifndef SOURCE_H
 #define SOURCE_H
 
+// VXXXXXXX N+ N- <<DC> DC/TRAN VALUE> <AC <ACMAG <ACPHASE>>>
+// <DISTOF1 <F1MAG <F1PHASE>>> <DISTOF2 <F2MAG <F2PHASE>>>
+
 #include <memory>
 
 #include "modeldesign/abstractelement.h"

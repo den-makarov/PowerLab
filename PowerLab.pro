@@ -29,13 +29,16 @@ SOURCES += \
     backend/modeldesign/elements/basic/inductor.cpp \
     backend/modeldesign/elements/basic/resistor.cpp \
     backend/modeldesign/elements/basic/switch.cpp \
+    backend/modeldesign/elements/sources/sinusoidalwaveform.cpp \
     backend/modeldesign/elements/sources/source.cpp \
     backend/modeldesign/elements/sources/voltagesource.cpp \
     backend/modeldesign/elements/sources/waveformsource.cpp \
     backend/modeldesign/parameters/capacitance.cpp \
+    backend/modeldesign/parameters/current.cpp \
     backend/modeldesign/parameters/frequency.cpp \
     backend/modeldesign/parameters/inductance.cpp \
     backend/modeldesign/parameters/phase.cpp \
+    backend/modeldesign/parameters/quantity.cpp \
     backend/modeldesign/parameters/resistance.cpp \
     backend/modeldesign/parameters/switchstate.cpp \
     backend/modeldesign/parameters/voltage.cpp \
@@ -81,13 +84,16 @@ HEADERS += \
     backend/modeldesign/elements/basic/inductor.h \
     backend/modeldesign/elements/basic/resistor.h \
     backend/modeldesign/elements/basic/switch.h \
+    backend/modeldesign/elements/sources/sinusoidalwaveform.h \
     backend/modeldesign/elements/sources/source.h \
     backend/modeldesign/elements/sources/voltagesource.h \
     backend/modeldesign/elements/sources/waveformsource.h \
     backend/modeldesign/parameters/capacitance.h \
+    backend/modeldesign/parameters/current.h \
     backend/modeldesign/parameters/frequency.h \
     backend/modeldesign/parameters/inductance.h \
     backend/modeldesign/parameters/phase.h \
+    backend/modeldesign/parameters/quantity.h \
     backend/modeldesign/parameters/resistance.h \
     backend/modeldesign/parameters/switchstate.h \
     backend/modeldesign/parameters/voltage.h \

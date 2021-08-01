@@ -16,5 +16,13 @@ SignalType WaveFormSource::getSignalType() const {
   return m_signalType;
 }
 
+EmptyWaveForm::EmptyWaveForm()
+  : WaveFormSource(CURRENT_MEASUREMENT)
+{}
+
+std::string EmptyWaveForm::getModel() const {
+  return "";
+}
+
 } // namespace ModelDesign
 } // namespace PowerLab
