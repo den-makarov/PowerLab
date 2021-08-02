@@ -1,5 +1,6 @@
 #include "elementport.h"
 #include "elementconnectionmanager.h"
+#include "abstractelement.h"
 
 namespace PowerLab {
 namespace ModelDesign {
@@ -20,6 +21,10 @@ void ElementPort::disconnect() {
 
 bool ElementPort::isConnected() const {
   return m_connection != UNCONNECTED;
+}
+
+std::string ElementPort::getOwnerName() const {
+  return m_owner.getName();
 }
 
 } // namespace ModelDesign

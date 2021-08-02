@@ -22,5 +22,28 @@ void ElementConnectionManager::destroyConnection(ConnectionId id) {
   }
 }
 
+ElementConnection* ElementConnectionManager::getConnection(ConnectionId id) {
+  ElementConnection* connection = nullptr;
+
+  auto it = m_connections.find(id);
+  if(it != m_connections.end()) {
+    connection = it->second.get();
+  }
+
+  return connection;
+}
+
+const ElementConnection* ElementConnectionManager::getConnection(ConnectionId id) const {
+  const ElementConnection* connection = nullptr;
+
+  auto it = m_connections.find(id);
+  if(it != m_connections.end()) {
+    connection = it->second.get();
+  }
+
+  return connection;
+}
+
+
 } // namespace ModelDesign
 } // namespace PowerLab

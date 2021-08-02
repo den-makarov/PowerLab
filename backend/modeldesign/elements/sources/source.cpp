@@ -8,6 +8,8 @@ std::string sourceTypeToStr(PowerLab::ModelDesign::Source::Type type) {
   case sType::CURRENT: return "current";
   case sType::VOLTAGE: return "voltage";
   }
+
+  return "";
 }
 
 }

@@ -1,6 +1,8 @@
 #ifndef ELEMENTPORT_H
 #define ELEMENTPORT_H
 
+#include <string>
+
 #include "elementconnection.h"
 
 namespace PowerLab {
@@ -15,6 +17,7 @@ public:
   void connect(ConnectionId connection);
   void disconnect();
   bool isConnected() const;
+  std::string getOwnerName() const;
 
 private:
   ConnectionId m_connection = UNCONNECTED;

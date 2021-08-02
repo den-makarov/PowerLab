@@ -29,5 +29,23 @@ std::vector<const ElementParameter*> CircuitElement::getAllParameters() const {
   return m_parameters.getAllParameters();
 }
 
+std::vector<const ElementPort*> CircuitElement::getAllPorts() const {
+  std::vector<const ElementPort*> result;
+  for(auto& port : m_ports) {
+    result.push_back(port.get());
+  }
+
+  return result;
+}
+
+std::vector<ElementPort*> CircuitElement::getAllPorts() {
+  std::vector<ElementPort*> result;
+  for(auto& port : m_ports) {
+    result.push_back(port.get());
+  }
+
+  return result;
+}
+
 } // namespace ModelDesign
 } // namespace PowerLab

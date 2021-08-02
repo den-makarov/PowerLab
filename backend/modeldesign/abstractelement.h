@@ -21,6 +21,9 @@ public:
   void addChild(std::unique_ptr<CircuitElement>&& child);
   std::vector<const ElementParameter*> getAllParameters() const;
 
+  std::vector<const ElementPort*> getAllPorts() const;
+  std::vector<ElementPort*> getAllPorts();
+
 protected:
   explicit CircuitElement(const ElementName& name);
 

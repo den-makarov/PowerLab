@@ -24,6 +24,9 @@ public:
   ConnectionId createConnection();
   void destroyConnection(ConnectionId);
 
+  ElementConnection* getConnection(ConnectionId id);
+  const ElementConnection* getConnection(ConnectionId id) const;
+
 private:
   ElementConnectionManager();
 

@@ -16,6 +16,7 @@ std::string getMessagePhrase(Message msg) {
     // Warning messages
     // Error messages
     {Message::ERROR_ELEMENT_PARAMETER_DOESNT_SUPPORT_TYPE, "Wrong usage of parameter \"%1%\". It isn't %2% type"},
+    {Message::ERROR_INVALID_CONNECTION, "Invalid connection Id: %1%"},
   };
 
   return msgPhrases.at(msg);
