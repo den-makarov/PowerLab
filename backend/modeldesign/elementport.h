@@ -19,7 +19,7 @@ enum class PortType {
   CONTROL_OUT,
   GENERAL_PURPOSE_IN,
   GENERAL_PURPOSE_OUT,
-  GENERAL_PURPOSE_BIDIR,
+  GENERAL_PURPOSE,
 };
 
 using PortNumber = size_t;

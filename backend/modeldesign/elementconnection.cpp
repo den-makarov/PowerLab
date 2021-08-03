@@ -24,6 +24,7 @@ void ElementConnection::connectPort(ElementPort& port) {
   auto connected = isConnectedPort(port);
   if(!connected) {
     m_connectedPorts.push_back(&port);
+    port.connect(m_id);
   }
 }
 
@@ -31,6 +32,7 @@ void ElementConnection::disconnectPort(ElementPort& port) {
   auto connectedPort = std::find(m_connectedPorts.begin(), m_connectedPorts.end(), &port);
   if(connectedPort != m_connectedPorts.end()) {
     m_connectedPorts.erase(connectedPort);
+    port.disconnect();
   }
 }
 

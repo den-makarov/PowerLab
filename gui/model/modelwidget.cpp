@@ -22,20 +22,20 @@ ModelWidget::ModelWidget(QWidget *parent, const QString& title)
   setToolTip(tr("Model Design"));
   setWindowTitle(title);
 
-  std::vector<ModelDesign::CircuitElement*> elements;
+  std::vector<std::unique_ptr<ModelDesign::CircuitElement>> elements;
 
   auto R1 = elements.size();
-  elements.push_back(new ModelDesign::Resistor("R1"));
+  elements.emplace_back(new ModelDesign::Resistor("R1"));
   auto L1 = elements.size();
-  elements.push_back(new ModelDesign::Inductor("L1"));
+  elements.emplace_back(new ModelDesign::Inductor("L1"));
   auto C1 = elements.size();
-  elements.push_back(new ModelDesign::Capacitor("C1"));
+  elements.emplace_back(new ModelDesign::Capacitor("C1"));
 //  auto SW1 = elements.size();
-  elements.push_back(new ModelDesign::Switch("SW1"));
+  elements.emplace_back(new ModelDesign::Switch("SW1"));
   auto VA1 = elements.size();
-  elements.push_back(new ModelDesign::AcVoltageSource("VA1"));
+  elements.emplace_back(new ModelDesign::AcVoltageSource("VA1"));
 
-  for(auto item : elements) {
+  for(auto& item : elements) {
     auto params = item->getAllParameters();
     std::string desc = "Element " + item->getName();
     for(auto p : params) {

@@ -7,9 +7,10 @@ namespace PowerLab {
 namespace ModelDesign {
 
 class VoltageSource : public Source {
+public:
+  virtual ~VoltageSource() override = default;
 protected:
   VoltageSource(const ElementName& name, std::unique_ptr<WaveFormSource>&& waveform);
-  virtual ~VoltageSource() override = default;
 private:
 };
 

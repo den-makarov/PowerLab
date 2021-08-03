@@ -14,7 +14,7 @@ namespace ModelDesign {
 class CircuitElement {
 public:
   using ElementName = std::string;
-  ~CircuitElement();
+  virtual ~CircuitElement();
 
   const ElementName& getName() const;
   void updateName(const ElementName& name);

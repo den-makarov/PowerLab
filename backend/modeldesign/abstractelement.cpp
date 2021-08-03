@@ -12,8 +12,10 @@ CircuitElement::CircuitElement(const ElementName& name)
 
 CircuitElement::~CircuitElement() {
   for(auto port : getAllPorts()) {
-    Connection c(port.get().getConnection());
-    c.disconnectPort(port);
+    if(port.get().isConnected()) {
+      Connection c(port.get().getConnection());
+      c.disconnectPort(port);
+    }
   }
 }
 

@@ -19,7 +19,8 @@ public:
     CURRENT
   };
 
-  virtual ~Source() = default;
+  virtual ~Source() override = default;
+
   Type getSourceType() const;
 
   const WaveFormSource& getWaveForm() const;
