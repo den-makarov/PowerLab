@@ -20,22 +20,22 @@ ElementConnection::~ElementConnection() {
   }
 }
 
-void ElementConnection::connectPort(ElementPort* port) {
+void ElementConnection::connectPort(ElementPort& port) {
   auto connected = isConnectedPort(port);
   if(!connected) {
-    m_connectedPorts.push_back(port);
+    m_connectedPorts.push_back(&port);
   }
 }
 
-void ElementConnection::disconnectPort(ElementPort* port) {
-  auto connectedPort = std::find(m_connectedPorts.begin(), m_connectedPorts.end(), port);
+void ElementConnection::disconnectPort(ElementPort& port) {
+  auto connectedPort = std::find(m_connectedPorts.begin(), m_connectedPorts.end(), &port);
   if(connectedPort != m_connectedPorts.end()) {
     m_connectedPorts.erase(connectedPort);
   }
 }
 
-bool ElementConnection::isConnectedPort(const ElementPort* port) const {
-  return std::find(m_connectedPorts.begin(), m_connectedPorts.end(), port) != m_connectedPorts.end();
+bool ElementConnection::isConnectedPort(const ElementPort& port) const {
+  return std::find(m_connectedPorts.begin(), m_connectedPorts.end(), &port) != m_connectedPorts.end();
 }
 
 void ElementConnection::setUserName(const std::string& name) {
@@ -104,22 +104,22 @@ std::string Connection::getUserName() const {
   return "";
 }
 
-void Connection::connectPort(ElementPort* port) {
-  if(isExist() && port != nullptr) {
+void Connection::connectPort(ElementPort& port) {
+  if(isExist()) {
     auto connection = ElementConnectionManager::instance().getConnection(m_id);
     connection->connectPort(port);
   }
 }
 
-void Connection::disconnectPort(ElementPort* port) {
-  if(isExist() && port != nullptr) {
+void Connection::disconnectPort(ElementPort& port) {
+  if(isExist()) {
     auto connection = ElementConnectionManager::instance().getConnection(m_id);
     connection->disconnectPort(port);
   }
 }
 
-bool Connection::isConnectedPort(const ElementPort* port) const {
-  if(isExist() && port != nullptr) {
+bool Connection::isConnectedPort(const ElementPort& port) const {
+  if(isExist()) {
     auto connection = ElementConnectionManager::instance().getConnection(m_id);
     return connection->isConnectedPort(port);
   }

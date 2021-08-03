@@ -10,8 +10,8 @@ Resistor::Resistor(const ElementName& name)
   auto resistance = std::make_unique<Resistance>();
   m_parameters.addParameter(ParameterType::RESISTANCE, std::move(resistance));
 
-  auto port1 = std::make_unique<ElementPort>(*this);
-  auto port2 = std::make_unique<ElementPort>(*this);
+  auto port1 = std::make_unique<ElementPort>(*this, PortType::POWER_IN);
+  auto port2 = std::make_unique<ElementPort>(*this, PortType::POWER_OUT);
   addPort(std::move(port1));
   addPort(std::move(port2));
 }

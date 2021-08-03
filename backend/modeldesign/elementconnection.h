@@ -23,9 +23,9 @@ public:
   void setUserName(const std::string& name);
   const std::string& getUserName() const;
 
-  void connectPort(ElementPort* port);
-  void disconnectPort(ElementPort* port);
-  bool isConnectedPort(const ElementPort* port) const;
+  void connectPort(ElementPort& port);
+  void disconnectPort(ElementPort& port);
+  bool isConnectedPort(const ElementPort& port) const;
 
   std::string getModel() const;
 
@@ -46,9 +46,9 @@ public:
   void setUserName(const std::string& name);
   std::string getUserName() const;
 
-  void connectPort(ElementPort* port);
-  void disconnectPort(ElementPort* port);
-  bool isConnectedPort(const ElementPort* port) const;
+  void connectPort(ElementPort& port);
+  void disconnectPort(ElementPort& port);
+  bool isConnectedPort(const ElementPort& port) const;
 
   std::string getModel() const;
   std::string str() const;

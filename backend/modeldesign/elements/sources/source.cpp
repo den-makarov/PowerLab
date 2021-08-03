@@ -22,8 +22,8 @@ Source::Source(const ElementName& name, Type type, std::unique_ptr<WaveFormSourc
   , m_waveform(std::move(waveform))
   , m_type(type)
 {
-  auto port1 = std::make_unique<ElementPort>(*this);
-  auto port2 = std::make_unique<ElementPort>(*this);
+  auto port1 = std::make_unique<ElementPort>(*this, PortType::POWER_IN);
+  auto port2 = std::make_unique<ElementPort>(*this, PortType::POWER_OUT);
   addPort(std::move(port1));
   addPort(std::move(port2));
 }

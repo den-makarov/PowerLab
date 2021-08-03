@@ -14,6 +14,7 @@ namespace ModelDesign {
 class CircuitElement {
 public:
   using ElementName = std::string;
+  ~CircuitElement();
 
   const ElementName& getName() const;
   void updateName(const ElementName& name);
@@ -21,8 +22,8 @@ public:
   void addChild(std::unique_ptr<CircuitElement>&& child);
   std::vector<const ElementParameter*> getAllParameters() const;
 
-  std::vector<const ElementPort*> getAllPorts() const;
-  std::vector<ElementPort*> getAllPorts();
+  std::vector<ElementPortCRef> getAllPorts() const;
+  std::vector<ElementPortRef> getAllPorts();
 
 protected:
   explicit CircuitElement(const ElementName& name);
@@ -33,7 +34,7 @@ protected:
 
 private:
   ElementName m_name;
-  std::vector<std::unique_ptr<ElementPort>> m_ports;
+  ElementPortMap m_ports;
   std::vector<std::unique_ptr<CircuitElement>> m_children;
 };
 
