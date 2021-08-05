@@ -25,6 +25,8 @@ public:
   std::vector<ElementPortCRef> getAllPorts() const;
   std::vector<ElementPortRef> getAllPorts();
 
+  virtual std::string getModel() const = 0;
+
 protected:
   explicit CircuitElement(const ElementName& name);
 

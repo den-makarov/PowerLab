@@ -9,6 +9,8 @@
 // THETA - Damping factor [1/sec]
 // PHASE - phase shift [degrees]
 
+#include <string>
+
 #include "waveformsource.h"
 
 namespace PowerLab {
@@ -20,6 +22,10 @@ public:
   virtual ~SinusoidalWaveForm() override = default;
 
   virtual std::string getModel() const override;
+
+  static constexpr const char* DC_BIAS = "bias";
+  static constexpr const char* AC_AMPLITUDE = "amplitude";
+  static constexpr const char* DUMPING_FACTOR = "dumping";
 };
 
 
