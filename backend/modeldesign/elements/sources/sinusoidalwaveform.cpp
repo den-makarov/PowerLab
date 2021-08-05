@@ -32,45 +32,45 @@ std::string SinusoidalWaveForm::getModel() const {
     model << dcBias->getValue<double>();
   } else {
     assert(false && "MANDATORY PARAMETER IS LOST: DC BIAS");
-    model << "0.0 ";
+    model << "0.0";
   }
 
   auto ampl = m_parameters.getParameter(std::string(AC_AMPLITUDE));
   if(ampl) {
-    model << ampl->getValue<double>();
+    model << " " << ampl->getValue<double>();
   } else {
     assert(false && "MANDATORY PARAMETER IS LOST: AMPLITUDE");
-    model << "0.0 ";
+    model << " 0.0";
   }
 
   auto frequency = m_parameters.getParameter(ParameterType::FREQUENCY);
   if(frequency) {
-    model << frequency->getValue<double>();
+    model << " " << frequency->getValue<double>();
   } else {
     assert(false && "MANDATORY PARAMETER IS LOST: FREQUENCY");
-    model << "0.0 ";
+    model << " 0.0";
   }
 
   auto delay = m_parameters.getParameter(ParameterType::TIME);
   if(delay) {
-    model << delay->getValue<double>();
+    model << " " << delay->getValue<double>();
   } else {
-    model << "0.0 ";
+    model << " 0.0";
   }
 
   auto dumping = m_parameters.getParameter(std::string(DUMPING_FACTOR));
   if(dumping) {
-    model << dumping->getValue<double>();
+    model << " " << dumping->getValue<double>();
   } else {
-    model << "0.0 ";
+    model << " 0.0";
   }
 
   auto phase = m_parameters.getParameter(ParameterType::PHASE);
   if(phase) {
-    model << phase->getValue<double>();
+    model << " " << phase->getValue<double>();
   } else {
     assert(false && "MANDATORY PARAMETER IS LOST: PHASE");
-    model << "0.0";
+    model << " 0.0";
   }
 
   model << ")";

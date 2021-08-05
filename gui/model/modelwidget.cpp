@@ -69,6 +69,12 @@ ModelWidget::ModelWidget(QWidget *parent, const QString& title)
   output.connectPort(elements[R1]->getAllPorts()[0]);
   output.connectPort(elements[C1]->getAllPorts()[0]);
   Logger::log(Logger::Message::DEBUG_MSG, output.str());
+
+  auto va = dynamic_cast<ModelDesign::AcVoltageSource*>(elements[VA1].get());
+  if(va) {
+    auto vaModel = va->getWaveForm().getModel();
+    Logger::log(Logger::Message::DEBUG_MSG, vaModel);
+  }
 }
 
 } // namespace Gui
