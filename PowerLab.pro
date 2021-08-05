@@ -20,8 +20,8 @@ SOURCES += \
     backend/logger/modelresultmessage.cpp \
     backend/logger/modeldesignmessage.cpp \
     backend/logger/systemmessage.cpp \
+    backend/modeldesign/circuitelement.cpp \
     backend/modeldesign/elementparameter.cpp \
-    backend/modeldesign/abstractelement.cpp \
     backend/modeldesign/elementconnection.cpp \
     backend/modeldesign/elementconnectionmanager.cpp \
     backend/modeldesign/elementport.cpp \
@@ -75,8 +75,8 @@ HEADERS += \
     backend/logger/modelresultmessage.h \
     backend/logger/modeldesignmessage.h \
     backend/logger/systemmessage.h \
+    backend/modeldesign/circuitelement.h \
     backend/modeldesign/elementparameter.h \
-    backend/modeldesign/abstractelement.h \
     backend/modeldesign/elementport.h \
     backend/modeldesign/elementconnectionmanager.h \
     backend/modeldesign/elementconnection.h \

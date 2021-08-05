@@ -12,7 +12,7 @@
 // ron= - on resistance. Deafult 1 Ohm
 // roff= - off resistance. Deafult 1.0e+12 Ohm
 
-#include "modeldesign/abstractelement.h"
+#include "modeldesign/circuitelement.h"
 
 namespace PowerLab {
 namespace ModelDesign {

@@ -24,7 +24,7 @@
 // CJ = DI * e0 / THICK if DI is specified, otherwise CJ = e(SiO2) / THICK
 // where e0 = 8.854214871e−12 [F/m], e(SiO2) = 3.4531479969e−11 [F/m]
 
-#include "modeldesign/abstractelement.h"
+#include "modeldesign/circuitelement.h"
 
 namespace PowerLab {
 namespace ModelDesign {

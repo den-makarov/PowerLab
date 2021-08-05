@@ -1,4 +1,4 @@
-#include "abstractelement.h"
+#include "circuitelement.h"
 #include "elementconnectionmanager.h"
 
 namespace PowerLab {

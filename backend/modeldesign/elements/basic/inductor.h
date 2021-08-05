@@ -20,7 +20,7 @@
 // if value or IND are not set, inductance is calculated by:
 // Lnom = MU * u0 * NT^2 * CSECT / LENGTH
 
-#include "modeldesign/abstractelement.h"
+#include "modeldesign/circuitelement.h"
 
 namespace PowerLab {
 namespace ModelDesign {

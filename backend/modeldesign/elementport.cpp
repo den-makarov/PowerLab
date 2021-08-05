@@ -1,6 +1,6 @@
 #include "elementport.h"
 #include "elementconnectionmanager.h"
-#include "abstractelement.h"
+#include "circuitelement.h"
 
 namespace PowerLab {
 namespace ModelDesign {

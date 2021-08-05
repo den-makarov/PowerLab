@@ -6,7 +6,7 @@
 
 #include <memory>
 
-#include "modeldesign/abstractelement.h"
+#include "modeldesign/circuitelement.h"
 #include "waveformsource.h"
 
 namespace PowerLab {

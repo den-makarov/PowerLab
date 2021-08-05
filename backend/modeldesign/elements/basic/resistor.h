@@ -7,7 +7,7 @@
 // ac - resistance used in AC analysis
 // noisy - temperature and flicker noise simulation
 
-#include "modeldesign/abstractelement.h"
+#include "modeldesign/circuitelement.h"
 
 namespace PowerLab {
 namespace ModelDesign {
