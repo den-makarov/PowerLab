@@ -72,7 +72,7 @@ ModelWidget::ModelWidget(QWidget *parent, const QString& title)
 
   auto va = dynamic_cast<ModelDesign::AcVoltageSource*>(elements[VA1].get());
   if(va) {
-    auto vaModel = va->getWaveForm().getModel();
+    auto vaModel = va->getModel();
     Logger::log(Logger::Message::DEBUG_MSG, vaModel);
   }
 }

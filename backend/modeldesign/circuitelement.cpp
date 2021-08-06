@@ -47,5 +47,13 @@ std::vector<ElementPortRef> CircuitElement::getAllPorts() {
   return m_ports.getAllPorts();
 }
 
+std::vector<ElementPortCRef> CircuitElement::getPortsOfType(PortType type) const {
+  return m_ports.getPortsOfType(type);
+}
+
+std::vector<ElementPortRef> CircuitElement::getPortsOfType(PortType type) {
+  return m_ports.getPortsOfType(type);
+}
+
 } // namespace ModelDesign
 } // namespace PowerLab

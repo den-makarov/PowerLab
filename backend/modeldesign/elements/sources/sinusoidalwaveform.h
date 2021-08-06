@@ -10,6 +10,7 @@
 // PHASE - phase shift [degrees]
 
 #include <string>
+#include <iostream>
 
 #include "waveformsource.h"
 

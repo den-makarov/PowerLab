@@ -18,6 +18,8 @@ class AcVoltageSource : public VoltageSource {
 public:
   AcVoltageSource(const ElementName& name);
   virtual ~AcVoltageSource() override = default;
+
+  virtual std::string getModel() const override;
 };
 
 } // namespace ModelDesign

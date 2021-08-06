@@ -25,6 +25,9 @@ public:
   std::vector<ElementPortCRef> getAllPorts() const;
   std::vector<ElementPortRef> getAllPorts();
 
+  std::vector<ElementPortCRef> getPortsOfType(PortType type) const;
+  std::vector<ElementPortRef> getPortsOfType(PortType type);
+
   virtual std::string getModel() const {return "";}
 
 protected:

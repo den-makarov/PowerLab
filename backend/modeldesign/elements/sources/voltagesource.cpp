@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "voltagesource.h"
 #include "sinusoidalwaveform.h"
 
@@ -13,6 +15,37 @@ AcVoltageSource::AcVoltageSource(const ElementName& name)
   : VoltageSource(name, std::make_unique<SinusoidalWaveForm>())
 {
 
+}
+
+std::string AcVoltageSource::getModel() const {
+  std::ostringstream model;
+
+  auto& name = getName();
+  if(name.empty()) {
+    // ERROR
+    return "";
+  }
+
+  if(name.front() != 'V') {
+    // ERROR
+    return "";
+  }
+
+  model << name;
+
+  auto inPorts = getPortsOfType(PortType::POWER_IN);
+  auto outPorts = getPortsOfType(PortType::POWER_OUT);
+
+  if(inPorts.size() != 1 || outPorts.size() != 1) {
+    // ERROR
+    return "";
+  }
+
+  model << " " << Connection(inPorts.front().get().getConnection()).getModel();
+  model << " " << Connection(outPorts.front().get().getConnection()).getModel();
+  model << " " << getWaveForm().getModel();
+
+  return model.str();
 }
 
 } // namespace ModelDesign
