@@ -15,6 +15,7 @@ namespace ModelDesign {
 class Resistor : public CircuitElement {
 public:
   Resistor(const ElementName& name);
+  virtual std::string getModel() const override;
 };
 
 } // namespace ModelDesign

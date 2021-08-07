@@ -20,6 +20,7 @@ namespace ModelDesign {
 class Switch : public CircuitElement {
 public:
   Switch(const ElementName& name);
+  virtual std::string getModel() const override;
 private:
 };
 

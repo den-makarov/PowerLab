@@ -32,6 +32,7 @@ namespace ModelDesign {
 class Capacitor : public CircuitElement {
 public:
   Capacitor(const ElementName& name);
+  virtual std::string getModel() const override;
 };
 
 } // namespace ModelDesign

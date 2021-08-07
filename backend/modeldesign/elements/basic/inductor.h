@@ -28,6 +28,7 @@ namespace ModelDesign {
 class Inductor : public CircuitElement {
 public:
   Inductor(const ElementName& name);
+  virtual std::string getModel() const override;
 };
 
 } // namespace ModelDesign
