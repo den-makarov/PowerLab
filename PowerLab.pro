@@ -33,6 +33,7 @@ SOURCES += \
     backend/modeldesign/elements/sources/source.cpp \
     backend/modeldesign/elements/sources/voltagesource.cpp \
     backend/modeldesign/elements/sources/waveformsource.cpp \
+    backend/modeldesign/model.cpp \
     backend/modeldesign/parameters/capacitance.cpp \
     backend/modeldesign/parameters/current.cpp \
     backend/modeldesign/parameters/frequency.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
     backend/modeldesign/elements/sources/source.h \
     backend/modeldesign/elements/sources/voltagesource.h \
     backend/modeldesign/elements/sources/waveformsource.h \
+    backend/modeldesign/model.h \
     backend/modeldesign/parameters/capacitance.h \
     backend/modeldesign/parameters/current.h \
     backend/modeldesign/parameters/frequency.h \

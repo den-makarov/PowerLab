@@ -37,6 +37,8 @@ private:
   std::string m_userName;
 };
 
+class ElementConnectionManager;
+
 class Connection {
 public:
   explicit Connection(ConnectionId id = INVALID_CONNECTION);
@@ -58,6 +60,7 @@ private:
 
   ElementConnection* getConnection() const;
   const ConnectionId m_id;
+  const ElementConnectionManager& m_manager;
 };
 
 } // namespace ModelDesign

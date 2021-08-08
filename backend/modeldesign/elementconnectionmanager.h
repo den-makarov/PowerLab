@@ -11,15 +11,10 @@ namespace ModelDesign {
 
 class ElementConnectionManager {
 public:
-  static ElementConnectionManager& instance() {
-    static ElementConnectionManager _;
-    return _;
-  }
+  ElementConnectionManager();
 
   ElementConnectionManager(const ElementConnectionManager& manager) = delete;
   ElementConnectionManager& operator=(const ElementConnectionManager& manager) = delete;
-  ElementConnectionManager(ElementConnectionManager&& manager) = delete;
-  ElementConnectionManager& operator=(ElementConnectionManager&& manager) = delete;
 
   ConnectionId createConnection();
   void destroyConnection(ConnectionId);
@@ -28,8 +23,6 @@ public:
   const ElementConnection* getConnection(ConnectionId id) const;
 
 private:
-  ElementConnectionManager();
-
   std::map<ConnectionId, std::unique_ptr<ElementConnection>> m_connections;
 
   static ConnectionId m_connectionCounter;
