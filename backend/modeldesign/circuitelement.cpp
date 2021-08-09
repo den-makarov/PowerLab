@@ -12,10 +12,7 @@ CircuitElement::CircuitElement(const ElementName& name)
 
 CircuitElement::~CircuitElement() {
   for(auto port : getAllPorts()) {
-    if(port.get().isConnected()) {
-      Connection c(port.get().getConnection());
-      c.disconnectPort(port);
-    }
+    port.get().disconnect();
   }
 }
 
@@ -53,6 +50,20 @@ std::vector<ElementPortCRef> CircuitElement::getPortsOfType(PortType type) const
 
 std::vector<ElementPortRef> CircuitElement::getPortsOfType(PortType type) {
   return m_ports.getPortsOfType(type);
+}
+
+std::ostream& CircuitElement::getConnectionModel(std::ostream& out, const ElementPort* port) const {
+  if(port) {
+    auto connection = port->getConnection();
+    if(connection) {
+      out << connection->getModel();
+    } else {
+      out << "NC";
+    }
+  } else {
+    out << "NC";
+  }
+  return out;
 }
 
 } // namespace ModelDesign

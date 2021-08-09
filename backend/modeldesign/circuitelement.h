@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <iostream>
 
 #include "elementport.h"
 #include "elementparameter.h"
@@ -34,6 +35,7 @@ protected:
   explicit CircuitElement(const ElementName& name);
 
   void addPort(std::unique_ptr<ElementPort>&& port);
+  std::ostream& getConnectionModel(std::ostream&, const ElementPort* port) const;
 
   ElementParameterMap m_parameters;
 

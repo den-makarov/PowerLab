@@ -9,22 +9,27 @@
 namespace PowerLab {
 namespace ModelDesign {
 
-ElementConnection::ElementConnection(ConnectionId id)
-  : m_id(id)
+Connection ElementConnection::createConnection() {
+  return std::make_shared<ElementConnection>();
+}
+
+ElementConnection::ConnectionId ElementConnection::globalId = 0;
+
+ElementConnection::ElementConnection()
+  : m_id(globalId++)
 {
 }
 
 ElementConnection::~ElementConnection() {
-  for(auto& p : m_connectedPorts) {
-    p->disconnect();
-  }
+//  for(auto& p : m_connectedPorts) {
+//    p->disconnect();
+//  }
 }
 
 void ElementConnection::connectPort(ElementPort& port) {
   auto connected = isConnectedPort(port);
   if(!connected) {
     m_connectedPorts.push_back(&port);
-    port.connect(m_id);
   }
 }
 
@@ -71,78 +76,6 @@ std::string ElementConnection::str() const {
   str << "}";
 
   return str.str();
-}
-
-bool Connection::isValid(ConnectionId id) {
-  return id != INVALID_CONNECTION;
-}
-
-Connection::Connection(ConnectionId id)
-  : m_id(id)
-{
-}
-
-bool Connection::isExist() const {
-  if(isValid(m_id) && ElementConnectionManager::instance().getConnection(m_id) != nullptr) {
-    return true;
-  }
-
-  Logger::log(Message::ERROR_INVALID_CONNECTION, m_id);
-  return false;
-}
-
-void Connection::setUserName(const std::string& name) {
-  if(isExist()) {
-    auto connection = ElementConnectionManager::instance().getConnection(m_id);
-    connection->setUserName(name);
-  }
-}
-
-std::string Connection::getUserName() const {
-  if(isExist()) {
-    auto connection = ElementConnectionManager::instance().getConnection(m_id);
-    return connection->getUserName();
-  }
-  return "";
-}
-
-void Connection::connectPort(ElementPort& port) {
-  if(isExist()) {
-    auto connection = ElementConnectionManager::instance().getConnection(m_id);
-    connection->connectPort(port);
-  }
-}
-
-void Connection::disconnectPort(ElementPort& port) {
-  if(isExist()) {
-    auto connection = ElementConnectionManager::instance().getConnection(m_id);
-    connection->disconnectPort(port);
-  }
-}
-
-bool Connection::isConnectedPort(const ElementPort& port) const {
-  if(isExist()) {
-    auto connection = ElementConnectionManager::instance().getConnection(m_id);
-    return connection->isConnectedPort(port);
-  }
-
-  return false;
-}
-
-std::string Connection::getModel() const {
-  if(isExist()) {
-    auto connection = ElementConnectionManager::instance().getConnection(m_id);
-    return connection->getModel();
-  }
-  return "";
-}
-
-std::string Connection::str() const {
-  if(isExist()) {
-    auto connection = ElementConnectionManager::instance().getConnection(m_id);
-    return connection->str();
-  }
-  return "";
 }
 
 } // namespace ModelDesign

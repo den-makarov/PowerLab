@@ -4,20 +4,21 @@
 #include <limits>
 #include <vector>
 #include <string>
+#include <memory>
 
 namespace PowerLab {
 namespace ModelDesign {
 
-using ConnectionId = size_t;
-
-static constexpr ConnectionId UNCONNECTED = std::numeric_limits<size_t>::max();
-static constexpr ConnectionId INVALID_CONNECTION = std::numeric_limits<size_t>::max();
-
 class ElementPort;
+
+class ElementConnection;
+using Connection = std::shared_ptr<ElementConnection>;
 
 class ElementConnection {
 public:
-  explicit ElementConnection(ConnectionId id);
+  static Connection createConnection();
+
+  explicit ElementConnection();
   ~ElementConnection();
 
   void setUserName(const std::string& name);
@@ -32,36 +33,14 @@ public:
   std::string str() const;
 
 private:
-  std::vector<ElementPort*> m_connectedPorts;
+  using ConnectionId = int32_t;
+  static ConnectionId globalId;
+
   const ConnectionId m_id;
+  std::vector<ElementPort*> m_connectedPorts;
   std::string m_userName;
 };
 
-class ElementConnectionManager;
-
-class Connection {
-public:
-  explicit Connection(ConnectionId id = INVALID_CONNECTION);
-
-  static bool isValid(ConnectionId id);
-
-  void setUserName(const std::string& name);
-  std::string getUserName() const;
-
-  void connectPort(ElementPort& port);
-  void disconnectPort(ElementPort& port);
-  bool isConnectedPort(const ElementPort& port) const;
-
-  std::string getModel() const;
-  std::string str() const;
-
-private:
-  bool isExist() const;
-
-  ElementConnection* getConnection() const;
-  const ConnectionId m_id;
-  const ElementConnectionManager& m_manager;
-};
 
 } // namespace ModelDesign
 } // namespace PowerLab

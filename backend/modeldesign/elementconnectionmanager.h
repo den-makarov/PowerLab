@@ -16,16 +16,7 @@ public:
   ElementConnectionManager(const ElementConnectionManager& manager) = delete;
   ElementConnectionManager& operator=(const ElementConnectionManager& manager) = delete;
 
-  ConnectionId createConnection();
-  void destroyConnection(ConnectionId);
-
-  ElementConnection* getConnection(ConnectionId id);
-  const ElementConnection* getConnection(ConnectionId id) const;
-
 private:
-  std::map<ConnectionId, std::unique_ptr<ElementConnection>> m_connections;
-
-  static ConnectionId m_connectionCounter;
 };
 
 } // namespace ModelDesign

@@ -11,19 +11,20 @@ ElementPort::ElementPort(const CircuitElement& owner, PortType type)
 {
 }
 
-void ElementPort::connect(ConnectionId connection) {
+void ElementPort::connect(Connection connection) {
   m_connection = connection;
+  m_connection->connectPort(*this);
 }
 
 void ElementPort::disconnect() {
-  m_connection = UNCONNECTED;
+  m_connection.reset();
 }
 
 bool ElementPort::isConnected() const {
-  return m_connection != UNCONNECTED;
+  return m_connection != nullptr;
 }
 
-ConnectionId ElementPort::getConnection() const {
+Connection ElementPort::getConnection() const {
   return m_connection;
 }
 

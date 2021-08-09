@@ -43,8 +43,11 @@ std::string Resistor::getModel() const {
     return "";
   }
 
-  model << " " << Connection(inPorts.front().get().getConnection()).getModel();
-  model << " " << Connection(outPorts.front().get().getConnection()).getModel();
+  model << " ";
+  getConnectionModel(model, &inPorts.front().get());
+
+  model << " ";
+  getConnectionModel(model, &outPorts.front().get());
 
   auto resistance = m_parameters.getParameter(ParameterType::RESISTANCE);
   if(resistance) {

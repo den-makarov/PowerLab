@@ -49,10 +49,17 @@ std::string Switch::getModel() const {
     return "";
   }
 
-  model << " " << Connection(inPorts.front().get().getConnection()).getModel();
-  model << " " << Connection(outPorts.front().get().getConnection()).getModel();
-  model << " " << Connection(inControlPorts.front().get().getConnection()).getModel();
-  model << " " << Connection(outControlPorts.front().get().getConnection()).getModel();
+  model << " ";
+  getConnectionModel(model, &inPorts.front().get());
+
+  model << " ";
+  getConnectionModel(model, &outPorts.front().get());
+
+  model << " ";
+  getConnectionModel(model, &inControlPorts.front().get());
+
+  model << " ";
+  getConnectionModel(model, &outControlPorts.front().get());
 
   auto initialStatus = m_parameters.getParameter(ParameterType::STATE);
   if(initialStatus) {

@@ -30,16 +30,16 @@ class ElementPort {
 public:
   explicit ElementPort(const CircuitElement& owner, PortType type);
 
-  void connect(ConnectionId connection);
+  void connect(Connection connection);
   void disconnect();
   bool isConnected() const;
-  ConnectionId getConnection() const;
+  Connection getConnection() const;
   std::string getOwnerName() const;
   PortType getType() const;
   void setType(PortType type);
 
 private:
-  ConnectionId m_connection = UNCONNECTED;
+  Connection m_connection;
   const CircuitElement& m_owner;
   PortType m_type;
 };
