@@ -13,10 +13,10 @@ Capacitor::Capacitor(const ElementName& name)
   auto capacitance = std::make_unique<Capacitance>();
   m_parameters.addParameter(ParameterType::CAPACITANCE, std::move(capacitance));
 
-  auto port1 = std::make_unique<ElementPort>(*this, PortType::POWER_IN);
-  auto port2 = std::make_unique<ElementPort>(*this, PortType::POWER_OUT);
-  addPort(std::move(port1));
-  addPort(std::move(port2));
+  auto port1 = ElementPort::createPort(*this, PortType::POWER_IN);
+  auto port2 = ElementPort::createPort(*this, PortType::POWER_OUT);
+  addPort(port1);
+  addPort(port2);
 }
 
 std::string Capacitor::getModel() const {
@@ -44,10 +44,10 @@ std::string Capacitor::getModel() const {
   }
 
   model << " ";
-  getConnectionModel(model, &inPorts.front().get());
+  getConnectionModel(model, inPorts.front());
 
   model << " ";
-  getConnectionModel(model, &outPorts.front().get());
+  getConnectionModel(model, outPorts.front());
 
   auto resistance = m_parameters.getParameter(ParameterType::CAPACITANCE);
   if(resistance) {

@@ -12,7 +12,7 @@ CircuitElement::CircuitElement(const ElementName& name)
 
 CircuitElement::~CircuitElement() {
   for(auto port : getAllPorts()) {
-    port.get().disconnect();
+    port->disconnect();
   }
 }
 
@@ -24,7 +24,7 @@ const CircuitElement::ElementName& CircuitElement::getName() const {
   return m_name;
 }
 
-void CircuitElement::addPort(std::unique_ptr<ElementPort>&& port) {
+void CircuitElement::addPort(Port port) {
   m_ports.addPort(std::move(port));
 }
 
@@ -36,23 +36,23 @@ std::vector<const ElementParameter*> CircuitElement::getAllParameters() const {
   return m_parameters.getAllParameters();
 }
 
-std::vector<ElementPortCRef> CircuitElement::getAllPorts() const {
+std::vector<CPort> CircuitElement::getAllPorts() const {
   return m_ports.getAllPorts();
 }
 
-std::vector<ElementPortRef> CircuitElement::getAllPorts() {
+std::vector<Port> CircuitElement::getAllPorts() {
   return m_ports.getAllPorts();
 }
 
-std::vector<ElementPortCRef> CircuitElement::getPortsOfType(PortType type) const {
+std::vector<CPort> CircuitElement::getPortsOfType(PortType type) const {
   return m_ports.getPortsOfType(type);
 }
 
-std::vector<ElementPortRef> CircuitElement::getPortsOfType(PortType type) {
+std::vector<Port> CircuitElement::getPortsOfType(PortType type) {
   return m_ports.getPortsOfType(type);
 }
 
-std::ostream& CircuitElement::getConnectionModel(std::ostream& out, const ElementPort* port) const {
+std::ostream& CircuitElement::getConnectionModel(std::ostream& out, CPort port) const {
   if(port) {
     auto connection = port->getConnection();
     if(connection) {

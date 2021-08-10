@@ -13,10 +13,10 @@ Inductor::Inductor(const ElementName& name)
   auto inductance = std::make_unique<Inductance>();
   m_parameters.addParameter(ParameterType::INDUCTANCE, std::move(inductance));
 
-  auto port1 = std::make_unique<ElementPort>(*this, PortType::POWER_IN);
-  auto port2 = std::make_unique<ElementPort>(*this, PortType::POWER_OUT);
-  addPort(std::move(port1));
-  addPort(std::move(port2));
+  auto port1 = ElementPort::createPort(*this, PortType::POWER_IN);
+  auto port2 = ElementPort::createPort(*this, PortType::POWER_OUT);
+  addPort(port1);
+  addPort(port2);
 }
 
 std::string Inductor::getModel() const {
@@ -44,10 +44,10 @@ std::string Inductor::getModel() const {
   }
 
   model << " ";
-  getConnectionModel(model, &inPorts.front().get());
+  getConnectionModel(model, inPorts.front());
 
   model << " ";
-  getConnectionModel(model, &outPorts.front().get());
+  getConnectionModel(model, outPorts.front());
 
   auto resistance = m_parameters.getParameter(ParameterType::INDUCTANCE);
   if(resistance) {

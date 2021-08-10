@@ -12,15 +12,15 @@ Switch::Switch(const ElementName& name)
   auto initialStatus = std::make_unique<SwitchStatus>(SwitchState(SwitchState::State::OFF));
   m_parameters.addParameter(ParameterType::STATE, std::move(initialStatus));
 
-  auto powerPort1 = std::make_unique<ElementPort>(*this, PortType::POWER_IN);
-  auto powerPort2 = std::make_unique<ElementPort>(*this, PortType::POWER_OUT);
-  auto controlPort1 = std::make_unique<ElementPort>(*this, PortType::CONTROL_IN);
-  auto controlPort2 = std::make_unique<ElementPort>(*this, PortType::CONTROL_OUT);
+  auto powerPort1 = ElementPort::createPort(*this, PortType::POWER_IN);
+  auto powerPort2 = ElementPort::createPort(*this, PortType::POWER_OUT);
+  auto controlPort1 = ElementPort::createPort(*this, PortType::CONTROL_IN);
+  auto controlPort2 = ElementPort::createPort(*this, PortType::CONTROL_OUT);
 
-  addPort(std::move(powerPort1));
-  addPort(std::move(powerPort2));
-  addPort(std::move(controlPort1));
-  addPort(std::move(controlPort2));
+  addPort(powerPort1);
+  addPort(powerPort2);
+  addPort(controlPort1);
+  addPort(controlPort2);
 }
 
 std::string Switch::getModel() const {
@@ -50,16 +50,16 @@ std::string Switch::getModel() const {
   }
 
   model << " ";
-  getConnectionModel(model, &inPorts.front().get());
+  getConnectionModel(model, inPorts.front());
 
   model << " ";
-  getConnectionModel(model, &outPorts.front().get());
+  getConnectionModel(model, outPorts.front());
 
   model << " ";
-  getConnectionModel(model, &inControlPorts.front().get());
+  getConnectionModel(model, inControlPorts.front());
 
   model << " ";
-  getConnectionModel(model, &outControlPorts.front().get());
+  getConnectionModel(model, outControlPorts.front());
 
   auto initialStatus = m_parameters.getParameter(ParameterType::STATE);
   if(initialStatus) {

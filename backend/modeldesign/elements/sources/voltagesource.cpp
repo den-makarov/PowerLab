@@ -42,10 +42,10 @@ std::string AcVoltageSource::getModel() const {
   }
 
   model << " ";
-  getConnectionModel(model, &inPorts.front().get());
+  getConnectionModel(model, inPorts.front());
 
   model << " ";
-  getConnectionModel(model, &outPorts.front().get());
+  getConnectionModel(model, outPorts.front());
 
   model << " " << getWaveForm().getModel();
 

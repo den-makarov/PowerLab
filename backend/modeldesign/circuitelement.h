@@ -23,19 +23,19 @@ public:
   void addChild(std::unique_ptr<CircuitElement>&& child);
   std::vector<const ElementParameter*> getAllParameters() const;
 
-  std::vector<ElementPortCRef> getAllPorts() const;
-  std::vector<ElementPortRef> getAllPorts();
+  std::vector<CPort> getAllPorts() const;
+  std::vector<Port> getAllPorts();
 
-  std::vector<ElementPortCRef> getPortsOfType(PortType type) const;
-  std::vector<ElementPortRef> getPortsOfType(PortType type);
+  std::vector<CPort> getPortsOfType(PortType type) const;
+  std::vector<Port> getPortsOfType(PortType type);
 
   virtual std::string getModel() const {return "";}
 
 protected:
   explicit CircuitElement(const ElementName& name);
 
-  void addPort(std::unique_ptr<ElementPort>&& port);
-  std::ostream& getConnectionModel(std::ostream&, const ElementPort* port) const;
+  void addPort(Port port);
+  std::ostream& getConnectionModel(std::ostream&, CPort port) const;
 
   ElementParameterMap m_parameters;
 

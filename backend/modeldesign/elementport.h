@@ -26,8 +26,13 @@ using PortNumber = size_t;
 
 class CircuitElement;
 
+class ElementPort;
+using Port = std::shared_ptr<ElementPort>;
+using CPort = std::shared_ptr<const ElementPort>;
+
 class ElementPort {
 public:
+  static Port createPort(const CircuitElement& owner, PortType type);
   explicit ElementPort(const CircuitElement& owner, PortType type);
 
   void connect(Connection connection);
@@ -44,28 +49,25 @@ private:
   PortType m_type;
 };
 
-using ElementPortRef = std::reference_wrapper<ElementPort>;
-using ElementPortCRef = std::reference_wrapper<const ElementPort>;
-
 class ElementPortMap {
 public:
   ElementPortMap() = default;
 
   size_t getPortCount() const;
 
-  std::vector<ElementPortCRef> getAllPorts() const;
-  std::vector<ElementPortRef> getAllPorts();
+  std::vector<CPort> getAllPorts() const;
+  std::vector<Port> getAllPorts();
 
-  const ElementPort* getPort(PortNumber number) const;
-  ElementPort* getPort(PortNumber number);
+  CPort getPort(PortNumber number) const;
+  Port getPort(PortNumber number);
 
-  std::vector<ElementPortCRef> getPortsOfType(PortType type) const;
-  std::vector<ElementPortRef> getPortsOfType(PortType type);
+  std::vector<CPort> getPortsOfType(PortType type) const;
+  std::vector<Port> getPortsOfType(PortType type);
 
-  void addPort(std::unique_ptr<ElementPort>&& port);
+  void addPort(Port port);
 
 private:
-  std::vector<std::unique_ptr<ElementPort>> m_ports;
+  std::vector<Port> m_ports;
 };
 
 } // namespace ModelDesign

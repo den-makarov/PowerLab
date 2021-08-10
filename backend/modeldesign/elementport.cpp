@@ -5,6 +5,10 @@
 namespace PowerLab {
 namespace ModelDesign {
 
+Port ElementPort::createPort(const CircuitElement& owner, PortType type) {
+  return std::make_shared<ElementPort>(owner, type);
+}
+
 ElementPort::ElementPort(const CircuitElement& owner, PortType type)
   : m_owner(owner)
   , m_type(type)
@@ -44,51 +48,49 @@ size_t ElementPortMap::getPortCount() const {
   return m_ports.size();
 }
 
-void ElementPortMap::addPort(std::unique_ptr<ElementPort>&& port) {
-  m_ports.emplace_back(std::move(port));
+void ElementPortMap::addPort(Port port) {
+  m_ports.emplace_back(port);
 }
 
-std::vector<ElementPortCRef> ElementPortMap::getAllPorts() const {
-  std::vector<ElementPortCRef> res;
-  for(auto& pPort : m_ports) {
-    res.push_back(std::cref(*pPort.get()));
+std::vector<CPort> ElementPortMap::getAllPorts() const {
+  std::vector<CPort> res;
+  for(const auto& port : m_ports) {
+    res.push_back(port);
   }
   return res;
 }
 
-std::vector<ElementPortRef> ElementPortMap::getAllPorts() {
-  std::vector<ElementPortRef> res;
-  for(auto& pPort : m_ports) {
-    res.push_back(std::ref(*pPort.get()));
+std::vector<Port> ElementPortMap::getAllPorts() {
+  std::vector<Port> res;
+  for(auto& port : m_ports) {
+    res.push_back(port);
   }
   return res;
 }
 
-const ElementPort* ElementPortMap::getPort(PortNumber number) const {
-  return number <= m_ports.size() ? m_ports[number].get() : nullptr;
+CPort ElementPortMap::getPort(PortNumber number) const {
+  return number <= m_ports.size() ? m_ports[number] : nullptr;
 }
 
-ElementPort* ElementPortMap::getPort(PortNumber number) {
-  return number <= m_ports.size() ? m_ports[number].get() : nullptr;
+Port ElementPortMap::getPort(PortNumber number) {
+  return number <= m_ports.size() ? m_ports[number] : nullptr;
 }
 
-std::vector<ElementPortCRef> ElementPortMap::getPortsOfType(PortType type) const {
-  std::vector<ElementPortCRef> res;
-  for(auto& pPort : m_ports) {
-    auto& port = *pPort.get();
-    if(port.getType() == type) {
-      res.push_back(std::cref(*pPort.get()));
+std::vector<CPort> ElementPortMap::getPortsOfType(PortType type) const {
+  std::vector<CPort> res;
+  for(const auto& port : m_ports) {
+    if(port->getType() == type) {
+      res.push_back(port);
     }
   }
   return res;
 }
 
-std::vector<ElementPortRef> ElementPortMap::getPortsOfType(PortType type) {
-  std::vector<ElementPortRef> res;
-  for(auto& pPort : m_ports) {
-    auto& port = *pPort.get();
-    if(port.getType() == type) {
-      res.push_back(std::ref(*pPort.get()));
+std::vector<Port> ElementPortMap::getPortsOfType(PortType type) {
+  std::vector<Port> res;
+  for(auto& port : m_ports) {
+    if(port->getType() == type) {
+      res.push_back(port);
     }
   }
   return res;
