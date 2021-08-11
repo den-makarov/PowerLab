@@ -12,6 +12,9 @@
 namespace PowerLab {
 namespace ModelDesign {
 
+class CircuitElement;
+using Element = std::shared_ptr<CircuitElement>;
+
 class CircuitElement {
 public:
   using ElementName = std::string;
