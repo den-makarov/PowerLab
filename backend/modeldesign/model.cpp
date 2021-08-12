@@ -26,28 +26,28 @@ Model::Model(const std::string& name)
 
   ModelDesign::Connection ground = ModelDesign::ElementConnection::createConnection();
   addConnection(ground);
-  m_elements["VA1"]->getAllPorts()[1]->connect(ground);
-  m_elements["R1"]->getAllPorts()[1]->connect(ground);
-  m_elements["C1"]->getAllPorts()[1]->connect(ground);
+  getElement("VA1")->getAllPorts()[1]->connect(ground);
+  getElement("R1")->getAllPorts()[1]->connect(ground);
+  getElement("C1")->getAllPorts()[1]->connect(ground);
 
   ModelDesign::Connection input = ModelDesign::ElementConnection::createConnection();
   addConnection(input);
-  m_elements["VA1"]->getAllPorts()[0]->connect(input);
-  m_elements["L1"]->getAllPorts()[0]->connect(input);
+  getElement("VA1")->getAllPorts()[0]->connect(input);
+  getElement("L1")->getAllPorts()[0]->connect(input);
 
   ModelDesign::Connection output = ModelDesign::ElementConnection::createConnection();
   addConnection(output);
-  m_elements["L1"]->getAllPorts()[1]->connect(output);
-  m_elements["R1"]->getAllPorts()[0]->connect(output);
-  m_elements["C1"]->getAllPorts()[0]->connect(output);
+  getElement("L1")->getAllPorts()[1]->connect(output);
+  getElement("R1")->getAllPorts()[0]->connect(output);
+  getElement("C1")->getAllPorts()[0]->connect(output);
 
   for(auto& item : m_connections) {
     Logger::log(Logger::Message::DEBUG_MSG, item->str());
   }
 
-  m_elements["L1"]->getAllPorts()[1]->disconnect();
-  input->disconnectPort(*(m_elements["L1"]->getAllPorts()[0]));
-  for(auto& [name, item] : m_elements) {
+  getElement("L1")->getAllPorts()[1]->disconnect();
+  input->disconnectPort(*(getElement("L1")->getAllPorts()[0]));
+  for(auto& item : getElements()) {
     auto model = item->getModel();
     Logger::log(Logger::Message::DEBUG_MSG, model);
   }
@@ -68,6 +68,15 @@ std::vector<Element> Model::getElements() {
     result.push_back(element);
   }
   return result;
+}
+
+Element Model::getElement(const std::string& name) {
+  auto it = m_elements.find(name);
+  if(it != m_elements.end()) {
+    return it->second;
+  } else {
+    return nullptr;
+  }
 }
 
 void Model::addElement(Element element) {

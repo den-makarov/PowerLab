@@ -20,6 +20,7 @@ public:
   void addConnection(Connection connection);
 
   std::vector<Element> getElements();
+  Element getElement(const std::string& name);
   void addElement(Element element);
 
 private:
