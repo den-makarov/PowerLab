@@ -67,6 +67,7 @@ SOURCES += \
     gui/mainwindow/mainwindowmodeldesigns.cpp \
     gui/mainwindow/mainwindowmodelresults.cpp \
     gui/mainwindow/mainwindowparameters.cpp \
+    gui/model/circuitelementview.cpp \
     gui/model/modelwidget.cpp \
     gui/parameters/graphparameterswidget.cpp \
     gui/parameters/parameterswidget.cpp
@@ -117,6 +118,7 @@ HEADERS += \
     gui/graphs/graphparametersmodel.h \
     gui/graphs/plot.h \
     gui/graphs/zoomselectionrectarea.h \
+    gui/model/circuitelementview.h \
     gui/model/modelwidget.h \
     gui/parameters/graphparameterswidget.h \
     gui/parameters/parameterswidget.h
@@ -132,6 +134,9 @@ INCLUDEPATH += \
     backend/logger
 
 RESOURCES = powerlab.qrc
+
+qtHaveModule(printsupport): QT += printsupport
+qtHaveModule(opengl): QT += opengl
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
