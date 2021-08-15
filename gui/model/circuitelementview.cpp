@@ -58,7 +58,7 @@ void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem
     QBrush b = painter->brush();
     painter->setBrush(QBrush(fillColor.darker(option->state & QStyle::State_Sunken ? 120 : 100)));
 
-    painter->drawRect(QRect(14, 14, 79, 39));
+    painter->drawRect(QRect(0, 0, 110, 70));
     painter->setBrush(b);
 
     // Draw text
@@ -77,29 +77,29 @@ void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem
     }
 
     // Draw lines
-    QVarLengthArray<QLineF, 8> lines;
-    if (lod >= 0.5) {
-        lines.append(QLineF(5, 35, 13, 35));
-        lines.append(QLineF(94, 35, 102, 35));
-    }
+    QVarLengthArray<QLineF, 6> lines;
+//    if (lod >= 0.5) {
+//        lines.append(QLineF(5, 35, 13, 35));
+//        lines.append(QLineF(94, 35, 102, 35));
+//    }
 
 // Diode
     if (lod >= 0.4) {
         const QLineF lineData[] = {
           // left -
-          QLineF(15, 35, 35, 35),
+          QLineF(0, 35, 35, 35),
 
           // left |
-          QLineF(35, 20, 35, 50),
+          QLineF(35, 0, 35, 70),
           // right |
-          QLineF(45, 20, 45, 50),
+          QLineF(80, 00, 80, 70),
 
           // >
-          QLineF(35, 20, 45, 35),
-          QLineF(35, 50, 45, 35),
+          QLineF(35, 0, 80, 35),
+          QLineF(35, 70, 80, 35),
 
           // right -
-          QLineF(45, 35, 92, 35)
+          QLineF(80, 35, 110, 35)
         };
         lines.append(lineData, 6);
     }
