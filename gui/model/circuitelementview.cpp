@@ -29,9 +29,10 @@ QPainterPath CircuitElementView::shape() const {
 }
 
 void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget*) {
-    QColor fillColor = (option->state & QStyle::State_Selected) ? m_color.darker(150) : m_color;
-    if (option->state & QStyle::State_MouseOver)
-        fillColor = fillColor.lighter(125);
+//    QColor fillColor = (option->state & QStyle::State_Selected) ? m_color.darker(150) : m_color;
+//    if (option->state & QStyle::State_MouseOver)
+//        fillColor = fillColor.lighter(125);
+    QColor fillColor = Qt::white;
 
     const qreal lod = option->levelOfDetailFromTransform(painter->worldTransform());
     if (lod < 0.2) {
@@ -60,13 +61,6 @@ void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem
     painter->drawRect(QRect(14, 14, 79, 39));
     painter->setBrush(b);
 
-    if (lod >= 1) {
-        painter->setPen(QPen(Qt::gray, 1));
-        painter->drawLine(15, 54, 94, 54);
-        painter->drawLine(94, 53, 94, 15);
-        painter->setPen(QPen(Qt::black, 0));
-    }
-
     // Draw text
     if (lod >= 2) {
         QFont font("Times", 10);
@@ -83,65 +77,33 @@ void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem
     }
 
     // Draw lines
-    QVarLengthArray<QLineF, 36> lines;
+    QVarLengthArray<QLineF, 8> lines;
     if (lod >= 0.5) {
-        for (int i = 0; i <= 10; i += (lod > 0.5 ? 1 : 2)) {
-            lines.append(QLineF(18 + 7 * i, 13, 18 + 7 * i, 5));
-            lines.append(QLineF(18 + 7 * i, 54, 18 + 7 * i, 62));
-        }
-        for (int i = 0; i <= 6; i += (lod > 0.5 ? 1 : 2)) {
-            lines.append(QLineF(5, 18 + i * 5, 13, 18 + i * 5));
-            lines.append(QLineF(94, 18 + i * 5, 102, 18 + i * 5));
-        }
+        lines.append(QLineF(5, 35, 13, 35));
+        lines.append(QLineF(94, 35, 102, 35));
     }
+
+// Diode
     if (lod >= 0.4) {
         const QLineF lineData[] = {
-            QLineF(25, 35, 35, 35),
-            QLineF(35, 30, 35, 40),
-            QLineF(35, 30, 45, 35),
-            QLineF(35, 40, 45, 35),
-            QLineF(45, 30, 45, 40),
-            QLineF(45, 35, 55, 35)
+          // left -
+          QLineF(15, 35, 35, 35),
+
+          // left |
+          QLineF(35, 20, 35, 50),
+          // right |
+          QLineF(45, 20, 45, 50),
+
+          // >
+          QLineF(35, 20, 45, 35),
+          QLineF(35, 50, 45, 35),
+
+          // right -
+          QLineF(45, 35, 92, 35)
         };
         lines.append(lineData, 6);
     }
     painter->drawLines(lines.data(), lines.size());
-
-    // Draw red ink
-    if (m_stuff.size() > 1) {
-        QPen p = painter->pen();
-        painter->setPen(QPen(Qt::red,
-                             1,
-                             Qt::SolidLine,
-                             Qt::RoundCap,
-                             Qt::RoundJoin));
-        painter->setBrush(Qt::NoBrush);
-        QPainterPath path;
-        path.moveTo(m_stuff.first());
-        for (int i = 1; i < m_stuff.size(); ++i)
-            path.lineTo(m_stuff.at(i));
-        painter->drawPath(path);
-        painter->setPen(p);
-    }
-}
-
-void CircuitElementView::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-    QGraphicsItem::mousePressEvent(event);
-    update();
-}
-
-void CircuitElementView::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-    if (event->modifiers() & Qt::ShiftModifier) {
-        m_stuff << event->pos();
-        update();
-        return;
-    }
-    QGraphicsItem::mouseMoveEvent(event);
-}
-
-void CircuitElementView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    QGraphicsItem::mouseReleaseEvent(event);
-    update();
 }
 
 } // namespace Gui
