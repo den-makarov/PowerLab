@@ -28,6 +28,63 @@ QPainterPath CircuitElementView::shape() const {
     return path;
 }
 
+void paintDiode(QVector<QLineF>& lines, int xOffset) {
+  int x = xOffset;
+  // left -
+  lines.push_back(QLineF(0 + x, 35, 35 + x, 35));
+  // left |
+  lines.push_back(QLineF(35 + x, 0, 35 + x, 70));
+  // right |
+  lines.push_back(QLineF(80 + x, 00, 80 + x, 70));
+  // >
+  lines.push_back(QLineF(35 + x, 0, 80 + x, 35));
+  lines.push_back(QLineF(35 + x, 70, 80 + x, 35));
+  // right -
+  lines.push_back(QLineF(80 + x, 35, 110 + x, 35));
+}
+
+void paintResistor(QVector<QLineF>& lines, int xOffset) {
+  int x = xOffset;
+  // left -
+  lines.push_back(QLineF(5 + x, 35, 25 + x, 35));
+  // left |
+  lines.push_back(QLineF(25 + x, 20, 25 + x, 50));
+  // right |
+  lines.push_back(QLineF(90 + x, 20, 90 + x, 50));
+  // top -
+  lines.push_back(QLineF(25 + x, 20, 90 + x, 20));
+  // bottom -
+  lines.push_back(QLineF(25 + x, 50, 90 + x, 50));
+  // right -
+  lines.push_back(QLineF(90 + x, 35, 110 + x, 35));
+}
+
+void paintCapacitor(QVector<QLineF>& lines, int xOffset) {
+  int x = xOffset;
+  // left -
+  lines.push_back(QLineF(5 + x, 35, 25 + x, 35));
+  // left |
+  lines.push_back(QLineF(25 + x, 20, 25 + x, 50));
+  // right |
+  lines.push_back(QLineF(30 + x, 20, 30 + x, 50));
+  // right -
+  lines.push_back(QLineF(30 + x, 35, 50 + x, 35));
+}
+
+void paintInductor(QVector<QLineF>& lines, int xOffset) {
+  int x = xOffset;
+  // left -
+  lines.push_back(QLineF(5 + x, 35, 25 + x, 35));
+  // 3 arcs
+  // right -
+  lines.push_back(QLineF(90 + x, 35, 110 + x, 35));
+}
+
+void paintACVoltageSource(QVector<QLineF>& lines, int xOffset) {
+  int x = xOffset;
+  lines.push_back(QLineF(0 + x, 0, 0, 0));
+}
+
 void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget*) {
 //    QColor fillColor = (option->state & QStyle::State_Selected) ? m_color.darker(150) : m_color;
 //    if (option->state & QStyle::State_MouseOver)
@@ -77,33 +134,16 @@ void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem
     }
 
     // Draw lines
-    QVarLengthArray<QLineF, 6> lines;
-//    if (lod >= 0.5) {
-//        lines.append(QLineF(5, 35, 13, 35));
-//        lines.append(QLineF(94, 35, 102, 35));
-//    }
-
+    QVector<QLineF> lines;
 // Diode
     if (lod >= 0.4) {
-        const QLineF lineData[] = {
-          // left -
-          QLineF(0, 35, 35, 35),
-
-          // left |
-          QLineF(35, 0, 35, 70),
-          // right |
-          QLineF(80, 00, 80, 70),
-
-          // >
-          QLineF(35, 0, 80, 35),
-          QLineF(35, 70, 80, 35),
-
-          // right -
-          QLineF(80, 35, 110, 35)
-        };
-        lines.append(lineData, 6);
+      paintDiode(lines, 0);
+      paintResistor(lines, 120);
+      paintCapacitor(lines, 240);
+      paintInductor(lines, 360);
+//      paintACVoltageSource(lines, 480);
     }
-    painter->drawLines(lines.data(), lines.size());
+    painter->drawLines(lines);
 }
 
 } // namespace Gui
