@@ -28,61 +28,87 @@ QPainterPath CircuitElementView::shape() const {
     return path;
 }
 
-void paintDiode(QVector<QLineF>& lines, int xOffset) {
+void paintDiode(QPainter* painter, int xOffset) {
+  QVector<QLineF> lines;
   int x = xOffset;
   // left -
-  lines.push_back(QLineF(0 + x, 35, 35 + x, 35));
+  lines.push_back(QLineF(0 + x, 35, 20 + x, 35));
   // left |
-  lines.push_back(QLineF(35 + x, 0, 35 + x, 70));
+  lines.push_back(QLineF(20 + x, 25, 20 + x, 45));
   // right |
-  lines.push_back(QLineF(80 + x, 00, 80 + x, 70));
+  lines.push_back(QLineF(40 + x, 25, 40 + x, 45));
   // >
-  lines.push_back(QLineF(35 + x, 0, 80 + x, 35));
-  lines.push_back(QLineF(35 + x, 70, 80 + x, 35));
+  lines.push_back(QLineF(20 + x, 25, 40 + x, 35));
+  lines.push_back(QLineF(20 + x, 45, 40 + x, 35));
   // right -
-  lines.push_back(QLineF(80 + x, 35, 110 + x, 35));
+  lines.push_back(QLineF(40 + x, 35, 60 + x, 35));
+  painter->drawLines(lines);
 }
 
-void paintResistor(QVector<QLineF>& lines, int xOffset) {
+void paintResistor(QPainter* painter, int xOffset) {
+  QVector<QLineF> lines;
   int x = xOffset;
   // left -
-  lines.push_back(QLineF(5 + x, 35, 25 + x, 35));
+  lines.push_back(QLineF(0 + x, 35, 20 + x, 35));
   // left |
-  lines.push_back(QLineF(25 + x, 20, 25 + x, 50));
+  lines.push_back(QLineF(20 + x, 25, 20 + x, 45));
   // right |
-  lines.push_back(QLineF(90 + x, 20, 90 + x, 50));
+  lines.push_back(QLineF(70 + x, 25, 70 + x, 45));
   // top -
-  lines.push_back(QLineF(25 + x, 20, 90 + x, 20));
+  lines.push_back(QLineF(20 + x, 25, 70 + x, 25));
   // bottom -
-  lines.push_back(QLineF(25 + x, 50, 90 + x, 50));
+  lines.push_back(QLineF(20 + x, 45, 70 + x, 45));
   // right -
-  lines.push_back(QLineF(90 + x, 35, 110 + x, 35));
+  lines.push_back(QLineF(70 + x, 35, 90 + x, 35));
+
+  painter->drawLines(lines);
 }
 
-void paintCapacitor(QVector<QLineF>& lines, int xOffset) {
+void paintCapacitor(QPainter* painter, int xOffset) {
+  QVector<QLineF> lines;
   int x = xOffset;
   // left -
-  lines.push_back(QLineF(5 + x, 35, 25 + x, 35));
+  lines.push_back(QLineF(0 + x, 35, 20 + x, 35));
   // left |
-  lines.push_back(QLineF(25 + x, 20, 25 + x, 50));
+  lines.push_back(QLineF(20 + x, 20, 20 + x, 50));
   // right |
-  lines.push_back(QLineF(30 + x, 20, 30 + x, 50));
+  lines.push_back(QLineF(25 + x, 20, 25 + x, 50));
   // right -
-  lines.push_back(QLineF(30 + x, 35, 50 + x, 35));
+  lines.push_back(QLineF(25 + x, 35, 45 + x, 35));
+
+  painter->drawLines(lines);
 }
 
-void paintInductor(QVector<QLineF>& lines, int xOffset) {
+void paintInductor(QPainter* painter, int xOffset) {
+  QVector<QLineF> lines;
   int x = xOffset;
   // left -
-  lines.push_back(QLineF(5 + x, 35, 25 + x, 35));
-  // 3 arcs
+  lines.push_back(QLineF(0 + x, 35, 20 + x, 35));
   // right -
-  lines.push_back(QLineF(90 + x, 35, 110 + x, 35));
+  lines.push_back(QLineF(80 + x, 35, 100 + x, 35));
+  painter->drawLines(lines);
+  // 3 arcs
+  for(int i = 0; i < 3; i++) {
+    QRectF rect(i * 20 + (20 + x), 25, 20, 20);
+    painter->drawArc(rect, 0, 180 * 16);
+  }
 }
 
-void paintACVoltageSource(QVector<QLineF>& lines, int xOffset) {
+void paintACVoltageSource(QPainter* painter, int xOffset) {
+  QVector<QLineF> lines;
   int x = xOffset;
-  lines.push_back(QLineF(0 + x, 0, 0, 0));
+  // left -
+  lines.push_back(QLineF(0 + x, 35, 20 + x, 35));
+  // right -
+  lines.push_back(QLineF(60 + x, 35, 80 + x, 35));
+  painter->drawLines(lines);
+  // outer circle
+  painter->drawEllipse(QRectF(20 + x, 15, 40, 40));
+  // 2 arcs
+  QRectF rect(40 - 4 + x, 35, 8, 10);
+  painter->drawArc(rect, -90 * 16, 180 * 16);
+  rect.moveBottom(35);
+  painter->drawArc(rect, 90 * 16, 180 * 16);
 }
 
 void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget*) {
@@ -115,7 +141,7 @@ void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem
     QBrush b = painter->brush();
     painter->setBrush(QBrush(fillColor.darker(option->state & QStyle::State_Sunken ? 120 : 100)));
 
-    painter->drawRect(QRect(0, 0, 110, 70));
+//    painter->drawRect(QRect(0, 0, 110, 70));
     painter->setBrush(b);
 
     // Draw text
@@ -137,11 +163,11 @@ void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem
     QVector<QLineF> lines;
 // Diode
     if (lod >= 0.4) {
-      paintDiode(lines, 0);
-      paintResistor(lines, 120);
-      paintCapacitor(lines, 240);
-      paintInductor(lines, 360);
-//      paintACVoltageSource(lines, 480);
+      paintDiode(painter, 0);
+      paintResistor(painter, 60 + 10);
+      paintCapacitor(painter, 60 + 10 + 90 + 10);
+      paintInductor(painter, 60 + 10 + 90 + 10 + 45 + 10);
+      paintACVoltageSource(painter, 60 + 10 + 90 + 10 + 45 + 10 + 100 + 10);
     }
     painter->drawLines(lines);
 }
