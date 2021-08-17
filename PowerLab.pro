@@ -68,6 +68,11 @@ SOURCES += \
     gui/mainwindow/mainwindowmodelresults.cpp \
     gui/mainwindow/mainwindowparameters.cpp \
     gui/model/circuitelementview.cpp \
+    gui/model/elements/capacitorview.cpp \
+    gui/model/elements/diodeview.cpp \
+    gui/model/elements/resistorview.cpp \
+    gui/model/elements/inductorview.cpp \
+    gui/model/elements/acvoltageview.cpp \
     gui/model/modelwidget.cpp \
     gui/parameters/graphparameterswidget.cpp \
     gui/parameters/parameterswidget.cpp
@@ -119,6 +124,11 @@ HEADERS += \
     gui/graphs/plot.h \
     gui/graphs/zoomselectionrectarea.h \
     gui/model/circuitelementview.h \
+    gui/model/elements/capacitorview.h \
+    gui/model/elements/diodeview.h \
+    gui/model/elements/resistorview.h \
+    gui/model/elements/inductorview.h \
+    gui/model/elements/acvoltageview.h \
     gui/model/modelwidget.h \
     gui/parameters/graphparameterswidget.h \
     gui/parameters/parameterswidget.h

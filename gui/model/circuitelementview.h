@@ -21,6 +21,10 @@ public:
              const QStyleOptionGraphicsItem *item,
              QWidget *widget) override;
 
+protected:
+  virtual void paintElement(QPainter *painter, qreal levelOfDetails) const = 0;
+  QPoint position() const;
+
 private:
   ModelDesign::Element m_element;
   QPoint m_position;

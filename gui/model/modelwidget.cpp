@@ -5,7 +5,11 @@
 
 #include "modelwidget.h"
 #include "modeldesign/model.h"
-#include "circuitelementview.h"
+#include "elements/resistorview.h"
+#include "elements/capacitorview.h"
+#include "elements/inductorview.h"
+#include "elements/acvoltageview.h"
+#include "elements/diodeview.h"
 
 namespace PowerLab {
 namespace Gui {
@@ -22,11 +26,35 @@ ModelWidget::ModelWidget(QWidget *parent, const QString& title)
 
   auto R1 = model->getElement("R1");
   if(R1) {
-    QGraphicsItem* item = new CircuitElementView(R1, QPoint(0, 0));
+    QGraphicsItem* item = new ResistorView(R1, QPoint(0, 0));
     item->setPos(QPointF(0, 0));
     m_scene->addItem(item);
   }
 
+  auto C1 = model->getElement("C1");
+  if(C1) {
+    QGraphicsItem* item = new CapacitorView(C1, QPoint(80, 0));
+    item->setPos(QPointF(0, 0));
+    m_scene->addItem(item);
+  }
+
+  auto L1 = model->getElement("L1");
+  if(L1) {
+    QGraphicsItem* item = new InductorView(L1, QPoint(0, 40));
+    item->setPos(QPointF(0, 0));
+    m_scene->addItem(item);
+  }
+
+  auto AC1 = model->getElement("VA1");
+  if(AC1) {
+    QGraphicsItem* item = new ACVoltageView(AC1, QPoint(80, 40));
+    item->setPos(QPointF(0, 0));
+    m_scene->addItem(item);
+
+    item = new DiodeView(AC1, QPoint(160, 40));
+    item->setPos(QPointF(0, 0));
+    m_scene->addItem(item);
+  }
 //  QSplitter* vSplitter = new QSplitter;
 //  vSplitter->setOrientation(Qt::Vertical);
 //  vSplitter->addWidget(h1Splitter);
