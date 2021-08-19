@@ -12,19 +12,20 @@ CircuitElementView::CircuitElementView(ModelDesign::Element element,
   : m_element(element)
   , m_position(position)
 {
-  setZValue((m_position.x() + m_position.y()) % 2);
+  setToolTip(QString::fromStdString(element->getName()));
+  //  setZValue((m_position.x() + m_position.y()) % 2);
 
   setFlags(ItemIsSelectable | ItemIsMovable);
   setAcceptHoverEvents(true);
 }
 
 QRectF CircuitElementView::boundingRect() const {
-    return QRectF(0, 0, 110, 70);
+    return QRectF(0, 0, 0, 0);
 }
 
 QPainterPath CircuitElementView::shape() const {
     QPainterPath path;
-    path.addRect(14, 14, 82, 42);
+    path.addRect(0, 0, 0, 0);
     return path;
 }
 
@@ -33,10 +34,11 @@ QPoint CircuitElementView::position() const {
 }
 
 void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget*) {
-//    QColor fillColor = (option->state & QStyle::State_Selected) ? m_color.darker(150) : m_color;
-//    if (option->state & QStyle::State_MouseOver)
-//        fillColor = fillColor.lighter(125);
-  QColor fillColor = Qt::white;
+  QColor fillColor = (option->state & QStyle::State_Selected) ? m_color.darker(150) : m_color;
+  if(option->state & QStyle::State_MouseOver) {
+    fillColor = fillColor.lighter(125);
+  }
+//  QColor fillColor = Qt::white;
 
   const qreal lod = option->levelOfDetailFromTransform(painter->worldTransform());
   if (lod < 0.2) {
@@ -52,16 +54,29 @@ void CircuitElementView::paint(QPainter *painter, const QStyleOptionGraphicsItem
     return;
   }
 
-  QPen oldPen = painter->pen();
-  QPen pen = oldPen;
+  QPen pen = painter->pen();
   int width = 0;
   if(option->state & QStyle::State_Selected) {
-    width += 2;
+    width += 1;
   }
 
   pen.setWidth(width);
+  pen.setCapStyle(Qt::RoundCap);
+  pen.setJoinStyle(Qt::RoundJoin);
+  painter->setPen(pen);
+
+  drawText(painter, lod);
   paintElement(painter, lod);
 }
+
+ModelDesign::Element& CircuitElementView::getElement() {
+  return m_element;
+}
+
+const ModelDesign::Element& CircuitElementView::getElement() const {
+  return m_element;
+}
+
 
 } // namespace Gui
 } // namespace PowerLab

@@ -14,32 +14,26 @@ void CapacitorView::paintElement(QPainter* painter, qreal levelOfDetails) const 
   QVector<QLineF> lines;
 
   if(levelOfDetails >= 0.4) {
-    // left -
-    lines.push_back(QLineF(0, 35, 20, 35));
-    // left |
-    lines.push_back(QLineF(20, 20, 20, 50));
-    // right |
-    lines.push_back(QLineF(25, 20, 25, 50));
-    // right -
-    lines.push_back(QLineF(25, 35, 45, 35));
-
-    painter->drawLines(lines);
+    lines.push_back(QLineF(0, 0, 20, 0)); // left -
+    lines.push_back(QLineF(20, -15, 20, 15)); // left |
+    lines.push_back(QLineF(25, -15, 25, 15)); // right |
+    lines.push_back(QLineF(25, 0, 45, 0)); // right -
   }
 
-  // Draw text
-  if(levelOfDetails >= 2) {
-    QFont font("Times", 10);
-    font.setStyleStrategy(QFont::ForceOutline);
-    painter->setFont(font);
-    painter->save();
-    painter->scale(0.1, 0.1);
-    painter->drawText(170, 180, QString("Model: at %1x%2")
-                      .arg(position().x())
-                      .arg(position().y()));
-    painter->drawText(170, 200, QString("Serial number: SDSJ"));
-    painter->drawText(170, 220, QString("Manufacturer: Chip Manufacturer"));
-    painter->restore();
-  }
+  painter->drawLines(lines);
+}
+
+QRectF CapacitorView::boundingRect() const {
+  return QRectF(-1, -16, 47, 32);
+}
+
+QPainterPath CapacitorView::shape() const {
+  QPainterPath path;
+  path.addRect(20, -15, 25, 30);
+  return path;
+}
+
+void CapacitorView::drawText(QPainter*, qreal) const {
 }
 
 } // namespace Gui

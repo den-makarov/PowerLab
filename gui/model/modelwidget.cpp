@@ -242,6 +242,7 @@ View::View(const QString &name, QWidget *parent)
     connect(printButton, &QAbstractButton::clicked, this, &View::print);
 
     setupMatrix();
+    graphicsView->setRenderHint(QPainter::Antialiasing, true);
 }
 
 QGraphicsView *View::view() const

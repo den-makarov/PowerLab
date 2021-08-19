@@ -15,20 +15,28 @@ public:
   explicit CircuitElementView(ModelDesign::Element element,
                               QPoint position);
 
-  QRectF boundingRect() const override;
-  QPainterPath shape() const override;
+  virtual QRectF boundingRect() const override;
+  virtual QPainterPath shape() const override;
+
   void paint(QPainter *painter,
              const QStyleOptionGraphicsItem *item,
              QWidget *widget) override;
 
 protected:
+  static constexpr qreal PIN_WIDTH = 20;
+
   virtual void paintElement(QPainter *painter, qreal levelOfDetails) const = 0;
+  virtual void drawText(QPainter *painter, qreal levelOfDetails) const = 0;
   QPoint position() const;
 
+  ModelDesign::Element& getElement();
+  const ModelDesign::Element& getElement() const;
+
 private:
+
   ModelDesign::Element m_element;
   QPoint m_position;
-  QColor m_color;
+  QColor m_color = Qt::white;
 };
 
 } // namespace Gui
