@@ -12,11 +12,10 @@ namespace Gui {
 
 class CircuitElementView : public QGraphicsItem {
 public:
-  explicit CircuitElementView(ModelDesign::Element element,
-                              QPoint position);
+  explicit CircuitElementView(ModelDesign::Element element);
 
-  virtual QRectF boundingRect() const override;
-  virtual QPainterPath shape() const override;
+  virtual QRectF boundingRect() const override = 0;
+  virtual QPainterPath shape() const override = 0;
 
   void paint(QPainter *painter,
              const QStyleOptionGraphicsItem *item,
@@ -27,15 +26,12 @@ protected:
 
   virtual void paintElement(QPainter *painter, qreal levelOfDetails) const = 0;
   virtual void drawText(QPainter *painter, qreal levelOfDetails) const = 0;
-  QPoint position() const;
 
   ModelDesign::Element& getElement();
   const ModelDesign::Element& getElement() const;
 
 private:
-
   ModelDesign::Element m_element;
-  QPoint m_position;
   QColor m_color = Qt::white;
 };
 

@@ -7,5 +7,9 @@
         <file>images/paste.png</file>
         <file>images/save.png</file>
         <file>images/add.png</file>
+        <file>images/zoom_in.png</file>
+        <file>images/zoomin.png</file>
+        <file>images/zoom_out.png</file>
+        <file>images/zoomout.png</file>
     </qresource>
 </RCC>

@@ -5,8 +5,8 @@
 namespace PowerLab {
 namespace Gui {
 
-CapacitorView::CapacitorView(ModelDesign::Element element, QPoint position)
-  : CircuitElementView(element, position)
+CapacitorView::CapacitorView(ModelDesign::Element element)
+  : CircuitElementView(element)
 {
 }
 
@@ -29,7 +29,7 @@ QRectF CapacitorView::boundingRect() const {
 
 QPainterPath CapacitorView::shape() const {
   QPainterPath path;
-  path.addRect(20, -15, 25, 30);
+  path.addRect(20, -15, 5, 30);
   return path;
 }
 

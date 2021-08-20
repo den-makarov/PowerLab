@@ -8,7 +8,7 @@ namespace Gui {
 
 class ResistorView : public CircuitElementView {
 public:
-  ResistorView(ModelDesign::Element element, QPoint position);
+  ResistorView(ModelDesign::Element element);
   virtual QRectF boundingRect() const override;
   virtual QPainterPath shape() const override;
 

@@ -64,15 +64,9 @@ public slots:
     void zoomOut(int level = 1);
 
 private slots:
-    void resetView();
-    void setResetButtonEnabled();
     void setupMatrix();
     void togglePointerMode();
-    void toggleOpenGL();
-    void toggleAntialiasing();
     void print();
-    void rotateLeft();
-    void rotateRight();
 
 private:
     GraphicsView *graphicsView;
@@ -80,12 +74,8 @@ private:
     QLabel *label2;
     QToolButton *selectModeButton;
     QToolButton *dragModeButton;
-    QToolButton *openGlButton;
-    QToolButton *antialiasButton;
     QToolButton *printButton;
-    QToolButton *resetButton;
     QSlider *zoomSlider;
-    QSlider *rotateSlider;
 };
 
 #endif // MODELWIDGET_H

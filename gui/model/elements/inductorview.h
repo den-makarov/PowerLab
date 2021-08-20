@@ -8,7 +8,7 @@ namespace Gui {
 
 class InductorView : public CircuitElementView {
 public:
-  InductorView(ModelDesign::Element element, QPoint position);
+  InductorView(ModelDesign::Element element);
   virtual QRectF boundingRect() const override;
   virtual QPainterPath shape() const override;
 

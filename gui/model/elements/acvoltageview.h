@@ -8,7 +8,7 @@ namespace Gui {
 
 class ACVoltageView : public CircuitElementView {
 public:
-  ACVoltageView(ModelDesign::Element element, QPoint position);
+  ACVoltageView(ModelDesign::Element element);
   virtual QRectF boundingRect() const override;
   virtual QPainterPath shape() const override;
 

@@ -8,7 +8,7 @@ namespace Gui {
 
 class DiodeView : public CircuitElementView {
 public:
-  DiodeView(ModelDesign::Element element, QPoint position);
+  DiodeView(ModelDesign::Element element);
   virtual QRectF boundingRect() const override;
   virtual QPainterPath shape() const override;
 

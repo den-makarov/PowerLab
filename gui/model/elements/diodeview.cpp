@@ -5,8 +5,8 @@
 namespace PowerLab {
 namespace Gui {
 
-DiodeView::DiodeView(ModelDesign::Element element, QPoint position)
-  : CircuitElementView(element, position)
+DiodeView::DiodeView(ModelDesign::Element element)
+  : CircuitElementView(element)
 {
 }
 
@@ -14,24 +14,24 @@ void DiodeView::paintElement(QPainter* painter, qreal levelOfDetails) const {
   QVector<QLineF> lines;
 
   if(levelOfDetails >= 0.4) {
-    lines.push_back(QLineF(0, 35, 20, 35)); // left -
-    lines.push_back(QLineF(20, 25, 20, 45)); // left |
-    lines.push_back(QLineF(40, 25, 40, 45)); // right |
-    lines.push_back(QLineF(20, 25, 40, 35)); // >
-    lines.push_back(QLineF(20, 45, 40, 35));
-    lines.push_back(QLineF(40, 35, 60, 35)); // right -
+    lines.push_back(QLineF(0, 0, 20, 0)); // left -
+    lines.push_back(QLineF(20, -10, 20, 10)); // left |
+    lines.push_back(QLineF(40, -10, 40, 10)); // right |
+    lines.push_back(QLineF(20, -10, 40, 0)); // >
+    lines.push_back(QLineF(20, 10, 40, 0));
+    lines.push_back(QLineF(40, 0, 60, 0)); // right -
   }
 
   painter->drawLines(lines);
 }
 
 QRectF DiodeView::boundingRect() const {
-  return QRectF(-1, -1, 102, 12);
+  return QRectF(-1, -11, 62, 22);
 }
 
 QPainterPath DiodeView::shape() const {
   QPainterPath path;
-  path.addRect(20, 0, 80, 10);
+  path.addRect(20, -10, 20, 20);
   return path;
 }
 

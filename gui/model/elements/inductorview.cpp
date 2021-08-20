@@ -5,8 +5,8 @@
 namespace PowerLab {
 namespace Gui {
 
-InductorView::InductorView(ModelDesign::Element element, QPoint position)
-  : CircuitElementView(element, position)
+InductorView::InductorView(ModelDesign::Element element)
+  : CircuitElementView(element)
 {
 }
 
@@ -26,12 +26,12 @@ void InductorView::paintElement(QPainter* painter, qreal levelOfDetails) const {
 }
 
 QRectF InductorView::boundingRect() const {
-  return QRectF(-1, -1, 102, 12);
+  return QRectF(-1, -11, 102, 22);
 }
 
 QPainterPath InductorView::shape() const {
   QPainterPath path;
-  path.addRect(20, 0, 80, 10);
+  path.addRect(20, 0, 60, -10);
   return path;
 }
 

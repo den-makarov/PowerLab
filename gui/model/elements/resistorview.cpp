@@ -5,8 +5,8 @@
 namespace PowerLab {
 namespace Gui {
 
-ResistorView::ResistorView(ModelDesign::Element element, QPoint position)
-  : CircuitElementView(element, position)
+ResistorView::ResistorView(ModelDesign::Element element)
+  : CircuitElementView(element)
 {
 }
 

@@ -8,7 +8,7 @@ namespace Gui {
 
 class CapacitorView : public CircuitElementView {
 public:
-  CapacitorView(ModelDesign::Element element, QPoint position);
+  CapacitorView(ModelDesign::Element element);
   virtual QRectF boundingRect() const override;
   virtual QPainterPath shape() const override;
 
